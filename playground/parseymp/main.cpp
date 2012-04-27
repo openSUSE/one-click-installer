@@ -4,14 +4,15 @@
 #include <QList>
 #include <QDebug>
 #include <QStringList>
+#include "repository.h"
+#include "package.h"
 
 int main(int argc,char *argv[])
 {
 	QApplication app(argc,argv);
 	QFile file(argv[1]);
-	
-	QStringList packageList;
-	QStringList repositoryList;
+	QList<Package*> packageList;
+	QList<Repository*> repositoryList;
 	
 	if(!file.open(QIODevice::ReadOnly))
 	{
@@ -27,12 +28,15 @@ int main(int argc,char *argv[])
 		xml.readNext();
 		if(xml.name()=="repository" && !xml.isEndElement())
 		{
-			//qDebug()<<"in repo\n";
+			//Add a New Repository to the List
+			Repository *repo = new Repository;
 			xml.readNext();
 			xml.readNext();
-			qDebug()<<xml.name();
+			//qDebug()<<xml.name();
 			if(xml.name()=="name")
-				repositoryList<<xml.readElementText();
+				repo->setName(xml.readElementText());
+			repositoryList.append(repo);
+
 		}	
 	}
 
@@ -43,19 +47,21 @@ int main(int argc,char *argv[])
 		xml.readNext();
 		if(xml.name()=="name" && !xml.isEndElement())
 		{
-			packageList<<xml.readElementText();
+			Package *pkg = new Package;
+			pkg->setName(xml.readElementText());
+			packageList.append(pkg);
 		}
 	}
 	
 	qDebug()<<"***List of Repositories***";
-	foreach(QString repo,repositoryList)
+	foreach(Repository *repo,repositoryList)
 	{
-		qDebug()<<repo;
+		qDebug()<<repo->name();
 	}
 	qDebug()<<"***List of Packages***";
-	foreach(QString pack,packageList)
+	foreach(Package *pack,packageList)
 	{
-		qDebug()<<pack;
+		qDebug()<<pack->name();
 	}
 
 	return 0;
