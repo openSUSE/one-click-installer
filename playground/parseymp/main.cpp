@@ -25,30 +25,68 @@ int main(int argc,char *argv[])
 
 	while(!xml.atEnd() && xml.name()!="software")
 	{
-		xml.readNext();
+		xml.readNextStartElement();
 		if(xml.name()=="repository" && !xml.isEndElement())
 		{
-			//Add a New Repository to the List
 			Repository *repo = new Repository;
-			xml.readNext();
-			xml.readNext();
-			//qDebug()<<xml.name();
+			//Set whether recommended or not
+			repo->setRecommended(xml.attributes().value("recommended").toString());
+
+			xml.readNextStartElement();
+			//Read the Name of the Repository 
 			if(xml.name()=="name")
+			{
+				//qDebug()<<"Name"<<xml.readElementText();
 				repo->setName(xml.readElementText());
+			}
+			
+			xml.readNextStartElement();
+			//Read the Summary
+			if(xml.name()=="summary")
+			{
+				//qDebug()<<"Summary"<<xml.readElementText();
+				repo->setSummary(xml.readElementText());
+			}
+			xml.readNextStartElement();
+			//Read Description
+			if(xml.name()=="description")
+			{
+				//qDebug()<<"Description"<<xml.readElementText();
+				repo->setDescription(xml.readElementText());
+			}
+			xml.readNextStartElement();
+			//Read Url
+			if(xml.name()=="url")
+			{
+				repo->setDescription(xml.readElementText());
+			}
+			
+			//Add Repository to the List or Repositories
 			repositoryList.append(repo);
 
 		}	
 	}
 
-	//qDebug()<<xml.name();
 
 	while(!xml.atEnd() && !(xml.name()=="software" && xml.isEndElement()))
 	{
-		xml.readNext();
+		xml.readNextStartElement();
 		if(xml.name()=="name" && !xml.isEndElement())
 		{
 			Package *pkg = new Package;
+			//Read Element Text
 			pkg->setName(xml.readElementText());
+
+			xml.readNextStartElement();
+
+			//Read Summary
+			if(xml.name()=="summary")
+				pkg->setSummary(xml.readElementText());
+			xml.readNextStartElement();
+
+			//Read Description
+			if(xml.name()=="description")
+				pkg->setDescription(xml.readElementText());
 			packageList.append(pkg);
 		}
 	}
@@ -57,11 +95,17 @@ int main(int argc,char *argv[])
 	foreach(Repository *repo,repositoryList)
 	{
 		qDebug()<<repo->name();
+		qDebug()<<repo->recommended();
+		qDebug()<<repo->summary();
+		qDebug()<<repo->description();
 	}
+	qDebug()<<"";
 	qDebug()<<"***List of Packages***";
 	foreach(Package *pack,packageList)
 	{
 		qDebug()<<pack->name();
+		qDebug()<<pack->summary();
+		qDebug()<<pack->description();
 	}
 
 	return 0;
