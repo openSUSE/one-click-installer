@@ -8,8 +8,11 @@
 #include <QComboBox>
 #include <QHBoxLayout>
 
+#include "settings.h"
+
 class FirstScreen : public QWidget
 {
+	Q_OBJECT
 	private:
 		QLabel *m_warning;
 		QPushButton *m_trust;
@@ -22,6 +25,9 @@ class FirstScreen : public QWidget
 		QPushButton *m_install;
 	public:
 		FirstScreen(QObject *parent = 0);
+	private slots:
+		void showSettings();
+
 };
 
 

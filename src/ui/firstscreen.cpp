@@ -28,6 +28,14 @@ FirstScreen::FirstScreen(QObject *parent)
 	m_mainLayout->addLayout(m_installLayout);
 	m_mainLayout->addLayout(m_buttonLayout);
 
+	//Signal Slot connections
+	QObject::connect(m_settings,SIGNAL(clicked()),this,SLOT(showSettings()));
+
 	this->setLayout(m_mainLayout);
 	this->show();
+}
+
+void FirstScreen::showSettings()
+{
+	new Settings();
 }
