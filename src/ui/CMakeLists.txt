@@ -4,7 +4,7 @@ find_package(Qt4 REQUIRED)
 include(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS})
 
-set(oneclickui_SOURCES main.cpp mainwindow.cpp)
+set(oneclickui_SOURCES main.cpp mainwindow.cpp firstscreen.cpp)
 add_executable(oneclickui ${QT_LIBRARIES} ${oneclickui_SOURCES})
 
 target_link_libraries(oneclickui ${QT_LIBRARIES})
