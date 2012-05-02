@@ -6,6 +6,8 @@
 #include <QStringList>
 #include "repository.h"
 #include "package.h"
+#include <QUrl>
+#include <zypp/RepoManager.h>
 
 int main(int argc,char *argv[])
 {
@@ -13,7 +15,7 @@ int main(int argc,char *argv[])
 	QFile file(argv[1]);
 	QList<Package*> packageList;
 	QList<Repository*> repositoryList;
-	
+	zypp::RepoManager rman;
 	if(!file.open(QIODevice::ReadOnly))
 	{
 		qDebug()<<"Could not open File";
@@ -58,7 +60,7 @@ int main(int argc,char *argv[])
 			//Read Url
 			if(xml.name()=="url")
 			{
-				repo->setDescription(xml.readElementText());
+				repo->setUrl(xml.readElementText());
 			}
 			
 			//Add Repository to the List or Repositories
@@ -98,6 +100,17 @@ int main(int argc,char *argv[])
 		qDebug()<<repo->recommended();
 		qDebug()<<repo->summary();
 		qDebug()<<repo->description();
+		qDebug()<<repo->url();
+		//Add Repository
+		zypp::RepoInfo repoinfo;
+		std::cout<<"Std Url is "<<repo->url().toStdString()<<std::endl;
+		repoinfo.addBaseUrl(zypp::Url(repo->url().toStdString()));
+		repoinfo.setAlias(repo->url().toStdString());
+		repoinfo.setGpgCheck(false);
+		rman.addRepository(repoinfo);
+		rman.buildCache(repoinfo);
+		rman.loadFromCache(repoinfo);
+
 	}
 	qDebug()<<"";
 	qDebug()<<"***List of Packages***";

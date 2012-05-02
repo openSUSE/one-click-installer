@@ -7,7 +7,7 @@ add_definitions(${QT_DEFINITIONS})
 set(readymp_SOURCES main.cpp package.cpp repository.cpp)
 add_executable(readymp ${QT_LIBRARIES} ${readymp_SOURCES})
 
-target_link_libraries(readymp ${QT_LIBRARIES})
+target_link_libraries(readymp ${QT_LIBRARIES} zypp)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_BINARY_DIR}
