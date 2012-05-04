@@ -108,6 +108,7 @@ int main(int argc,char *argv[])
 		repoinfo.setAlias(repo->url().toStdString());
 		repoinfo.setGpgCheck(false);
 		rman.addRepository(repoinfo);
+		rman.refreshMetadata(repoinfo,zypp::RepoManager::RefreshIfNeeded);
 		rman.buildCache(repoinfo);
 		rman.loadFromCache(repoinfo);
 
