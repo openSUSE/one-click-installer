@@ -1,0 +1,12 @@
+A One Click Installer  for the YMP Specification
+
+Dependencies:
+
+1.) Qt
+2.) libzypp
+
+AUTHORS--
+
+Saurabh Sood
+Cornelius Schumacher
+Matt Barringer
