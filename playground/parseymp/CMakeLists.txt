@@ -1,6 +1,7 @@
 project(readymp)
 cmake_minimum_required(VERSION 2.8)
 find_package(Qt4 REQUIRED)
+find_package(Zypp REQUIRED)
 
 include(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS})
