@@ -1,5 +1,5 @@
 #ifndef PACKAGE_H
-#define PACKAGE
+#define PACKAGE_H
 
 #include <QString>
 
