@@ -1,0 +1,31 @@
+<metapackage xmlns:os="http://opensuse.org/Standards/One_Click_Install" xmlns="http://opensuse.org/Standards/One_Click_Install">
+  <group>
+    <repositories>
+      <repository recommended="true">
+        <name>X11:sax</name>
+        <summary>openSUSE Advanced X Configuration Utility v 3</summary>
+        <description>SaX3 is a tool to configure the X11 system based on the XOrg version developed by freedesktop.org. The program comes with an easy to use Qt, GTK and ncurses based GUI system to setup the most important features X provides. The user is now able to setup the system according to his needs using the GUI system. Its the successor to SaX2 but a whole lot different</description>
+        <url>http://download.opensuse.org/repositories/X11:/sax/openSUSE_12.1/</url>
+      </repository>
+      <repository recommended="false">
+        <name>openSUSE:12.1</name>
+        <summary>openSUSE 12.1 </summary>
+        <description>
+</description>
+        <url>http://download.opensuse.org/distribution/12.1/repo/oss/</url>
+      </repository>
+    </repositories>
+    <software>
+      <item>
+        <name>sax3</name>
+        <summary>A Graphical Configuration Tool for X</summary>
+        <description>A graphical utility for configuring X server settings. It can run without X with a graphical interface.
+
+Authors:
+_______
+Manu Gupta
+Michal Hrusecky</description>
+      </item>
+    </software>
+  </group>
+</metapackage>
