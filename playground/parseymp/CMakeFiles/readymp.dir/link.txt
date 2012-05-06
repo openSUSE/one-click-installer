@@ -1,1 +1,0 @@
-/usr/bin/c++       CMakeFiles/readymp.dir/main.cpp.o CMakeFiles/readymp.dir/package.cpp.o CMakeFiles/readymp.dir/repository.cpp.o  -o readymp -rdynamic -lQtGui -lQtCore -lzypp 
