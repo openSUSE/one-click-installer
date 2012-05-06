@@ -1,26 +1,29 @@
-#include <iostream>
-#include <QApplication>
-#include <QXmlStreamReader>
-#include <QFile>
-#include <QList>
+#include "xmlparse.h"
 #include <QDebug>
-#include <QStringList>
-#include "repository.h"
-#include "package.h"
-#include <QUrl>
-#include <zypp/RepoManager.h>
+#include <QFile>
 
-int main(int argc,char *argv[])
+XMLParse::XMLParse(const QString& ympfile)
 {
-	QApplication app(argc,argv);
-	QFile file(argv[1]);
-	QList<Package*> packageList;
-	QList<Repository*> repositoryList;
-	zypp::RepoManager rman;
+	fileName = ympfile;
+}
+
+QList<Package*> XMLParse::packages()
+{
+	return packageList;
+}
+
+QList<Repository*> XMLParse::repositories()
+{
+	return repositoryList;
+}
+
+void XMLParse::parse()
+{
+	QFile file(fileName);
 	if(!file.open(QIODevice::ReadOnly))
 	{
 		qDebug()<<"Could not open File";
-		return 0;
+		return;
 	}
 	QString fileData(file.readAll());
 	//qDebug()<<fileData;
@@ -69,8 +72,7 @@ int main(int argc,char *argv[])
 
 		}	
 	}
-
-
+	
 	while(!xml.atEnd() && !(xml.name()=="software" && xml.isEndElement()))
 	{
 		xml.readNextStartElement();
@@ -93,34 +95,26 @@ int main(int argc,char *argv[])
 			packageList.append(pkg);
 		}
 	}
-	
-	qDebug()<<"***List of Repositories***";
-	foreach(Repository *repo,repositoryList)
+}
+
+void XMLParse::printRepoList()
+{
+	foreach(Repository* repo, repositoryList)
 	{
 		qDebug() << repo->name();
-		qDebug() << repo->recommended();
-		qDebug() << repo->summary();
 		qDebug() << repo->description();
 		qDebug() << repo->url();
-		//Add Repository
-		zypp::RepoInfo repoinfo;
-		std::cout<<"Std Url is "<<repo->url().toStdString()<<std::endl;
-		repoinfo.addBaseUrl(zypp::Url(repo->url().toStdString()));
-		repoinfo.setAlias(repo->url().toStdString());
-		repoinfo.setGpgCheck(false);
-		rman.addRepository(repoinfo);
-		rman.refreshMetadata(repoinfo,zypp::RepoManager::RefreshIfNeeded);
-		rman.buildCache(repoinfo);
-		rman.loadFromCache(repoinfo);
-
+		qDebug() << repo->summary();
+		qDebug() << repo->recommended();
 	}
-	qDebug() << "***List of Packages***" ;
-	foreach(Package *pack,packageList)
+}
+
+void XMLParse::printPackageList()
+{
+	foreach(Package* pack, packageList)
 	{
 		qDebug() << pack->name();
-		qDebug() << pack->summary();
 		qDebug() << pack->description();
+		qDebug() << pack->summary();
 	}
-
-	return 0;
 }
