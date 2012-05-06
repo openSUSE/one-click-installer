@@ -1,4 +1,0 @@
-# Hashes of file build rules.
-c049a9a36bfd1589ea26abd4d06db8a6 moc_firstscreen.cxx
-cbfb4c04a9c04b8a1ebe19863d88a9c4 moc_mainwindow.cxx
-6500fff22d1037af919c0727f54960c3 moc_settings.cxx

@@ -1,1 +1,0 @@
-/usr/bin/c++       CMakeFiles/oneclickui.dir/main.cpp.o CMakeFiles/oneclickui.dir/mainwindow.cpp.o CMakeFiles/oneclickui.dir/firstscreen.cpp.o CMakeFiles/oneclickui.dir/settings.cpp.o CMakeFiles/oneclickui.dir/moc_mainwindow.cxx.o CMakeFiles/oneclickui.dir/moc_firstscreen.cxx.o CMakeFiles/oneclickui.dir/moc_settings.cxx.o  -o oneclickui -rdynamic -lQtGui -lQtCore 
