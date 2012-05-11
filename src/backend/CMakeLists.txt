@@ -5,7 +5,7 @@ find_package(Qt4 REQUIRED)
 include(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS})
 
-set(backend_SOURCES main.cpp package.cpp repository.cpp xmlparse.cpp)
+set(backend_SOURCES package.cpp repository.cpp YmpParser.cpp)
 #add_executable(backend ${QT_LIBRARIES} ${backend_SOURCES})
 
 target_link_libraries(backend ${QT_LIBRARIES})
