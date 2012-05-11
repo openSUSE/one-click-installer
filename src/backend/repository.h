@@ -5,12 +5,6 @@
 
 class Repository
 {
-	private:
-		QString m_recommended;
-		QString m_name;
-		QString m_description;
-		QString m_summary;
-		QString m_url;
 	public:
 		//Repository(QString recommended,QString name,QString summary,QString description,QString url);
 		Repository();
@@ -24,6 +18,12 @@ class Repository
 		void setDescription(QString description);
 		void setSummary(QString summary);
 		void setUrl(QString url);
+	private:
+		QString m_recommended;
+		QString m_name;
+		QString m_description;
+		QString m_summary;
+		QString m_url;
 };
 
 #endif

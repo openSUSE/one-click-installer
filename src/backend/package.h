@@ -5,10 +5,6 @@
 
 class Package
 {
-	private:
-		QString m_name;
-		QString m_summary;
-		QString m_description;
 	public:
 		Package(QString name,QString summary,QString description);
 		Package();
@@ -18,6 +14,10 @@ class Package
 		void setName(QString name);
 		void setSummary(QString summary);
 		void setDescription(QString description);
+	private:
+		QString m_name;
+		QString m_summary;
+		QString m_description;
 };
 
 #endif
