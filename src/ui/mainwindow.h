@@ -12,7 +12,6 @@ class MainWindow : public QDialog
 		MainWindow(QObject *parent = 0);
 	private:
 		QLabel *m_info;
-		QVBoxLayout *m_layout;
 		QWidget *m_stageWidget;	//This will load the corresponding widget to the layout depending on the stage of the installation
 };
 

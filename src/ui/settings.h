@@ -17,7 +17,6 @@ class Settings : public QDialog
 		QCheckBox *m_trust;
 		QPushButton *m_close;
 		QLabel *m_repos;
-		QVBoxLayout *m_mainLayout;
 
 };
 

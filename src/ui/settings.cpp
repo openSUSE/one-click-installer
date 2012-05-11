@@ -3,7 +3,7 @@
 Settings::Settings(QObject *parent)
 {
 	//Create Layouts
-	m_mainLayout = new QVBoxLayout;
+	QVBoxLayout *mainLayout = new QVBoxLayout;
 
 	//Create Interface Elements
 	m_repos = new QLabel("Repository Sources");
@@ -12,12 +12,12 @@ Settings::Settings(QObject *parent)
 	m_close = new QPushButton("Close");
 
 	//Add elements to Layout
-	m_mainLayout->addWidget(m_repos);
-	m_mainLayout->addWidget(m_subscribe);
-	m_mainLayout->addWidget(m_trust);
-	m_mainLayout->addWidget(m_close);
+	mainLayout->addWidget(m_repos);
+	mainLayout->addWidget(m_subscribe);
+	mainLayout->addWidget(m_trust);
+	mainLayout->addWidget(m_close);
 	
-	this->setLayout(m_mainLayout);
-	this->setWindowTitle("One Click Install Settings");
-	this->show();
+	setLayout(mainLayout);
+	setWindowTitle("One Click Install Settings");
+	show();
 }

@@ -3,10 +3,10 @@
 FirstScreen::FirstScreen(QObject *parent)
 {
 	//Create Layouts
-	m_warningLayout = new QVBoxLayout;
-	m_installLayout = new QVBoxLayout;
-	m_buttonLayout = new QHBoxLayout;
-	m_mainLayout = new QVBoxLayout;
+	QVBoxLayout *warningLayout = new QVBoxLayout;
+	QVBoxLayout *installLayout = new QVBoxLayout;
+	QHBoxLayout *buttonLayout = new QHBoxLayout;
+	QVBoxLayout *mainLayout = new QVBoxLayout;
 
 	//Create Interface Elemenets
 	m_warning = new	QLabel("This is a warning Message");	//This should be done only if repositories to be added need to be trusted
@@ -18,21 +18,21 @@ FirstScreen::FirstScreen(QObject *parent)
 	m_install = new QPushButton("Install");
 
 	//Add Elements to corresponding Layouts;
-	m_warningLayout->addWidget(m_warning);
-	m_warningLayout->addWidget(m_trust);
-	m_buttonLayout->addWidget(m_settings);
-	m_buttonLayout->addWidget(m_cancel);
-	m_buttonLayout->addWidget(m_install);
+	warningLayout->addWidget(m_warning);
+	warningLayout->addWidget(m_trust);
+	buttonLayout->addWidget(m_settings);
+	buttonLayout->addWidget(m_cancel);
+	buttonLayout->addWidget(m_install);
 
-	m_mainLayout->addLayout(m_warningLayout);
-	m_mainLayout->addLayout(m_installLayout);
-	m_mainLayout->addLayout(m_buttonLayout);
+	mainLayout->addLayout(warningLayout);
+	mainLayout->addLayout(installLayout);
+	mainLayout->addLayout(buttonLayout);
 
 	//Signal Slot connections
 	QObject::connect(m_settings,SIGNAL(clicked()),this,SLOT(showSettings()));
 
-	this->setLayout(m_mainLayout);
-	this->show();
+	setLayout(mainLayout);
+	show();
 }
 
 void FirstScreen::showSettings()

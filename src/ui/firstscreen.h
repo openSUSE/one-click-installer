@@ -16,10 +16,6 @@ class FirstScreen : public QWidget
 	private:
 		QLabel *m_warning;
 		QPushButton *m_trust;
-		QVBoxLayout *m_warningLayout;
-		QVBoxLayout *m_installLayout;
-		QHBoxLayout *m_buttonLayout;
-		QVBoxLayout *m_mainLayout;
 		QPushButton *m_settings;
 		QPushButton *m_cancel;
 		QPushButton *m_install;
