@@ -12,8 +12,8 @@ class YmpParser
 	public:
 		YmpParser(const QString& ympfile);
 		void parse();
-		QList<Package*> packages();
-		QList<Repository*> repositories();
+		QList<Package*> packages() const;
+		QList<Repository*> repositories() const;
 		void printRepoList();
 		void printPackageList();
 	private:

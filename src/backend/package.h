@@ -8,9 +8,9 @@ class Package
 	public:
 		Package(QString name,QString summary,QString description);
 		Package();
-		QString name();
-		QString summary();
-		QString description();
+		QString name() const;
+		QString summary() const;
+		QString description() const;
 		void setName(QString name);
 		void setSummary(QString summary);
 		void setDescription(QString description);

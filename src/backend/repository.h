@@ -8,11 +8,11 @@ class Repository
 	public:
 		//Repository(QString recommended,QString name,QString summary,QString description,QString url);
 		Repository();
-		QString name();
-		QString description();
-		QString summary();
-		QString url();
-		QString recommended();
+		QString name() const;
+		QString description() const;
+		QString summary() const;
+		QString url() const;
+		QString recommended() const;
 		void setRecommended(QString recommmended);
 		void setName(QString name);
 		void setDescription(QString description);

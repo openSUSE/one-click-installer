@@ -7,12 +7,12 @@ YmpParser::YmpParser(const QString& ympfile)
 	fileName = ympfile;
 }
 
-QList<Package*> YmpParser::packages()
+QList<Package*> YmpParser::packages() const
 {
 	return packageList;
 }
 
-QList<Repository*> YmpParser::repositories()
+QList<Repository*> YmpParser::repositories() const
 {
 	return repositoryList;
 }

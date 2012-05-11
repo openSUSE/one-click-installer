@@ -11,17 +11,17 @@ Package::Package()
 {
 }
 
-QString Package::name()
+QString Package::name() const
 {
 	return m_name;
 }
 
-QString Package::summary()
+QString Package::summary() const
 {
 	return m_summary;
 }
 
-QString Package::description()
+QString Package::description() const
 {
 	return m_description;
 }

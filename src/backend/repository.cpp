@@ -13,27 +13,27 @@ Repository::Repository()
 {
 }
 
-QString Repository::recommended()
+QString Repository::recommended() const
 {
 	return m_recommended;
 }
 
-QString Repository::name()
+QString Repository::name() const
 {
 	return m_name;
 }
 
-QString Repository::summary()
+QString Repository::summary() const
 {
 	return m_summary;
 }
 
-QString Repository::description()
+QString Repository::description() const
 {
 	return m_description;
 }
 
-QString Repository::url()
+QString Repository::url() const
 {
 	return m_url;
 }
