@@ -11,9 +11,9 @@ class Package
 		QString name() const;
 		QString summary() const;
 		QString description() const;
-		void setName(QString name);
-		void setSummary(QString summary);
-		void setDescription(QString description);
+		void setName(const QString& name);
+		void setSummary(const QString& summary);
+		void setDescription(const QString& description);
 	private:
 		QString m_name;
 		QString m_summary;

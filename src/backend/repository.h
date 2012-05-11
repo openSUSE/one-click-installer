@@ -13,11 +13,11 @@ class Repository
 		QString summary() const;
 		QString url() const;
 		QString recommended() const;
-		void setRecommended(QString recommmended);
-		void setName(QString name);
-		void setDescription(QString description);
-		void setSummary(QString summary);
-		void setUrl(QString url);
+		void setRecommended(const QString& recommmended);
+		void setName(const QString& name);
+		void setDescription(const QString& description);
+		void setSummary(const QString& summary);
+		void setUrl(const QString& url);
 	private:
 		QString m_recommended;
 		QString m_name;

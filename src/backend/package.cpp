@@ -26,17 +26,17 @@ QString Package::description() const
 	return m_description;
 }
 
-void Package::setName(QString name)
+void Package::setName(const QString& name)
 {
 	m_name = name;
 }
 
-void Package::setSummary(QString summary)
+void Package::setSummary(const QString& summary)
 {
 	m_summary = summary;
 }
 
-void Package::setDescription(QString description)
+void Package::setDescription(const QString& description)
 {
 	m_description = description;
 }

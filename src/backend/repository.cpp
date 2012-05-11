@@ -38,27 +38,27 @@ QString Repository::url() const
 	return m_url;
 }
 
-void Repository::setName(QString name)
+void Repository::setName(const QString& name)
 {
 	m_name = name;
 }
 
-void Repository::setRecommended(QString recommended)
+void Repository::setRecommended(const QString& recommended)
 {
 	m_recommended = recommended;
 }
 
-void Repository::setSummary(QString summary)
+void Repository::setSummary(const QString& summary)
 {
 	m_summary = summary;
 }
 
-void Repository::setDescription(QString description)
+void Repository::setDescription(const QString& description)
 {
 	m_description = description;
 }
 
-void Repository::setUrl(QString url)
+void Repository::setUrl(const QString& url)
 {
 	m_url = url;
 }
