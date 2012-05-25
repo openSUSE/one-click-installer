@@ -3,6 +3,7 @@
 
 #include <QString>
 
+namespace OCI{
 class Package
 {
 	public:
@@ -18,6 +19,7 @@ class Package
 		QString m_name;
 		QString m_summary;
 		QString m_description;
+};
 };
 
 #endif

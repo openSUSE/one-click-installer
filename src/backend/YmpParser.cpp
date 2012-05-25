@@ -2,22 +2,22 @@
 #include <QDebug>
 #include <QFile>
 
-YmpParser::YmpParser(const QString& ympfile)
+OCI::YmpParser::YmpParser(const QString& ympfile)
 {
 	fileName = ympfile;
 }
 
-QList<Package*> YmpParser::packages() const
+QList<OCI::Package*> OCI::YmpParser::packages() const
 {
 	return packageList;
 }
 
-QList<Repository*> YmpParser::repositories() const
+QList<OCI::Repository*> OCI::YmpParser::repositories() const
 {
 	return repositoryList;
 }
 
-void YmpParser::parse()
+void OCI::YmpParser::parse()
 {
 	QFile file(fileName);
 	if(!file.open(QIODevice::ReadOnly))
@@ -34,7 +34,7 @@ void YmpParser::parse()
 		xml.readNextStartElement();
 		if(xml.name()=="repository" && !xml.isEndElement())
 		{
-			Repository *repo = new Repository;
+			OCI::Repository *repo = new OCI::Repository;
 			//Set whether recommended or not
 			repo->setRecommended(xml.attributes().value("recommended").toString());
 
@@ -78,7 +78,7 @@ void YmpParser::parse()
 		xml.readNextStartElement();
 		if(xml.name()=="name" && !xml.isEndElement())
 		{
-			Package *pkg = new Package;
+			OCI::Package *pkg = new Package;
 			//Read Element Text
 			pkg->setName(xml.readElementText());
 
@@ -97,9 +97,9 @@ void YmpParser::parse()
 	}
 }
 
-void YmpParser::printRepoList()
+void OCI::YmpParser::printRepoList()
 {
-	foreach(Repository* repo, repositoryList)
+	foreach(OCI::Repository* repo, repositoryList)
 	{
 		qDebug() << repo->name();
 		qDebug() << repo->description();
@@ -109,9 +109,9 @@ void YmpParser::printRepoList()
 	}
 }
 
-void YmpParser::printPackageList()
+void OCI::YmpParser::printPackageList()
 {
-	foreach(Package* pack, packageList)
+	foreach(OCI::Package* pack, packageList)
 	{
 		qDebug() << pack->name();
 		qDebug() << pack->description();

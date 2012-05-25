@@ -7,19 +7,20 @@
 #include "package.h"
 #include "repository.h"
 
+namespace OCI{
 class YmpParser
 {
 	public:
 		YmpParser(const QString& ympfile);
 		void parse();
-		QList<Package*> packages() const;
-		QList<Repository*> repositories() const;
+		QList<OCI::Package*> packages() const;
+		QList<OCI::Repository*> repositories() const;
 		void printRepoList();
 		void printPackageList();
 	private:
-		QList<Package*> packageList;
-		QList<Repository*> repositoryList;
+		QList<OCI::Package*> packageList;
+		QList<OCI::Repository*> repositoryList;
 		QString fileName;
 };
-
+};
 #endif

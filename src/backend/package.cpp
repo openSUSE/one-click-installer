@@ -7,36 +7,36 @@
 	m_description = description;
 }*/
 
-Package::Package()
+OCI::Package::Package()
 {
 }
 
-QString Package::name() const
+QString OCI::Package::name() const
 {
 	return m_name;
 }
 
-QString Package::summary() const
+QString OCI::Package::summary() const
 {
 	return m_summary;
 }
 
-QString Package::description() const
+QString OCI::Package::description() const
 {
 	return m_description;
 }
 
-void Package::setName(const QString& name)
+void OCI::Package::setName(const QString& name)
 {
 	m_name = name;
 }
 
-void Package::setSummary(const QString& summary)
+void OCI::Package::setSummary(const QString& summary)
 {
 	m_summary = summary;
 }
 
-void Package::setDescription(const QString& description)
+void OCI::Package::setDescription(const QString& description)
 {
 	m_description = description;
 }

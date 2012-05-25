@@ -3,6 +3,8 @@
 
 #include <QString>
 
+namespace OCI{
+
 class Repository
 {
 	public:
@@ -25,5 +27,5 @@ class Repository
 		QString m_summary;
 		QString m_url;
 };
-
+};
 #endif

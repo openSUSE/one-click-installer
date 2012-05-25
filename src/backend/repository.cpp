@@ -9,56 +9,56 @@
 	m_url = url;
 }*/
 
-Repository::Repository()
+OCI::Repository::Repository()
 {
 }
 
-QString Repository::recommended() const
+QString OCI::Repository::recommended() const
 {
 	return m_recommended;
 }
 
-QString Repository::name() const
+QString OCI::Repository::name() const
 {
 	return m_name;
 }
 
-QString Repository::summary() const
+QString OCI::Repository::summary() const
 {
 	return m_summary;
 }
 
-QString Repository::description() const
+QString OCI::Repository::description() const
 {
 	return m_description;
 }
 
-QString Repository::url() const
+QString OCI::Repository::url() const
 {
 	return m_url;
 }
 
-void Repository::setName(const QString& name)
+void OCI::Repository::setName(const QString& name)
 {
 	m_name = name;
 }
 
-void Repository::setRecommended(const QString& recommended)
+void OCI::Repository::setRecommended(const QString& recommended)
 {
 	m_recommended = recommended;
 }
 
-void Repository::setSummary(const QString& summary)
+void OCI::Repository::setSummary(const QString& summary)
 {
 	m_summary = summary;
 }
 
-void Repository::setDescription(const QString& description)
+void OCI::Repository::setDescription(const QString& description)
 {
 	m_description = description;
 }
 
-void Repository::setUrl(const QString& url)
+void OCI::Repository::setUrl(const QString& url)
 {
 	m_url = url;
 }
