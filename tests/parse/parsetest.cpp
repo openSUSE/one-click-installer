@@ -13,4 +13,3 @@ void ParseTest::parse()
 }
 
 QTEST_MAIN(ParseTest)
-#include "parsetest.moc"
