@@ -3,7 +3,7 @@
 
 void ParseTest::parse()
 {
-	OCI::YmpParser parser("geany.ymp");
+	OCI::YmpParser parser("/home/saurabh/workspace/oneclick/tests/parse/geany.ymp");
 	parser.parse();
 	QList<OCI::Package*> packageList = parser.packages();
 	QList<OCI::Repository*> repositoryList = parser.repositories();
