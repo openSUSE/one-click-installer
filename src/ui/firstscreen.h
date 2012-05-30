@@ -20,7 +20,7 @@ class FirstScreen : public QWidget
 		QPushButton *m_cancel;
 		QPushButton *m_install;
 	public:
-		FirstScreen(QObject *parent = 0);
+		FirstScreen( QObject *parent = 0 );
 	private slots:
 		void showSettings();
 

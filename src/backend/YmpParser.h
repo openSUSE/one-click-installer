@@ -11,16 +11,16 @@ namespace OCI{
 class YmpParser
 {
 	public:
-		YmpParser(const QString& ympfile);
+		YmpParser( const QString& ympfile );
 		void parse();
-		QList<OCI::Package*> packages() const;
-		QList<OCI::Repository*> repositories() const;
+		QList< OCI::Package* > packages() const;
+		QList< OCI::Repository* > repositories() const;
 		void printRepoList();
 		void printPackageList();
 	private:
-		QList<OCI::Package*> packageList;
-		QList<OCI::Repository*> repositoryList;
+		QList< OCI::Package* > packageList;
+		QList< OCI::Repository* > repositoryList;
 		QString fileName;
 };
-};
+}
 #endif
