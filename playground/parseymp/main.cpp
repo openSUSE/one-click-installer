@@ -125,12 +125,25 @@ int main( int argc,char *argv[] )
 		qDebug() << pack->summary();
 		qDebug() << pack->description();
 	}
-
-	zypp::ResPoolProxy selectablePool( zypp::ResPool::instance().proxy() );
-	zypp::ui::Selectable::Ptr s = zypp::ui::Selectable::get( zypp::ResKind::package,packageList.at(0)->name().toStdString() );
-	for_(avail_it,s->availableBegin(), s->availableEnd() ){
-		s->setCandidate( *avail_it );
-		s->setToInstall( zypp::ResStatus::USER );
+        bool ret = false;
+        zypp::Resolvable::Kind kind = zypp::ResKind::package;
+        zypp::Arch architecture( "x86_64" );
+        std::string version_str = "1.0";
+        zypp::ZYpp::Ptr zypp_pointer = zypp::getZYpp();
+        zypp_pointer->initializeTarget( "/" );
+        zypp::ResPoolProxy selectablePool( zypp::ResPool::instance().proxy() );
+	zypp::ui::Selectable::Ptr s = zypp::ui::Selectable::get( "geany" );
+        if ( !s ) {
+            std::cout<<"Nothing is there\n";
+            return 0;;
+        }
+        zypp::PoolItem p = s->candidateObj();
+        for_( avail_it, s->availableBegin(), s->availableEnd()){
+            zypp::Resolvable::constPtr res = p.resolvable();
+	    s->setCandidate( p );
+	    ret = s->setToInstall( zypp::ResStatus::USER );
 	}
+        zypp::ZYppCommitPolicy policy;
+        zypp_pointer->commit(policy);
 	return 0;
 }
