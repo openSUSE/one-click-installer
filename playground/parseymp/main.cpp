@@ -132,7 +132,7 @@ int main( int argc,char *argv[] )
         zypp::ZYpp::Ptr zypp_pointer = zypp::getZYpp();
         zypp_pointer->initializeTarget( "/" );
         zypp::ResPoolProxy selectablePool( zypp::ResPool::instance().proxy() );
-	zypp::ui::Selectable::Ptr s = zypp::ui::Selectable::get( "geany" );
+	zypp::ui::Selectable::Ptr s = zypp::ui::Selectable::get( packageList.at( 0 )->name().toStdString() );
         if ( !s ) {
             std::cout<<"Nothing is there\n";
             return 0;;
