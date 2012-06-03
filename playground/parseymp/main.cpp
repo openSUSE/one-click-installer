@@ -28,7 +28,20 @@ namespace zypp
 int main( int argc,char *argv[] )
 {
 	QApplication app( argc,argv );
-	QFile file( argv[1] );
+        QFile file;
+        bool addrepo = false;
+        if ( argv[1] == "" && argv[2] == "") {
+            std::cout<<"--Usage--"<<std::endl<<"./readymp [--addrepo] <ymp filename>"<<std::endl;
+            return 0;
+        }
+        if ( QString( argv[1] ) == QString( "--addrepo" ) ) {
+            file.setFileName( argv[2] );
+            std::cout<<argv[2];
+            addrepo = true;
+        } else {
+            file.setFileName( argv[1] );
+            std::cout<<argv[1];
+        }
 	QList< Package* > packageList;
 	QList< Repository* > repositoryList;
 	zypp::RepoManager rman;
@@ -108,15 +121,17 @@ int main( int argc,char *argv[] )
 		qDebug() << repo->description();
 		qDebug() << repo->url();
 		//Add Repository
-		/*zypp::RepoInfo repoinfo;
-		std::cout<<"Std Url is "<<repo->url().toStdString()<<std::endl;
-		repoinfo.addBaseUrl(zypp::Url(repo->url().toStdString()));
-		repoinfo.setAlias(repo->url().toStdString());
-		repoinfo.setGpgCheck(false);
-		rman.addRepository(repoinfo);
-		rman.refreshMetadata(repoinfo,zypp::RepoManager::RefreshIfNeeded);
-		rman.buildCache(repoinfo);
-		rman.loadFromCache(repoinfo);*/
+		if ( addrepo == true){
+                    zypp::RepoInfo repoinfo;
+		    std::cout<<"Std Url is "<<repo->url().toStdString()<<std::endl;
+		    repoinfo.addBaseUrl(zypp::Url(repo->url().toStdString()));
+		    repoinfo.setAlias(repo->url().toStdString());
+		    repoinfo.setGpgCheck(false);
+		    rman.addRepository(repoinfo);
+		    rman.refreshMetadata(repoinfo,zypp::RepoManager::RefreshIfNeeded);
+		    rman.buildCache(repoinfo);
+		    rman.loadFromCache(repoinfo);
+                }
 
 	}
 	qDebug() << "***List of Packages***" ;
