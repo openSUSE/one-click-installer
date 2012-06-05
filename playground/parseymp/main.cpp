@@ -162,24 +162,39 @@ int main( int argc,char *argv[] )
         zypp::ZYpp::Ptr zypp_pointer = zypp::getZYpp();
         zypp_pointer->initializeTarget( "/" );
         zypp::ResPoolProxy selectablePool( zypp::ResPool::instance().proxy() );
-	zypp::ui::Selectable::Ptr s = zypp::ui::Selectable::get( "geany" );
+	zypp::ui::Selectable::Ptr s = zypp::ui::Selectable::get( packageList.at( 0 )->name().toStdString() );
         if ( !s ) {
             std::cout<<"Nothing is there\n";
             return 0;;
         }
         qDebug()<<"*****PRINTING POOL*********";
         foreach( const zypp::PoolItem &pi , zypp::ResPool::instance() ) {
-            std::cout<<pi<<std::endl;
+            //std::cout<<pi<<std::endl;
         } 
         zypp::PoolItem p = s->candidateObj();
+        std::cout<<"GRRRR "<<std::endl<<p<<std::endl;
         /*for_( avail_it, s->availableBegin(), s->availableEnd()){
             zypp::Resolvable::constPtr res = p.resolvable();
 	    s->setCandidate( p );
 	    ret = s->setToInstall( zypp::ResStatus::USER );
-	}*/
+	}
         s->setCandidate( p );
-        ret = s->setToInstall( zypp::ResStatus::USER );
+        ret = s->setToBeInstalled( zypp::ResStatus::USER );*/
+        zypp::ResPool pool = zypp::ResPool::instance();
+        p.status().setToBeInstalled( zypp::ResStatus::USER );
+        std::cout<<p.status()<<std::endl;
+        /*foreach (zypp::PoolItem pi,pool) {
+            std::cout<<pi<<std::endl;
+        }
+
+        for (zypp::ResPool::byName_iterator it = pool.byNameBegin( "geany" ) ; it!=pool.byNameEnd( "geany" ) ; it++ ) {
+            it->status().setToBeInstalled( zypp::ResStatus::USER );
+        }*/
+
         zypp::ZYppCommitPolicy policy;
+        policy.restrictToMedia( 0 );
+        policy.downloadMode( zypp::DownloadInHeaps );
+        policy.syncPoolAfterCommit( true );
         zypp::ZYppCommitResult result = zypp_pointer->commit( policy );
 	if ( result.allDone() ) {
             std::cout<<"Installation done"<<std::endl;
