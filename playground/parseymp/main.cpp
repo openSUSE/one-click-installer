@@ -182,6 +182,18 @@ int main( int argc,char *argv[] )
         ret = s->setToBeInstalled( zypp::ResStatus::USER );*/
         zypp::ResPool pool = zypp::ResPool::instance();
         p.status().setToBeInstalled( zypp::ResStatus::USER );
+        
+        //Resolving Dependencies
+
+        bool rres= false;
+        rres = zypp::ResPool::instance().resolver().resolvePool();
+        if ( !rres ) {
+            std::cout<<std::endl<<"Failed to Resolve Pool"<<std::endl;
+        } else {
+            std::cout<<"Resolved Pool"<<std::endl;
+        }
+        
+        
         std::cout<<p.status()<<std::endl;
         /*foreach (zypp::PoolItem pi,pool) {
             std::cout<<pi<<std::endl;
