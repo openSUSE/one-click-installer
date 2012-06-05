@@ -125,7 +125,7 @@ int main( int argc,char *argv[] )
 		qDebug() << repo->description();
 		qDebug() << repo->url();
 		//Add Repository
-		if ( addrepo == true){
+		if ( addrepo ){
                     zypp::RepoInfo repoinfo;
                     repos << repoinfo;
 		    std::cout<<"Std Url is "<<repo->url().toStdString()<<std::endl;
@@ -171,7 +171,7 @@ int main( int argc,char *argv[] )
         foreach( const zypp::PoolItem &pi , zypp::ResPool::instance() ) {
             //std::cout<<pi<<std::endl;
         } 
-        zypp::PoolItem p = s->candidateObj();
+        zypp::PoolItem p = s->highestAvailableVersionObj();
         std::cout<<"GRRRR "<<std::endl<<p<<std::endl;
         /*for_( avail_it, s->availableBegin(), s->availableEnd()){
             zypp::Resolvable::constPtr res = p.resolvable();
