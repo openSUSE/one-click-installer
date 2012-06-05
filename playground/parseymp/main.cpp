@@ -19,6 +19,8 @@
 #include <zypp/base/Regex.h>
 #include <zypp/sat/WhatProvides.h>
 #include <zypp/ZYppFactory.h>
+#include <zypp/misc/DefaultLoadSystem.h>
+#include "keyring.h"
 
 namespace zypp
 {
@@ -29,6 +31,8 @@ int main( int argc,char *argv[] )
 {
 	QApplication app( argc,argv );
         QFile file;
+        QList<zypp::RepoInfo> repos;
+        static zypp::KeyRingCallbacks keyring_callbacks;
         bool addrepo = false;
         if ( argv[1] == "" && argv[2] == "") {
             std::cout<<"--Usage--"<<std::endl<<"./readymp [--addrepo] <ymp filename>"<<std::endl;
@@ -123,14 +127,16 @@ int main( int argc,char *argv[] )
 		//Add Repository
 		if ( addrepo == true){
                     zypp::RepoInfo repoinfo;
+                    repos << repoinfo;
 		    std::cout<<"Std Url is "<<repo->url().toStdString()<<std::endl;
 		    repoinfo.addBaseUrl(zypp::Url(repo->url().toStdString()));
 		    repoinfo.setAlias(repo->url().toStdString());
-		    repoinfo.setGpgCheck(false);
-		    rman.addRepository(repoinfo);
+                    repoinfo.setGpgCheck(false);
+		    //rman.addRepository(repoinfo);
 		    rman.refreshMetadata(repoinfo,zypp::RepoManager::RefreshIfNeeded);
 		    rman.buildCache(repoinfo);
 		    rman.loadFromCache(repoinfo);
+                    std::cout<<std::endl<<"ALIAS IS "<<repoinfo.alias()<<std::endl;
                 }
 
 	}
@@ -142,23 +148,41 @@ int main( int argc,char *argv[] )
 	}
         bool ret = false;
         zypp::Resolvable::Kind kind = zypp::ResKind::package;
-        zypp::Arch architecture( "x86_64" );
-        std::string version_str = "1.0";
+        //zypp::Arch architecture( "x86_64" );
+        //std::string version_str = "1.0";
+        //zypp::ZYpp::Ptr zypp_pointer = zypp::getZYpp();
+        //try {
+            //zypp::target::rpm::RpmDb rpmd;
+            //zypp_pointer->initializeTarget( "/" );
+        //}
+        //catch( zypp::Exception &excpt ) {
+        //    std::cout<<excpt.msg().c_str()<<std::endl;
+        //}
+        zypp::misc::defaultLoadSystem( "/" );
         zypp::ZYpp::Ptr zypp_pointer = zypp::getZYpp();
         zypp_pointer->initializeTarget( "/" );
         zypp::ResPoolProxy selectablePool( zypp::ResPool::instance().proxy() );
-	zypp::ui::Selectable::Ptr s = zypp::ui::Selectable::get( packageList.at( 0 )->name().toStdString() );
+	zypp::ui::Selectable::Ptr s = zypp::ui::Selectable::get( "geany" );
         if ( !s ) {
             std::cout<<"Nothing is there\n";
             return 0;;
         }
+        qDebug()<<"*****PRINTING POOL*********";
+        foreach( const zypp::PoolItem &pi , zypp::ResPool::instance() ) {
+            std::cout<<pi<<std::endl;
+        } 
         zypp::PoolItem p = s->candidateObj();
-        for_( avail_it, s->availableBegin(), s->availableEnd()){
+        /*for_( avail_it, s->availableBegin(), s->availableEnd()){
             zypp::Resolvable::constPtr res = p.resolvable();
 	    s->setCandidate( p );
 	    ret = s->setToInstall( zypp::ResStatus::USER );
-	}
+	}*/
+        s->setCandidate( p );
+        ret = s->setToInstall( zypp::ResStatus::USER );
         zypp::ZYppCommitPolicy policy;
-        zypp_pointer->commit(policy);
-	return 0;
+        zypp::ZYppCommitResult result = zypp_pointer->commit( policy );
+	if ( result.allDone() ) {
+            std::cout<<"Installation done"<<std::endl;
+        }
+        return 0;
 }
