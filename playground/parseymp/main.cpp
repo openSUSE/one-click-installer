@@ -159,7 +159,7 @@ int main( int argc,char *argv[] )
         //catch( zypp::Exception &excpt ) {
         //    std::cout<<excpt.msg().c_str()<<std::endl;
         //}
-        /*zypp::misc::defaultLoadSystem( "/" );
+        zypp::misc::defaultLoadSystem( "/" );
         zypp::ZYpp::Ptr zypp_pointer = zypp::getZYpp();
         zypp_pointer->initializeTarget( "/" );
         zypp::ResPoolProxy selectablePool( zypp::ResPool::instance().proxy() );
@@ -174,19 +174,19 @@ int main( int argc,char *argv[] )
         } 
         zypp::PoolItem p = s->highestAvailableVersionObj();
         std::cout<<"GRRRR "<<std::endl<<p<<std::endl;
-        **for_( avail_it, s->availableBegin(), s->availableEnd()){
+        /*for_( avail_it, s->availableBegin(), s->availableEnd()){
             zypp::Resolvable::constPtr res = p.resolvable();
 	    s->setCandidate( p );
 	    ret = s->setToInstall( zypp::ResStatus::USER );
-	}
+	}*/
         s->setCandidate( p );
-        ret = s->setToBeInstalled( zypp::ResStatus::USER );*/
-        //zypp::ResPool pool = zypp::ResPool::instance();
-        //p.status().setToBeInstalled( zypp::ResStatus::USER );
+        //ret = s->setToInstall( zypp::ResStatus::USER );
+        zypp::ResPool pool = zypp::ResPool::instance();
+        p.status().setToBeInstalled( zypp::ResStatus::USER );
         
         //Resolving Dependencies
 
-        /*bool rres= false;
+        bool rres= false;
         rres = zypp::ResPool::instance().resolver().resolvePool();
         if ( !rres ) {
             std::cout<<std::endl<<"Failed to Resolve Pool"<<std::endl;
@@ -196,7 +196,7 @@ int main( int argc,char *argv[] )
         
         
         std::cout<<p.status()<<std::endl;
-        **foreach (zypp::PoolItem pi,pool) {
+        /*foreach (zypp::PoolItem pi,pool) {
             std::cout<<pi<<std::endl;
         }
 
@@ -204,13 +204,13 @@ int main( int argc,char *argv[] )
             it->status().setToBeInstalled( zypp::ResStatus::USER );
         }*/
 
-        /*zypp::ZYppCommitPolicy policy;
+        zypp::ZYppCommitPolicy policy;
         policy.restrictToMedia( 0 );
         policy.downloadMode( zypp::DownloadInHeaps );
         policy.syncPoolAfterCommit( true );
         zypp::ZYppCommitResult result = zypp_pointer->commit( policy );
 	if ( result.allDone() ) {
             std::cout<<"Installation done"<<std::endl;
-        }*/
+        }
         return 0;
 }
