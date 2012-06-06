@@ -11,32 +11,38 @@ Package::Package()
 {
 }
 
-QString Package::name()
+QString
+Package::name()
 {
 	return m_name;
 }
 
-QString Package::summary()
+QString
+Package::summary()
 {
 	return m_summary;
 }
 
-QString Package::description()
+QString
+Package::description()
 {
 	return m_description;
 }
 
-void Package::setName(QString name)
+void
+Package::setName( QString name )
 {
 	m_name = name;
 }
 
-void Package::setSummary(QString summary)
+void
+Package::setSummary( QString summary )
 {
 	m_summary = summary;
 }
 
-void Package::setDescription(QString description)
+void
+Package::setDescription( QString description )
 {
 	m_description = description;
 }

@@ -13,52 +13,62 @@ Repository::Repository()
 {
 }
 
-QString Repository::recommended()
+QString
+Repository::recommended()
 {
 	return m_recommended;
 }
 
-QString Repository::name()
+QString
+Repository::name()
 {
 	return m_name;
 }
 
-QString Repository::summary()
+QString
+Repository::summary()
 {
 	return m_summary;
 }
 
-QString Repository::description()
+QString
+Repository::description()
 {
 	return m_description;
 }
 
-QString Repository::url()
+QString
+Repository::url()
 {
 	return m_url;
 }
 
-void Repository::setName(QString name)
+void
+Repository::setName( QString name )
 {
 	m_name = name;
 }
 
-void Repository::setRecommended(QString recommended)
+void
+Repository::setRecommended( QString recommended )
 {
 	m_recommended = recommended;
 }
 
-void Repository::setSummary(QString summary)
+void
+Repository::setSummary( QString summary )
 {
 	m_summary = summary;
 }
 
-void Repository::setDescription(QString description)
+void
+Repository::setDescription( QString description )
 {
 	m_description = description;
 }
 
-void Repository::setUrl(QString url)
+void
+Repository::setUrl( QString url )
 {
 	m_url = url;
 }

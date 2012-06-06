@@ -19,11 +19,11 @@ class Repository
 		QString summary();
 		QString url();
 		QString recommended();
-		void setRecommended(QString recommmended);
-		void setName(QString name);
-		void setDescription(QString description);
-		void setSummary(QString summary);
-		void setUrl(QString url);
+		void setRecommended( QString recommmended );
+		void setName( QString name );
+		void setDescription( QString description );
+		void setSummary( QString summary );
+		void setUrl( QString url );
 };
 
 #endif

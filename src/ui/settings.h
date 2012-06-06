@@ -10,7 +10,7 @@
 class Settings : public QDialog
 {
 	public:
-		Settings(QObject *parent = 0);
+		Settings( QObject *parent = 0 );
 	private:
 		QPushButton *m_confirm;
 		QCheckBox *m_subscribe;
