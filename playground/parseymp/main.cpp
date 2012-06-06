@@ -33,6 +33,7 @@ int main( int argc,char *argv[] )
         QFile file;
         QList<zypp::RepoInfo> repos;
         static zypp::KeyRingCallbacks keyring_callbacks;
+        //zypp::KeyRing::setDefaultAccept( zypp::KeyRing::ACCEPT_UNKNOWNKEY );
         bool addrepo = false;
         if ( argv[1] == "" && argv[2] == "") {
             std::cout<<"--Usage--"<<std::endl<<"./readymp [--addrepo] <ymp filename>"<<std::endl;
@@ -131,8 +132,8 @@ int main( int argc,char *argv[] )
 		    std::cout<<"Std Url is "<<repo->url().toStdString()<<std::endl;
 		    repoinfo.addBaseUrl(zypp::Url(repo->url().toStdString()));
 		    repoinfo.setAlias(repo->url().toStdString());
-                    repoinfo.setGpgCheck(false);
-		    //rman.addRepository(repoinfo);
+                    repoinfo.setGpgCheck(true);
+		    rman.addRepository(repoinfo);
 		    rman.refreshMetadata(repoinfo,zypp::RepoManager::RefreshIfNeeded);
 		    rman.buildCache(repoinfo);
 		    rman.loadFromCache(repoinfo);
@@ -158,7 +159,7 @@ int main( int argc,char *argv[] )
         //catch( zypp::Exception &excpt ) {
         //    std::cout<<excpt.msg().c_str()<<std::endl;
         //}
-        zypp::misc::defaultLoadSystem( "/" );
+        /*zypp::misc::defaultLoadSystem( "/" );
         zypp::ZYpp::Ptr zypp_pointer = zypp::getZYpp();
         zypp_pointer->initializeTarget( "/" );
         zypp::ResPoolProxy selectablePool( zypp::ResPool::instance().proxy() );
@@ -173,19 +174,19 @@ int main( int argc,char *argv[] )
         } 
         zypp::PoolItem p = s->highestAvailableVersionObj();
         std::cout<<"GRRRR "<<std::endl<<p<<std::endl;
-        /*for_( avail_it, s->availableBegin(), s->availableEnd()){
+        **for_( avail_it, s->availableBegin(), s->availableEnd()){
             zypp::Resolvable::constPtr res = p.resolvable();
 	    s->setCandidate( p );
 	    ret = s->setToInstall( zypp::ResStatus::USER );
 	}
         s->setCandidate( p );
         ret = s->setToBeInstalled( zypp::ResStatus::USER );*/
-        zypp::ResPool pool = zypp::ResPool::instance();
-        p.status().setToBeInstalled( zypp::ResStatus::USER );
+        //zypp::ResPool pool = zypp::ResPool::instance();
+        //p.status().setToBeInstalled( zypp::ResStatus::USER );
         
         //Resolving Dependencies
 
-        bool rres= false;
+        /*bool rres= false;
         rres = zypp::ResPool::instance().resolver().resolvePool();
         if ( !rres ) {
             std::cout<<std::endl<<"Failed to Resolve Pool"<<std::endl;
@@ -195,7 +196,7 @@ int main( int argc,char *argv[] )
         
         
         std::cout<<p.status()<<std::endl;
-        /*foreach (zypp::PoolItem pi,pool) {
+        **foreach (zypp::PoolItem pi,pool) {
             std::cout<<pi<<std::endl;
         }
 
@@ -203,13 +204,13 @@ int main( int argc,char *argv[] )
             it->status().setToBeInstalled( zypp::ResStatus::USER );
         }*/
 
-        zypp::ZYppCommitPolicy policy;
+        /*zypp::ZYppCommitPolicy policy;
         policy.restrictToMedia( 0 );
         policy.downloadMode( zypp::DownloadInHeaps );
         policy.syncPoolAfterCommit( true );
         zypp::ZYppCommitResult result = zypp_pointer->commit( policy );
 	if ( result.allDone() ) {
             std::cout<<"Installation done"<<std::endl;
-        }
+        }*/
         return 0;
 }
