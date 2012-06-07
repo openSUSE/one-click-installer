@@ -4,7 +4,7 @@ find_package(Qt4 REQUIRED)
 add_definitions(${QT_DEFINITIONS})
 include(${QT_USE_FILE})
 
-set(ParseTest_SRCS parsetest.cpp YmpParser.cpp package.cpp repository.cpp)
+set(ParseTest_SRCS parsetest.cpp ../../src/backend/package.cpp ../../src/backend/repository.cpp ../../src/backend/YmpParser.cpp)
 set(ParseTest_HEADERS parsetest.h)
 QT4_WRAP_CPP(ParseTest_HEADERS_MOC ${ParseTest_HEADERS})
 ADD_EXECUTABLE(ParseTest ${ParseTest_SRCS} ${ParseTest_HEADERS_MOC})

@@ -1,9 +1,9 @@
 #ifndef PARSETEST_H
 #define PARSETEST_H
 
-#include "YmpParser.h"
-#include "repository.h"
-#include "package.h"
+#include "../../src/backend/YmpParser.h"
+#include "../../src/backend/repository.h"
+#include "../../src/backend/package.h"
 
 class ParseTest : public QObject
 {
