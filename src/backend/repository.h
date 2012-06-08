@@ -2,6 +2,8 @@
 #define REPOSITORY_H
 
 #include <QString>
+#include <zypp/RepoInfo.h>
+#include <zypp/RepoManager.h>
 
 namespace OCI{
 
@@ -20,6 +22,7 @@ class Repository
 		void setDescription( const QString& description );
 		void setSummary( const QString& summary );
 		void setUrl( const QString& url );
+		void addRepository();
 	private:
 		QString m_recommended;
 		QString m_name;

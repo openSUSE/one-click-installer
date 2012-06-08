@@ -1,4 +1,5 @@
 #include <QtTest/QTest>
+#include <QDebug>
 #include "keyringtest.h"
 
 void
@@ -9,7 +10,7 @@ KeyRingTest::checkKeyRing()
     OCI::Repository repo;
     repo.setUrl( baseUrl );
     repo.addRepository();
-    QCOMPARE( keyringcallbacks.exists(),true );
+    QVERIFY( keyringcallbacks.exists() == true );
 }
 
 QTEST_MAIN( KeyRingTest )

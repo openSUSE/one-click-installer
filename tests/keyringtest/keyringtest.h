@@ -2,8 +2,8 @@
 #define KEYRINGTEST_H
 
 #include <QObject>
-#include "repository.h"
-#include "keyringcallbacks.h"
+#include "../../src/backend/repository.h"
+#include "../../src/backend/keyringcallbacks.h"
 
 class KeyRingTest : public QObject
 {
