@@ -173,7 +173,6 @@ int main( int argc,char *argv[] )
             //std::cout<<pi<<std::endl;
         } 
         zypp::PoolItem p = s->highestAvailableVersionObj();
-        std::cout<<"GRRRR "<<std::endl<<p<<std::endl;
         /*for_( avail_it, s->availableBegin(), s->availableEnd()){
             zypp::Resolvable::constPtr res = p.resolvable();
 	    s->setCandidate( p );
