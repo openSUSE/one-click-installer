@@ -6,8 +6,11 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QComboBox>
+#include <QCheckBox>
 #include <QHBoxLayout>
 
+#include "../../src/backend/FakeBackend.h"
+#include "../../src/backend/AbstractBackend.h"
 #include "settings.h"
 
 class FirstScreen : public QWidget
@@ -20,7 +23,7 @@ class FirstScreen : public QWidget
 		QPushButton *m_cancel;
 		QPushButton *m_install;
 	public:
-		FirstScreen( QObject *parent = 0 );
+		FirstScreen( AbstractBackend *backend ,QObject *parent = 0 );
 	private slots:
 		void showSettings();
 
