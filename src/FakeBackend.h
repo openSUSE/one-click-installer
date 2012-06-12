@@ -4,19 +4,20 @@
 #include "PackageBackend.h"
 #include <QList>
 #include <QString>
+#include <QWidget>
+#include <QMessageBox>
 
 class FakeBackend : public PackageBackend
 {
     public:
-    FakeBackend();
+    FakeBackend( QWidget* main );
     virtual void addRepository( const QString& url  );
     virtual bool performInstallation();
     virtual bool resolveConflicts();
+    bool m_allTrusted;
 
     private:
-    QList< QString > packageList;
-    QList< QString > repoList;
-    bool m_allTrusted;
+    QWidget *m_main;
 };
 
 #endif

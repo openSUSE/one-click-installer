@@ -1,6 +1,6 @@
 #include "firstscreen.h"
 
-FirstScreen::FirstScreen( PackageBackend *backend, QObject *parent )
+FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObject *parent )
 {
 	//Create Layouts
 	QVBoxLayout *warningLayout = new QVBoxLayout;
@@ -30,9 +30,19 @@ FirstScreen::FirstScreen( PackageBackend *backend, QObject *parent )
 
 	//Signal Slot connections
 	QObject::connect( m_settings,SIGNAL( clicked() ),this, SLOT( showSettings() ) );
-
 	setLayout( mainLayout );
-	show();
+
+        //Parse YMP File
+        OCI::YmpParser parser( filename );
+        parser.parse();
+        QList< OCI::Package* > packages = parser.packages();
+        QList< OCI::Repository* > repos = parser.repositories();
+        QString rl = "";
+        foreach ( OCI::Repository* iter, repos ) {
+            rl.append( iter->url() );
+        }
+        backend->addRepository( rl  );
+        show();
 }
 
 void

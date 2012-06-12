@@ -11,7 +11,10 @@
 
 #include "FakeBackend.h"
 #include "PackageBackend.h"
+#include "YmpParser.h"
 #include "settings.h"
+#include "package.h"
+#include "repository.h"
 
 class FirstScreen : public QWidget
 {
@@ -23,7 +26,7 @@ class FirstScreen : public QWidget
 		QPushButton *m_cancel;
 		QPushButton *m_install;
 	public:
-		FirstScreen( PackageBackend *backend ,QObject *parent = 0 );
+		FirstScreen( PackageBackend *backend , const QString& filename, QObject *parent = 0 );
 	private slots:
 		void showSettings();
 
