@@ -9,8 +9,8 @@
 #include <QCheckBox>
 #include <QHBoxLayout>
 
-#include "../../src/backend/FakeBackend.h"
-#include "../../src/backend/AbstractBackend.h"
+#include "FakeBackend.h"
+#include "PackageBackend.h"
 #include "settings.h"
 
 class FirstScreen : public QWidget
@@ -23,7 +23,7 @@ class FirstScreen : public QWidget
 		QPushButton *m_cancel;
 		QPushButton *m_install;
 	public:
-		FirstScreen( AbstractBackend *backend ,QObject *parent = 0 );
+		FirstScreen( PackageBackend *backend ,QObject *parent = 0 );
 	private slots:
 		void showSettings();
 

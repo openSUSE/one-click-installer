@@ -6,8 +6,8 @@
 #include <QVBoxLayout>
 #include <QList>
 #include "firstscreen.h"
-#include "../../src/backend/FakeBackend.h"
-#include "../../src/backend/AbstractBackend.h"
+#include "FakeBackend.h"
+#include "PackageBackend.h"
 
 class MainWindow : public QDialog
 {
@@ -16,7 +16,7 @@ class MainWindow : public QDialog
 	private:
 		QLabel *m_info;
 		QWidget *m_stageWidget;	//This will load the corresponding widget to the layout depending on the stage of the installation
-                AbstractBackend *backend;
+                PackageBackend *backend;
 };
 
 #endif

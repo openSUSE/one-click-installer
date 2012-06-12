@@ -1,16 +1,12 @@
 #include "firstscreen.h"
 
-FirstScreen::FirstScreen( AbstractBackend *backend, QObject *parent )
+FirstScreen::FirstScreen( PackageBackend *backend, QObject *parent )
 {
 	//Create Layouts
 	QVBoxLayout *warningLayout = new QVBoxLayout;
 	QVBoxLayout *installLayout = new QVBoxLayout;
 	QHBoxLayout *buttonLayout = new QHBoxLayout;
 	QVBoxLayout *mainLayout = new QVBoxLayout;
-
-	//Get List of Packages and Repos
-        QList< QString > packageList = backend->packages();
-        QList< QString > repoList = backend->repos();
         
         //Create Interface Elemenets
 	m_warning = new	QLabel( "This is a warning Message" );	//This should be done only if repositories to be added need to be trusted
@@ -29,14 +25,6 @@ FirstScreen::FirstScreen( AbstractBackend *backend, QObject *parent )
 	buttonLayout->addWidget( m_install );
 
 	mainLayout->addLayout( warningLayout );
-        mainLayout->addWidget( new QLabel( "Adding Sources:" ) );
-        foreach (QString repo, repoList) {
-            mainLayout->addWidget( new QLabel( repo  ) );
-        }
-        mainLayout->addWidget( new QLabel( "Installing Packages:" ) );
-        foreach (QString package, packageList) {
-            mainLayout->addWidget( new QLabel( package ) );
-        }
 	mainLayout->addLayout( installLayout );
 	mainLayout->addLayout( buttonLayout );
 
