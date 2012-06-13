@@ -31,6 +31,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
 	//Signal Slot connections
 	QObject::connect( m_settings,SIGNAL( clicked() ),this, SLOT( showSettings() ) );
 	setLayout( mainLayout );
+        show();
 
         //Parse YMP File
         OCI::YmpParser parser( filename );
@@ -42,7 +43,6 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
             rl.append( iter->url() );
         }
         backend->addRepository( rl  );
-        show();
 }
 
 void
