@@ -29,11 +29,13 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
 	mainLayout->addLayout( buttonLayout );
 
 	//Signal Slot connections
-	QObject::connect( m_settings,SIGNAL( clicked() ),this, SLOT( showSettings() ) );
+	QObject::connect( m_settings, SIGNAL( clicked() ), this, SLOT( showSettings() ) );
+	QObject::connect( m_install, SIGNAL( clicked() ), this, SLOT( performInstallation() ) );
 	setLayout( mainLayout );
         show();
 
         //Parse YMP File
+	m_backend = backend;
         OCI::YmpParser parser( filename );
         parser.parse();
         QList< OCI::Package* > packages = parser.packages();
@@ -42,11 +44,22 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
         foreach ( OCI::Repository* iter, repos ) {
             rl.append( iter->url() );
         }
-        backend->addRepository( rl  );
+	foreach ( OCI::Package* iter, packages ) {
+		pack << iter->name();
+	}
+
+	//Add Repository
+        m_backend->addRepository( rl  );
 }
 
 void
 FirstScreen::showSettings()
 {
 	new Settings();
+}
+
+void
+FirstScreen::performInstallation()
+{
+	m_backend->performInstallation( pack );
 }

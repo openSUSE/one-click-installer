@@ -12,7 +12,7 @@ class FakeBackend : public PackageBackend
     public:
     FakeBackend( QWidget* main );
     virtual void addRepository( const QString& url  );
-    virtual bool performInstallation();
+    virtual bool performInstallation( const QList< QString >& pack  );
     virtual bool resolveConflicts();
     bool m_allTrusted;
 

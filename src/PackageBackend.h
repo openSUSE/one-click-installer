@@ -7,7 +7,7 @@ class PackageBackend
 {
     public:
     virtual void addRepository( const QString& url  ) = 0;
-    virtual bool performInstallation() = 0;
+    virtual bool performInstallation( const QList< QString >& pack) = 0;
     virtual bool resolveConflicts() = 0;
 };
 
