@@ -19,6 +19,8 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
 	m_cancel = new QPushButton( "Cancel" );
 	m_install = new QPushButton( "Install" );
 
+	m_install->setEnabled( false );
+
 	//Add Elements to corresponding Layouts;
 	warningLayout->addWidget( m_warning );
 	warningLayout->addWidget( m_trust );
