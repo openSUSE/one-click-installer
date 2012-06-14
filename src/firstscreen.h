@@ -26,7 +26,6 @@ class FirstScreen : public QWidget
 		QPushButton *m_cancel;
 		QPushButton *m_install;
 		PackageBackend *m_backend;
-		QList< QString > pack;
 	public:
 		FirstScreen( PackageBackend *backend , const QString& filename, QObject *parent = 0 );
 	private slots:

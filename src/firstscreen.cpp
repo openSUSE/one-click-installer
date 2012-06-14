@@ -40,16 +40,16 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
         parser.parse();
         QList< OCI::Package* > packages = parser.packages();
         QList< OCI::Repository* > repos = parser.repositories();
-        QString rl = "";
-        foreach ( OCI::Repository* iter, repos ) {
-            rl.append( iter->url() );
-        }
+
 	foreach ( OCI::Package* iter, packages ) {
-		pack << iter->name();
+		m_backend->performInstallation( iter->name() );
 	}
 
 	//Add Repository
-        m_backend->addRepository( rl  );
+	foreach( OCI::Repository* iter, repos){
+        	m_backend->setToAddRepository( QUrl( iter->url() ) );
+	}
+	static_cast< FakeBackend* >( m_backend )->addRepositories();
 }
 
 void
@@ -61,5 +61,5 @@ FirstScreen::showSettings()
 void
 FirstScreen::performInstallation()
 {
-	m_backend->performInstallation( pack );
+	static_cast< FakeBackend* >( m_backend )->installPackages();
 }
