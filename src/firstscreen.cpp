@@ -7,6 +7,8 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
 	QVBoxLayout *installLayout = new QVBoxLayout;
 	QHBoxLayout *buttonLayout = new QHBoxLayout;
 	QVBoxLayout *mainLayout = new QVBoxLayout;
+	QVBoxLayout *repoLayout = new QVBoxLayout;
+	QVBoxLayout * packageLayout = new QVBoxLayout;
         
         //Create Interface Elemenets
 	m_warning = new	QLabel( "This is a warning Message" );	//This should be done only if repositories to be added need to be trusted
@@ -25,6 +27,8 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
 	buttonLayout->addWidget( m_install );
 
 	mainLayout->addLayout( warningLayout );
+	mainLayout->addLayout( repoLayout );
+	mainLayout->addLayout( packageLayout );
 	mainLayout->addLayout( installLayout );
 	mainLayout->addLayout( buttonLayout );
 
@@ -40,14 +44,20 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
         parser.parse();
         QList< OCI::Package* > packages = parser.packages();
         QList< OCI::Repository* > repos = parser.repositories();
-
+	
+	packageLayout->addWidget( new QLabel( "The following packages will be installed:" ) );
 	foreach ( OCI::Package* iter, packages ) {
 		m_backend->performInstallation( iter->name() );
+		QCheckBox *checkPackage = new QCheckBox( iter->name() );
+		packageLayout->addWidget( checkPackage );
 	}
 
 	//Add Repository
+	repoLayout->addWidget( new QLabel( "The following repositories will be added: " ) );
 	foreach( OCI::Repository* iter, repos){
         	m_backend->setToAddRepository( QUrl( iter->url() ) );
+		QCheckBox *checkRepo = new QCheckBox( iter->url() );
+		repoLayout->addWidget( checkRepo );
 	}
 	static_cast< FakeBackend* >( m_backend )->addRepositories();
 }
