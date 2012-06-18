@@ -12,6 +12,9 @@
 class MainWindow : public QDialog
 {
 	public:
+		/**
+		 	Default Constructor taking the YMP file as argument
+		 */
 		MainWindow( const QString& filename, QObject *parent = 0 );
 	private:
 		QLabel *m_info;

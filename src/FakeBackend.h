@@ -13,7 +13,14 @@
 class FakeBackend : public PackageBackend
 {
     public:
+    /**
+    	Default Constructor
+     */
     FakeBackend( QWidget* main );
+
+    /**
+    	Fake implementation of the install function
+     */
     void install();
 
     private:

@@ -26,9 +26,19 @@ class FirstScreen : public QWidget
 		QPushButton *m_install;
 		PackageBackend *m_backend;
 	public:
+		/**
+			Default constructor taking the backend, and the filename as argument
+		 */
 		FirstScreen( PackageBackend *backend , const QString& filename, QObject *parent = 0 );
 	private slots:
+		/**
+		 	Shows the Settings dialog
+		 */
 		void showSettings();
+
+		/**
+		 	Triggers the installation when the Install software button is clicked
+		 */
 		void performInstallation();
 };
 
