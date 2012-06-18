@@ -19,7 +19,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
 	m_cancel = new QPushButton( "Cancel" );
 	m_install = new QPushButton( "Install" );
 
-	m_install->setEnabled( false );
+	m_install->setEnabled( true );
 
 	//Add Elements to corresponding Layouts;
 	warningLayout->addWidget( m_warning );
@@ -49,7 +49,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
 	
 	packageLayout->addWidget( new QLabel( "The following packages will be installed:" ) );
 	foreach ( OCI::Package* iter, packages ) {
-		m_backend->performInstallation( iter->name() );
+		m_backend->addPackage( iter->name() );
 		QCheckBox *checkPackage = new QCheckBox( iter->name() );
 		packageLayout->addWidget( checkPackage );
 	}
@@ -57,11 +57,10 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
 	//Add Repository
 	repoLayout->addWidget( new QLabel( "The following repositories will be added: " ) );
 	foreach( OCI::Repository* iter, repos){
-        	m_backend->setToAddRepository( QUrl( iter->url() ) );
+        	m_backend->addRepository( QUrl( iter->url() ) );
 		QCheckBox *checkRepo = new QCheckBox( iter->url() );
 		repoLayout->addWidget( checkRepo );
 	}
-	static_cast< FakeBackend* >( m_backend )->addRepositories();
 }
 
 void
@@ -73,5 +72,5 @@ FirstScreen::showSettings()
 void
 FirstScreen::performInstallation()
 {
-	static_cast< FakeBackend* >( m_backend )->installPackages();
+	 m_backend->install();
 }
