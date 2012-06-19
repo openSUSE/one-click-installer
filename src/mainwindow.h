@@ -19,7 +19,7 @@ class MainWindow : public QDialog
 	private:
 		QLabel *m_info;
 		QWidget *m_stageWidget;	//This will load the corresponding widget to the layout depending on the stage of the installation
-                PackageBackend *backend;
+                PackageBackend *m_backend;
 };
 
 #endif
