@@ -8,8 +8,19 @@ class KeyRingCallbacks{
     private:
         zypp::KeyRingReceive _keyRingReport;
     public:
-        KeyRingCallbacks();
+        /**
+		Default Constructor
+	 */
+	KeyRingCallbacks();
+
+	/**
+		Destructor
+	 */
         ~KeyRingCallbacks();
+
+	/**
+		Returns whether the Keyring exists or not
+	 */
         bool exists();
 };
 }

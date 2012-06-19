@@ -10,6 +10,9 @@
 class Settings : public QDialog
 {
 	public:
+		/**
+		 	Constructor for the Settings dialog
+		 */
 		Settings( QObject *parent = 0 );
 	private:
 		QPushButton *m_confirm;

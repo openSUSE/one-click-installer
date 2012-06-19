@@ -14,7 +14,10 @@ namespace zypp{
 struct KeyRingReceive : public zypp::callback::ReceiveReport<zypp::KeyRingReport>
 {
     bool keyRingExists;
-    
+   
+   /**
+   	Get the Keyring and Ask the user to accept it
+    */ 
     virtual KeyRingReport::KeyTrust askUserToAcceptKey( const PublicKey &key, const zypp::KeyContext& context )
     {
         keyRingExists = false;
@@ -35,29 +38,14 @@ struct KeyRingReceive : public zypp::callback::ReceiveReport<zypp::KeyRingReport
         return KeyRingReport::KEY_TRUST_AND_IMPORT;
     }
 
+    /**
+     	Returns whether the Keyring has been found or not
+     */
     bool exists(){
         return keyRingExists;
     }
 
 };
-/*
-class KeyRingCallbacks{
-    private:
-        zypp::KeyRingReceive _keyRingReport;
-    public:
-        KeyRingCallbacks()
-        {
-            _keyRingReport.connect();
-        }
-        ~KeyRingCallbacks()
-        {
-            _keyRingReport.disconnect();
-        }
-        bool exists()
-        {
-			return _keyRingReport.exists();
-		}
-};*/
 }
 
 #endif
