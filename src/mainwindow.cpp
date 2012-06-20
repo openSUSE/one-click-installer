@@ -6,9 +6,9 @@ MainWindow::MainWindow( const QString& filename, QObject *parent)
 	QVBoxLayout *mainLayout = new QVBoxLayout;
 
         //Set up the backend
-        backend = new FakeBackend( this );
+        m_backend = new FakeBackend( this );
 
-	m_stageWidget = new FirstScreen( backend, filename );
+        m_stageWidget = new FirstScreen( m_backend, filename );
 	mainLayout->addWidget( m_info );
 	mainLayout->addWidget( m_stageWidget );
 	setLayout( mainLayout );
