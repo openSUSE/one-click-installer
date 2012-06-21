@@ -25,6 +25,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
 	warningLayout->addWidget( m_warning );
 	warningLayout->addWidget( m_trust );
 	buttonLayout->addWidget( m_settings );
+        buttonLayout->addSpacing( 100 );
 	buttonLayout->addWidget( m_cancel );
 	buttonLayout->addWidget( m_install );
 
