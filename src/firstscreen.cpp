@@ -23,8 +23,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
 	m_settings = new QPushButton( "Settings" );
         m_cancel = new QPushButton( "Cancel" );
 	m_install = new QPushButton( "Install" );
-
-	m_install->setEnabled( true );
+        m_install->setEnabled( false );
 
 	//Add Elements to corresponding Layouts;
 	warningLayout->addWidget( m_warning );
@@ -44,6 +43,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
 	QObject::connect( m_settings, SIGNAL( clicked() ), this, SLOT( showSettings() ) );
 	QObject::connect( m_install, SIGNAL( clicked() ), this, SLOT( performInstallation() ) );
         QObject::connect( m_cancel, SIGNAL(clicked()), parent, SLOT(deleteLater()) );
+        QObject::connect( m_trust, SIGNAL(clicked()), this, SLOT(trust()) );
 	setLayout( mainLayout );
         show();
 
@@ -80,4 +80,14 @@ void
 FirstScreen::performInstallation()
 {
 	 m_backend->install();
+}
+
+void
+FirstScreen::trust()
+{
+    /*
+      Add code to trust repositories
+    */
+
+    m_install->setEnabled( true );
 }

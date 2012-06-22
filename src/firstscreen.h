@@ -40,6 +40,11 @@ class FirstScreen : public QWidget
 		 	Triggers the installation when the Install software button is clicked
 		 */
 		void performInstallation();
+
+                /**
+                        Trusts the repositories, and enables the Install Button
+                 */
+                void trust();
 };
 
 
