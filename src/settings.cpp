@@ -18,6 +18,18 @@ Settings::Settings( QObject *parent )
 	mainLayout->addWidget( m_close );
 	
 	setLayout( mainLayout );
-	setWindowTitle( "One Click Install Settings" );
+        setWindowTitle( "One Click Install Settings" );
 	show();
+
+        QObject::connect( m_close, SIGNAL(clicked()), this, SLOT( saveSettingsAndClose()) );
+}
+
+void
+Settings::saveSettingsAndClose()
+{
+    /*
+      Add Code here to save settings
+     */
+
+    close();
 }

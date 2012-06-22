@@ -6,7 +6,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
         QWidget *repoWidget = new QWidget;
         QWidget *packageWidget = new QWidget;
         QHBoxLayout *warningLayout = new QHBoxLayout( warningWidget );
-        warningWidget->setStyleSheet( "background-color: rgb(255, 170, 127)" );
+        warningWidget->setStyleSheet( "background-color: rgb(255, 170, 127);" );
         repoWidget->setStyleSheet( "background-color : white" );
         packageWidget->setStyleSheet( "background-color : white" );
 	QVBoxLayout *installLayout = new QVBoxLayout;
@@ -17,8 +17,8 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
         
         //Create Interface Elemenets
 	m_warning = new	QLabel( "This is a warning Message" );	//This should be done only if repositories to be added need to be trusted
-	m_trust = new QPushButton( "Trust" );		// Same as above
-        m_trust->setStyleSheet( "background-color : white" );
+        m_trust = new QPushButton( "Trust" );		// Same as above
+        //m_trust->setStyleSheet( "background-color : white" );
 	
 	m_settings = new QPushButton( "Settings" );
         m_cancel = new QPushButton( "Cancel" );
