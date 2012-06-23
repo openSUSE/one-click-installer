@@ -25,7 +25,10 @@ class FirstScreen : public QWidget
 		QPushButton *m_cancel;
 		QPushButton *m_install;
 		PackageBackend *m_backend;
-	public:
+                QLabel *m_moreDetails;
+                bool m_detailsVisible;
+
+                public:
 		/**
 			Default constructor taking the backend, and the filename as argument
 		 */
@@ -43,8 +46,13 @@ class FirstScreen : public QWidget
 
                 /**
                         Trusts the repositories, and enables the Install Button
-                 */
+                */
                 void trust();
+
+                /**
+                        More Details on untrusted repositories
+                */
+                void untrusedRepoDetails( QString link);
 };
 
 

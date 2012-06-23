@@ -16,8 +16,10 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
         QVBoxLayout * packageLayout = new QVBoxLayout( packageWidget );
         
         //Create Interface Elemenets
-	m_warning = new	QLabel( "This is a warning Message" );	//This should be done only if repositories to be added need to be trusted
+        m_warning = new	QLabel( "This is a warning Message" );	//This should be done only if repositories to be added need to be trusted
+        m_moreDetails = new QLabel( "<a href = \"#\">Click to view more details</a>" );
         m_trust = new QPushButton( "Trust" );		// Same as above
+        m_trust->setStyleSheet( "QPushButton{ color : black; background-color : white; }" );
         //m_trust->setStyleSheet( "background-color : white" );
 	
 	m_settings = new QPushButton( "Settings" );
@@ -26,8 +28,9 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
         m_install->setEnabled( false );
 
 	//Add Elements to corresponding Layouts;
-	warningLayout->addWidget( m_warning );
-	warningLayout->addWidget( m_trust );
+        warningLayout->addWidget( m_warning );
+        warningLayout->addWidget( m_trust );
+        warningLayout->addWidget( m_moreDetails );
 	buttonLayout->addWidget( m_settings );
         buttonLayout->addSpacing( 100 );
 	buttonLayout->addWidget( m_cancel );
@@ -44,6 +47,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
 	QObject::connect( m_install, SIGNAL( clicked() ), this, SLOT( performInstallation() ) );
         QObject::connect( m_cancel, SIGNAL(clicked()), parent, SLOT(deleteLater()) );
         QObject::connect( m_trust, SIGNAL(clicked()), this, SLOT(trust()) );
+        QObject::connect( m_moreDetails, SIGNAL( linkActivated( QString) ), this, SLOT( untrusedRepoDetails(QString) ) );
 	setLayout( mainLayout );
         show();
 
@@ -68,6 +72,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
 		QCheckBox *checkRepo = new QCheckBox( iter->url() );
 		repoLayout->addWidget( checkRepo );
 	}
+        m_detailsVisible = false;
 }
 
 void
@@ -90,4 +95,16 @@ FirstScreen::trust()
     */
 
     m_install->setEnabled( true );
+}
+
+void
+FirstScreen::untrusedRepoDetails( QString link )
+{
+    if( !m_detailsVisible ){
+        QLabel *gpgKeyName = new QLabel( "Name: " );
+        QLabel *fingerprint = new QLabel( "Fingerprint: " );
+        m_trust->parentWidget()->layout()->addWidget( gpgKeyName );
+        m_trust->parentWidget()->layout()->addWidget( fingerprint );
+        m_detailsVisible = true;
+    }
 }
