@@ -14,6 +14,9 @@
 #include "settings.h"
 #include "package.h"
 #include "repository.h"
+#include "installscreen.h"
+
+class MainWindow;
 
 class FirstScreen : public QWidget
 {
@@ -26,13 +29,14 @@ class FirstScreen : public QWidget
 		QPushButton *m_install;
 		PackageBackend *m_backend;
                 QLabel *m_moreDetails;
+                QWidget *m_stageWidget;
                 bool m_detailsVisible;
 
                 public:
 		/**
 			Default constructor taking the backend, and the filename as argument
 		 */
-		FirstScreen( PackageBackend *backend , const QString& filename, QObject *parent = 0 );
+                FirstScreen( PackageBackend *backend, QWidget* stageWidget, const QString& filename, QObject *parent = 0 );
 	private slots:
 		/**
 		 	Shows the Settings dialog

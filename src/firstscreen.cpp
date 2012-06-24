@@ -1,6 +1,6 @@
 #include "firstscreen.h"
 
-FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObject *parent )
+FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const QString& filename, QObject *parent )
 {
         QWidget *warningWidget = new QWidget;
         QWidget *repoWidget = new QWidget;
@@ -51,6 +51,8 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& filename, QObj
 	setLayout( mainLayout );
         show();
 
+        m_stageWidget = this;
+
         //Parse YMP File
 	m_backend = backend;
         OCI::YmpParser parser( filename );
@@ -85,6 +87,10 @@ void
 FirstScreen::performInstallation()
 {
 	 m_backend->install();
+         m_stageWidget->hide();
+         InstallScreen *installer = new InstallScreen( m_backend );
+         m_stageWidget->parentWidget()->layout()->addWidget( installer );
+         m_stageWidget = installer;
 }
 
 void
@@ -93,7 +99,6 @@ FirstScreen::trust()
     /*
       Add code to trust repositories
     */
-
     m_install->setEnabled( true );
 }
 
