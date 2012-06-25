@@ -2,12 +2,6 @@
 #define PACKAGE_H
 
 #include <QString>
-#include <zypp/ZYppFactory.h>
-#include <zypp/ZYppCommit.h>
-#include <zypp/misc/DefaultLoadSystem.h>
-#include <zypp/ResPool.h>
-#include <zypp/ResStatus.h>
-#include <zypp/ResFilters.h>
 #include <QDebug>
 
 namespace OCI {
@@ -48,9 +42,6 @@ public:
     Sets the description for the package
     */
     void setDescription( const QString& description );
-
-    void installPackage( const zypp::ZYpp::Ptr& zypp_pointer );
-    bool isInstalled();
 private:
         QString m_name;
         QString m_summary;

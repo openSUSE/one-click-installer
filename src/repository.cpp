@@ -53,13 +53,3 @@ void OCI::Repository::setUrl( const QString& url )
 {
 	m_url = url;
 }
-
-void OCI::Repository::addRepository()
-{
-    zypp::RepoInfo repo;
-    zypp::RepoManager rman;
-    repo.addBaseUrl( zypp::Url( url().toStdString() ) );
-    repo.setAlias( url().toStdString() );
-    repo.setGpgCheck( true );
-    rman.addRepository( repo );
-}

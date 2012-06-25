@@ -22,7 +22,7 @@ private:
     QLabel *m_installStatus;
     QLabel *m_sources;
     QPushButton *m_cancel;
-    ssPackageBackend *m_backend;
+    PackageBackend *m_backend;
 };
 
 #endif

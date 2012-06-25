@@ -9,7 +9,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
     warningWidget->setStyleSheet( "background-color: rgb(255, 170, 127);" );
     repoWidget->setStyleSheet( "background-color : white" );
     packageWidget->setStyleSheet( "background-color : white" );
-    VBoxLayout *installLayout = new QVBoxLayout;
+    QVBoxLayout *installLayout = new QVBoxLayout;
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     QVBoxLayout *mainLayout = new QVBoxLayout;
     QVBoxLayout *repoLayout = new QVBoxLayout( repoWidget );
