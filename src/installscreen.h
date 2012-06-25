@@ -15,14 +15,14 @@
 
 class InstallScreen : public QWidget
 {
-	Q_OBJECT
-	public:
-		InstallScreen( PackageBackend *backend,  QObject *parent = 0 );
-	private:
-		QLabel *m_installStatus;
-		QLabel *m_sources;
-		QPushButton *m_cancel;
-		PackageBackend *m_backend;
+    Q_OBJECT
+public:
+    InstallScreen( PackageBackend *backend,  QObject *parent = 0 );
+private:
+    QLabel *m_installStatus;
+    QLabel *m_sources;
+    QPushButton *m_cancel;
+    ssPackageBackend *m_backend;
 };
 
 #endif

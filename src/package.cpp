@@ -1,54 +1,40 @@
 #include "package.h"
 
-/*Package::Package(QString name,QString summary,QString description)
-{
-	m_name = name;
-	m_summary = summary;
-	m_description = description;
-}*/
-
 OCI::Package::Package()
 {
 }
 
-QString
-OCI::Package::name() const
+QString OCI::Package::name() const
 {
-	return m_name;
+    return m_name;
 }
 
-QString
-OCI::Package::summary() const
+QString OCI::Package::summary() const
 {
-	return m_summary;
+    return m_summary;
 }
 
-QString
-OCI::Package::description() const
+QString OCI::Package::description() const
 {
-	return m_description;
+    return m_description;
 }
 
-void
-OCI::Package::setName( const QString& name )
+void OCI::Package::setName( const QString& name )
 {
-	m_name = name;
+    m_name = name;
 }
 
-void
-OCI::Package::setSummary( const QString& summary )
+void OCI::Package::setSummary( const QString& summary )
 {
-	m_summary = summary;
+    m_summary = summary;
 }
 
-void
-OCI::Package::setDescription( const QString& description )
+void OCI::Package::setDescription( const QString& description )
 {
-	m_description = description;
+    m_description = description;
 }
 
-void
-OCI::Package::installPackage( const zypp::ZYpp::Ptr& zypp_pointer )
+void OCI::Package::installPackage( const zypp::ZYpp::Ptr& zypp_pointer )
 {
     bool rres;
     m_status = false;
@@ -65,7 +51,7 @@ OCI::Package::installPackage( const zypp::ZYpp::Ptr& zypp_pointer )
     if ( !rres ) {
         qDebug()<<"Failed to Resolve Pool";
         return;
-    }else {
+    } else {
         qDebug()<<"Pool Resolved";
     }
     zypp::ZYppCommitPolicy policy;
@@ -76,13 +62,12 @@ OCI::Package::installPackage( const zypp::ZYpp::Ptr& zypp_pointer )
     if ( result.allDone() ) {
         qDebug()<<"Installation Completed";
         m_status = true;
-    }else {
+    } else {
         qDebug()<<"Installation Failed";
     }
 }
 
-bool
-OCI::Package::isInstalled()
+bool OCI::Package::isInstalled()
 {
-    return m_status;
+    sreturn m_status;
 }
