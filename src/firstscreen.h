@@ -23,14 +23,11 @@ class FirstScreen : public QWidget
     Q_OBJECT
 private:
     QLabel *m_warning;
-    QPushButton *m_trust;
     QPushButton *m_settings;
     QPushButton *m_cancel;
     QPushButton *m_install;
     PackageBackend *m_backend;
-    QLabel *m_moreDetails;
     QWidget *m_stageWidget;
-    bool m_detailsVisible;
 
 public:
     /**
@@ -48,11 +45,6 @@ private slots:
    Triggers the installation when the Install software button is clicked
    */
     void performInstallation();
-
-    /**
-    Trusts the repositories, and enables the Install Button
-    */
-    void trust();
 
     /**
     More Details on untrusted repositories
