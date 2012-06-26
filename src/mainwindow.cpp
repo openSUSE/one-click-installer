@@ -18,5 +18,6 @@ MainWindow::MainWindow( const QString& filename, QObject *parent)
     mainLayout->addWidget( m_stageWidget );
     setLayout( mainLayout );
     setWindowTitle( "One Click Install" );
+    setWindowIcon( QIcon("res/oneclickinstall.png") );
     show();
 }
