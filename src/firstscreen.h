@@ -7,7 +7,7 @@
 #include <QVBoxLayout>
 #include <QCheckBox>
 #include <QHBoxLayout>
-
+#include <QList>
 #include "FakeBackend.h"
 #include "PackageBackend.h"
 #include "YmpParser.h"
@@ -15,6 +15,7 @@
 #include "package.h"
 #include "repository.h"
 #include "installscreen.h"
+#include "details.h"
 
 class MainWindow;
 
@@ -28,6 +29,8 @@ private:
     QPushButton *m_install;
     PackageBackend *m_backend;
     QWidget *m_stageWidget;
+    QList< QVBoxLayout* > m_repoLayouts;
+    QList< bool > m_visible;
 
 public:
     /**
@@ -50,6 +53,11 @@ private slots:
     More Details on untrusted repositories
     */
     void untrusedRepoDetails( QString link);
+
+    /**
+    Shows Details of Repositories
+    */
+    void showDetails( QString link );
 };
 
 #endif

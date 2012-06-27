@@ -26,11 +26,6 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
     buttonLayout->addSpacing( 100 );
     buttonLayout->addWidget( m_cancel );
     buttonLayout->addWidget( m_install );
-
-    //Signal Slot connections
-    QObject::connect( m_settings, SIGNAL( clicked() ), this, SLOT( showSettings() ) );
-    QObject::connect( m_install, SIGNAL( clicked() ), this, SLOT( performInstallation() ) );
-    QObject::connect( m_cancel, SIGNAL(clicked()), parent, SLOT(deleteLater()) );
     setLayout( mainLayout );
     show();
 
@@ -44,16 +39,23 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
     QList< OCI::Repository* > repos = parser.repositories();
 
     //Add Repository
+    int i = 0;
+    QVBoxLayout *repoDetails;
     foreach( OCI::Repository *iter, repos){
         m_backend->addRepository( QUrl( iter->url() ) );
         QHBoxLayout *sourceInfo = new QHBoxLayout;
+        repoDetails = new QVBoxLayout;
+        m_repoLayouts.append( repoDetails );
+        m_visible.append( false );
         QLabel *repoName = new QLabel( "<b>Source:</b> " + iter->name() );
-        QLabel *detailsLabel = new QLabel( "<a href = \"#\">Show Details</a>" );
-        repoName->setStyleSheet( "background-color : yellow" );
-        detailsLabel->setStyleSheet( "background-color : yellow" );
+        QLabel *detailsLabel = new QLabel( QString("<a href = %1>Show Details</a>").arg( i ) );
+        repoName->setStyleSheet( "background-color: rgb(255, 221, 139);" );
+        detailsLabel->setStyleSheet( "background-color: rgb(255, 221, 139);" );
+        QObject::connect( detailsLabel, SIGNAL( linkActivated(QString) ), this, SLOT( showDetails( QString ) ) );
         sourceInfo->addWidget( repoName );
         sourceInfo->addWidget( detailsLabel );
-        mainLayout->addLayout( sourceInfo );
+        repoDetails->addLayout( sourceInfo );
+        mainLayout->addLayout( repoDetails );
         QVBoxLayout *repoPackages = new QVBoxLayout;
         foreach( OCI::Package *iter, packages ){
             m_backend->addPackage( iter->name() );
@@ -62,7 +64,13 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
             repoPackages->addWidget( checkPackage );
         }
         mainLayout->addLayout( repoPackages );
+        i++;
     }
+
+    //Signal Slot connections
+    QObject::connect( m_settings, SIGNAL( clicked() ), this, SLOT( showSettings() ) );
+    QObject::connect( m_install, SIGNAL( clicked() ), this, SLOT( performInstallation() ) );
+    QObject::connect( m_cancel, SIGNAL(clicked()), parent, SLOT(deleteLater()) );
 
     mainLayout->addLayout( installLayout );
     mainLayout->addWidget( warningWidget );
@@ -81,6 +89,19 @@ void FirstScreen::performInstallation()
     InstallScreen *installer = new InstallScreen( m_backend );
     m_stageWidget->parentWidget()->layout()->addWidget( installer );
     m_stageWidget = installer;
+}
+
+void FirstScreen::showDetails( QString link )
+{
+    if( m_visible.at(link.toInt() ) ){
+
+    } else{
+        qDebug() << link;
+        Details *detailsWidget = new Details( m_backend );
+        qDebug()<<link.toInt();
+        m_repoLayouts.at( link.toInt() )->addWidget( detailsWidget );
+        m_visible.replace( link.toInt(), true);
+    }
 }
 
 void FirstScreen::untrusedRepoDetails( QString link )
