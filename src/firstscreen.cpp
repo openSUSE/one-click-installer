@@ -87,7 +87,7 @@ void FirstScreen::performInstallation()
     m_backend->install();
     m_stageWidget->hide();
     //InstallScreen *installer = new InstallScreen( m_backend );
-    Summary *installSummary = new Summary( m_backend );
+    Summary *installSummary = new Summary( m_backend, m_stageWidget );
     m_stageWidget->parentWidget()->layout()->addWidget( installSummary );
     m_stageWidget = installSummary;
 }

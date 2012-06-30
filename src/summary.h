@@ -8,16 +8,22 @@
 #include <QPushButton>
 #include <QList>
 #include "PackageBackend.h"
+#include "installscreen.h"
 
 class Summary : public QWidget
 {
+    Q_OBJECT
 public:
-    Summary( PackageBackend *backend, QObject *parent = 0 );
+    Summary( PackageBackend *backend, QWidget *stageWidget, QObject *parent = 0 );
 private:
     QTextBrowser *m_installationSummary;
     QPushButton *m_continue;
     QPushButton *m_cancel;
     PackageBackend *m_backend;
+    QWidget *m_stageWidget;
+private slots:
+    void continueInstallation();
+    void cancel();
 };
 
 #endif
