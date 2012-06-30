@@ -49,6 +49,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
         m_visible.append( false );
         QLabel *repoName = new QLabel( "<b>Source:</b> " + iter->name() );
         QLabel *detailsLabel = new QLabel( QString("<a href = %1>Show Details</a>").arg( i ) );
+        m_detailsLabels.replace( i, detailsLabel );
         repoName->setStyleSheet( "background-color: rgb(255, 221, 139);" );
         detailsLabel->setStyleSheet( "background-color: rgb(255, 221, 139);" );
         QObject::connect( detailsLabel, SIGNAL( linkActivated(QString) ), this, SLOT( showDetails( QString ) ) );
@@ -94,14 +95,21 @@ void FirstScreen::performInstallation()
 
 void FirstScreen::showDetails( QString link )
 {
-    if( m_visible.at(link.toInt() ) ){
-
+    int linkNo = link.toInt();
+    if( m_visible.at( linkNo ) ){
+        Details *temp = m_detailsWidgets.at( linkNo );
+        m_detailsWidgets.removeAt( linkNo );
+        delete temp;
+        m_visible.replace( linkNo, false);
+        m_detailsLabels.at( linkNo )->setText( QString( "<a href = %1>Show Details</a>" ).arg( linkNo ) );
     } else{
-        qDebug() << link;
+        qDebug() << linkNo;
         Details *detailsWidget = new Details( m_backend );
-        qDebug()<<link.toInt();
-        m_repoLayouts.at( link.toInt() )->addWidget( detailsWidget );
-        m_visible.replace( link.toInt(), true);
+        qDebug() << linkNo;
+        m_repoLayouts.at( linkNo )->addWidget( detailsWidget );
+        m_detailsWidgets.replace( linkNo, detailsWidget );
+        m_visible.replace( linkNo, true);
+        m_detailsLabels.at( linkNo )->setText( QString( "<a href = %1>Hide Details</a>" ).arg( linkNo ) );
     }
 }
 

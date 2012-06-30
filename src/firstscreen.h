@@ -31,6 +31,8 @@ private:
     PackageBackend *m_backend;
     QWidget *m_stageWidget;
     QList< QVBoxLayout* > m_repoLayouts;
+    QList< Details* > m_detailsWidgets;
+    QList< QLabel* > m_detailsLabels;
     QList< bool > m_visible;
 
 public:
