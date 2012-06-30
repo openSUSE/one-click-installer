@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-MainWindow::MainWindow( const QString& filename, QObject *parent)
+MainWindow::MainWindow( const QString& filename, bool fakeRequested, QObject *parent)
 {
     m_info = new QLabel( "This installer will install and download packages" );
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -10,7 +10,11 @@ MainWindow::MainWindow( const QString& filename, QObject *parent)
     detailsLayout->addWidget( imgView );
     detailsLayout->addWidget( m_info );
     //Set up the backend
-    m_backend = new FakeBackend( this );
+    if( fakeRequested ){
+        m_backend = new FakeBackend( this );
+    } else{
+        m_backend = new Backend;
+    }
     m_firstScreen = new FirstScreen( m_backend, m_stageWidget, filename, this );
     m_stageWidget = m_firstScreen;
     QObject::connect(m_stageWidget, SIGNAL(destroyed()), this, SLOT(close()));
