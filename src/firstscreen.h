@@ -16,6 +16,7 @@
 #include "repository.h"
 #include "installscreen.h"
 #include "details.h"
+#include "summary.h"
 
 class MainWindow;
 

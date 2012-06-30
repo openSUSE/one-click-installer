@@ -86,9 +86,10 @@ void FirstScreen::performInstallation()
 {
     m_backend->install();
     m_stageWidget->hide();
-    InstallScreen *installer = new InstallScreen( m_backend );
-    m_stageWidget->parentWidget()->layout()->addWidget( installer );
-    m_stageWidget = installer;
+    //InstallScreen *installer = new InstallScreen( m_backend );
+    Summary *installSummary = new Summary( m_backend );
+    m_stageWidget->parentWidget()->layout()->addWidget( installSummary );
+    m_stageWidget = installSummary;
 }
 
 void FirstScreen::showDetails( QString link )
