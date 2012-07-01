@@ -34,6 +34,8 @@ private:
     QList< Details* > m_detailsWidgets;
     QList< QLabel* > m_detailsLabels;
     QList< bool > m_visible;
+    QList< OCI::Package* > m_packages;
+    QList< OCI::Repository* > m_repos;
 
 public:
     /**

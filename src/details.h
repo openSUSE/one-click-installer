@@ -9,7 +9,7 @@
 class Details : public QWidget
 {
 public:
-    Details( PackageBackend *backend, QObject *parent = 0 );
+    Details( PackageBackend *backend, QString url, QObject *parent = 0 );
 private:
     PackageBackend *m_backend;
     QLabel *m_url;

@@ -35,13 +35,13 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
     m_backend = backend;
     OCI::YmpParser parser( filename );
     parser.parse();
-    QList< OCI::Package* > packages = parser.packages();
-    QList< OCI::Repository* > repos = parser.repositories();
+    m_packages = parser.packages();
+    m_repos = parser.repositories();
 
     //Add Repository
     int i = 0;
     QVBoxLayout *repoDetails;
-    foreach( OCI::Repository *iter, repos){
+    foreach( OCI::Repository *iter, m_repos){
         m_backend->addRepository( QUrl( iter->url() ) );
         QHBoxLayout *sourceInfo = new QHBoxLayout;
         repoDetails = new QVBoxLayout;
@@ -58,7 +58,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
         repoDetails->addLayout( sourceInfo );
         mainLayout->addLayout( repoDetails );
         QVBoxLayout *repoPackages = new QVBoxLayout;
-        foreach( OCI::Package *iter, packages ){
+        foreach( OCI::Package *iter, m_packages ){
             m_backend->addPackage( iter->name() );
             QCheckBox *checkPackage = new QCheckBox( iter->name() );
             checkPackage->setStyleSheet( "background-color : white ");
@@ -104,7 +104,7 @@ void FirstScreen::showDetails( QString link )
         m_detailsLabels.at( linkNo )->setText( QString( "<a href = %1>Show Details</a>" ).arg( linkNo ) );
     } else{
         qDebug() << linkNo;
-        Details *detailsWidget = new Details( m_backend );
+        Details *detailsWidget = new Details( m_backend, m_repos.at( linkNo )->url() );
         qDebug() << linkNo;
         m_repoLayouts.at( linkNo )->addWidget( detailsWidget );
         m_detailsWidgets.replace( linkNo, detailsWidget );

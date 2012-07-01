@@ -1,11 +1,11 @@
 #include "details.h"
 
-Details::Details( PackageBackend *backend, QObject *parent )
+Details::Details( PackageBackend *backend, QString url, QObject *parent )
 {
     m_backend = backend;
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setSpacing( 0 );
-    m_url = new QLabel( "<b>URL :</b> " );
+    m_url = new QLabel( QString( "<b>URL :</b> %1" ).arg( url ) );
     m_id = new QLabel( "<b>ID: </b>" );
     m_fingerprint = new QLabel( "<b>Fingerprint: </b>" );
     m_created = new QLabel( "<b>Created: </b>" );
