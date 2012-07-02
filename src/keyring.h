@@ -13,38 +13,36 @@
 namespace zypp{
 struct KeyRingReceive : public zypp::callback::ReceiveReport<zypp::KeyRingReport>
 {
-    bool keyRingExists;
-   
+    bool m_keyRingExists;
+    std::string m_id;
+    std::string m_name;
+    std::string m_fingerprint;
+    std::string m_created;
+    std::string m_expires;
+
    /**
    	Get the Keyring and Ask the user to accept it
     */ 
     virtual KeyRingReport::KeyTrust askUserToAcceptKey( const PublicKey &key, const zypp::KeyContext& context )
     {
-        keyRingExists = false;
-        const std::string& keyid = key.id();
-        const std::string & keyname = key.name();
-        const std::string fingerprint = key.fingerprint();
-
-        if ( keyid.empty() || keyname.empty() || fingerprint.empty() ) {
-            keyRingExists = true;
+        m_keyRingExists = false;
+        m_id = key.id();
+        m_name = key.name();
+        m_fingerprint = key.fingerprint();
+        if ( m_id.empty() || m_name.empty() || m_fingerprint.empty() ) {
+            m_keyRingExists = true;
         }
-        //Printing Information
+        m_created = key.created().asString().c_str();
+        m_expires = key.created().asString().c_str();
 
-        std::cout<<"Key ID: "<<keyid.c_str()<<std::endl;
-        std::cout<<"Key Name: " <<keyname.c_str()<<std::endl;
-        std::cout<<"Key Fingerprint: "<<fingerprint.c_str()<<std::endl;
-        std::cout<<"Key Created: "<<key.created().asString().c_str()<<std::endl;
-        std::cout<<"Key Expires: "<<key.expiresAsString().c_str()<<std::endl;
+        //Printing Information
+        std::cout<<"Key ID: " << m_id << std::endl;
+        std::cout<<"Key Name: " << m_name << std::endl;
+        std::cout<<"Key Fingerprint: " << m_fingerprint <<std::endl;
+        std::cout<<"Key Created: "<< m_created <<std::endl;
+        std::cout<<"Key Expires: "<< m_expires <<std::endl;
         return KeyRingReport::KEY_TRUST_AND_IMPORT;
     }
-
-    /**
-     	Returns whether the Keyring has been found or not
-     */
-    bool exists(){
-        return keyRingExists;
-    }
-
 };
 }
 
