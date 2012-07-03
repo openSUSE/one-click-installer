@@ -9,7 +9,7 @@ class KeyRingCallbacks{
     private:
         zypp::KeyRingReceive _keyRingReport;
     public:
-        /**
+    /**
 		Default Constructor
 	 */
 	KeyRingCallbacks();
