@@ -1,7 +1,6 @@
 #ifndef BACKEND_H
 #define BACKEND_H
 
-#include "PackageBackend.h"
 #include <QDebug>
 #include <QUrl>
 #include <zypp/RepoManager.h>
@@ -19,13 +18,29 @@
 #include <zypp/misc/DefaultLoadSystem.h>
 #include <list>
 #include "keyringcallbacks.h"
+#include "PackageBackend.h"
 
 class Backend : public PackageBackend
 {
 public:
+    /**
+        Default Constructor
+     */
     Backend();
+
+    /**
+        Function to perform installation
+     */
     void install();
+
+    /**
+        Add Repositories
+     */
     void addRepositories();
+
+    /**
+        Check if repo exists in the Repository database or not
+     */
     bool exists( std::string repo );
 private:
     zypp::RepoManager *m_manager;
