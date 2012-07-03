@@ -3,6 +3,41 @@
 void Backend::install()
 {
     addRepositories();
+
+    //Code to install packages
+    zypp::misc::defaultLoadSystem( "/" );
+    zypp::ZYpp::Ptr zypp_pointer = zypp::getZYpp();
+    zypp_pointer->initializeTarget( "/" );
+    zypp::ResPoolProxy selectablePool( zypp::ResPool::instance().proxy() );
+
+    foreach( QString package, packages() ){
+        zypp::ui::Selectable::Ptr s = zypp::ui::Selectable::get( package.toStdString() );
+        zypp::PoolItem p = s->highestAvailableVersionObj();
+        s->setCandidate( p );
+        p.status().setToBeInstalled( zypp::ResStatus::USER );
+    }
+    zypp::ResPool pool = zypp::ResPool::instance();
+    bool resolved = false;
+    resolved = pool.resolver().resolvePool();
+
+    if( !resolved ){
+        std::cout << "Failed to Resolve Pool" << std::endl;
+        //Code for further resolving
+    } else{
+        std::cout << "Resolved Pool" << std::endl;
+        //Perform Instalation
+        zypp::ZYppCommitPolicy policy;
+        policy.restrictToMedia( 0 );
+        policy.downloadMode( zypp::DownloadInHeaps );
+        policy.syncPoolAfterCommit();
+        zypp::ZYppCommitResult result = zypp_pointer->commit( policy );
+
+        if( result.allDone() ){
+            std::cout << "Installation Succeeded" << std::endl;
+        } else{
+            std::cout << "Installation did not succeed" << std::cout;
+        }
+    }
 }
 
 Backend::Backend()
