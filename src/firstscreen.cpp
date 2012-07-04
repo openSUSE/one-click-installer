@@ -76,7 +76,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
     //Signal Slot connections
     QObject::connect( m_settings, SIGNAL( clicked() ), this, SLOT( showSettings() ) );
     QObject::connect( m_install, SIGNAL( clicked() ), this, SLOT( performInstallation() ) );
-    QObject::connect( m_cancel, SIGNAL(clicked()), parent, SLOT(deleteLater()) );
+    QObject::connect( m_cancel, SIGNAL( clicked()), parent, SLOT( close() ) );
 
     mainLayout->addLayout( installLayout );
     mainLayout->addWidget( warningWidget );
