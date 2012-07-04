@@ -6,7 +6,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
     QWidget *repoWidget = new QWidget;
     QWidget *packageWidget = new QWidget;
     QHBoxLayout *warningLayout = new QHBoxLayout( warningWidget );
-    warningWidget->setStyleSheet( "background-color: rgb(255, 170, 127);" );
+    warningWidget->setStyleSheet( "background-color: rgb(253, 227, 187);" );
     repoWidget->setStyleSheet( "background-color : white" );
     packageWidget->setStyleSheet( "background-color : white" );
     QVBoxLayout *installLayout = new QVBoxLayout;
@@ -50,8 +50,8 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
         QLabel *repoName = new QLabel( "<b>Source:</b> " + iter->name() );
         QLabel *detailsLabel = new QLabel( QString("<a href = %1>Show Details</a>").arg( i ) );
         m_detailsLabels.replace( i, detailsLabel );
-        repoName->setStyleSheet( "background-color: rgb(255, 221, 139);" );
-        detailsLabel->setStyleSheet( "background-color: rgb(255, 221, 139);" );
+        repoName->setStyleSheet( "background-color: rgb(254, 250, 210);" );
+        detailsLabel->setStyleSheet( "background-color: rgb(254, 250, 210);" );
         QObject::connect( detailsLabel, SIGNAL( linkActivated(QString) ), this, SLOT( showDetails( QString ) ) );
         sourceInfo->addWidget( repoName );
         sourceInfo->addWidget( detailsLabel );

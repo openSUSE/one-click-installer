@@ -10,11 +10,11 @@ Details::Details( PackageBackend *backend, QString url, QObject *parent )
     m_fingerprint = new QLabel( "<b>Fingerprint: </b>" );
     m_created = new QLabel( "<b>Created: </b>" );
     m_expires = new QLabel( "<b>Expires : </b> ");
-    m_url->setStyleSheet( "background-color: rgb(255, 221, 139);" );
-    m_id->setStyleSheet( "background-color: rgb(255, 221, 139);" );
-    m_fingerprint->setStyleSheet( "background-color: rgb(255, 221, 139)" );
-    m_created->setStyleSheet( "background-color: rgb(255, 221, 139)" );
-    m_expires->setStyleSheet( "background-color: rgb(255, 221, 139)" );
+    m_url->setStyleSheet( "background-color: rgb(254, 250, 210);" );
+    m_id->setStyleSheet( "background-color: rgb(254, 250, 210);" );
+    m_fingerprint->setStyleSheet( "background-color: rgb(254, 250, 210)" );
+    m_created->setStyleSheet( "background-color: rgb(254, 250, 210)" );
+    m_expires->setStyleSheet( "background-color: rgb(254, 250, 210)" );
     mainLayout->addWidget( m_url );
     mainLayout->addWidget( m_id );
     mainLayout->addWidget( m_fingerprint );
