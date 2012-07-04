@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 MainWindow::MainWindow( const QString& filename, bool fakeRequested, QObject *parent)
 {
+    setStyleSheet( "background-color : rgb(251,248,241)" );
     m_info = new QLabel( "This installer will install and download packages" );
     QVBoxLayout *mainLayout = new QVBoxLayout;
     QHBoxLayout *detailsLayout = new QHBoxLayout;

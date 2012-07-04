@@ -15,7 +15,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
     mainLayout->setSpacing( 0 );
         
     //Create Interface Elemenets
-    m_warning = new	QLabel( "This is a warning Message" );	//This should be done only if repositories to be added need to be trusted
+    m_warning = new	QLabel( "<b>Be careful!</b> Some Sources are not currently known. Installing<br />software requires trusting these sources" );
     m_settings = new QPushButton( "Settings" );
     m_cancel = new QPushButton( "Cancel" );
     m_install = new QPushButton( "Install" );
@@ -50,7 +50,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
         QLabel *repoName = new QLabel( "<b>Source:</b> " + iter->name() );
         QLabel *detailsLabel = new QLabel( QString("<a href = %1>Show Details</a>").arg( i ) );
         m_detailsLabels.replace( i, detailsLabel );
-        repoName->setStyleSheet( "background-color: rgb(254, 250, 210);" );
+        repoName->setStyleSheet( "background-color: rgb(254, 250, 210); border-color : green;" );
         detailsLabel->setStyleSheet( "background-color: rgb(254, 250, 210);" );
         QObject::connect( detailsLabel, SIGNAL( linkActivated(QString) ), this, SLOT( showDetails( QString ) ) );
         sourceInfo->addWidget( repoName );
@@ -74,6 +74,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
     QObject::connect( m_cancel, SIGNAL(clicked()), parent, SLOT(deleteLater()) );
 
     mainLayout->addLayout( installLayout );
+    mainLayout->addSpacing( 5 );
     mainLayout->addWidget( warningWidget );
     mainLayout->addLayout( buttonLayout );
 }
