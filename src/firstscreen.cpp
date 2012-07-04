@@ -6,7 +6,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
     QWidget *repoWidget = new QWidget;
     QWidget *packageWidget = new QWidget;
     QHBoxLayout *warningLayout = new QHBoxLayout( warningWidget );
-    warningWidget->setStyleSheet( "background-color: rgb(253, 227, 187);" );
+    //warningWidget->setStyleSheet( "" );
     repoWidget->setStyleSheet( "background-color : white" );
     packageWidget->setStyleSheet( "background-color : white" );
     QVBoxLayout *installLayout = new QVBoxLayout;
@@ -16,6 +16,8 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
         
     //Create Interface Elemenets
     m_warning = new	QLabel( "<b>Be careful!</b> Some Sources are not currently known. Installing<br />software requires trusting these sources" );
+    m_warning->setStyleSheet( "border : 1px solid rgb(196,181,147); background-color: rgb(253, 227, 187); border-radius : 5px" );
+    m_warning->setContentsMargins( 10,10,10,10 );
     m_settings = new QPushButton( "Settings" );
     m_cancel = new QPushButton( "Cancel" );
     m_install = new QPushButton( "Install" );
@@ -25,6 +27,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
     buttonLayout->addWidget( m_settings );
     buttonLayout->addSpacing( 100 );
     buttonLayout->addWidget( m_cancel );
+    buttonLayout->addSpacing( 10 );
     buttonLayout->addWidget( m_install );
     setLayout( mainLayout );
     show();
@@ -50,8 +53,9 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
         QLabel *repoName = new QLabel( "<b>Source:</b> " + iter->name() );
         QLabel *detailsLabel = new QLabel( QString("<a href = %1>Show Details</a>").arg( i ) );
         m_detailsLabels.replace( i, detailsLabel );
-        repoName->setStyleSheet( "background-color: rgb(254, 250, 210); border-color : green;" );
-        detailsLabel->setStyleSheet( "background-color: rgb(254, 250, 210);" );
+        repoName->setContentsMargins( 10,10,10,10 );
+        repoName->setStyleSheet( "background-color: rgb(254, 250, 210); border-bottom : 1px solid rgb(252,233,79); border-left : 1 px solid rgb(196,181,147); border-top : 1px solid rgb(196,181,147);" );
+        detailsLabel->setStyleSheet( "background-color: rgb(254, 250, 210); border-bottom : 1px solid rgb(252,233,79); border-right : 1 px solid rgb(196,181,147); border-top : 1px solid rgb(196,181,147);" );
         QObject::connect( detailsLabel, SIGNAL( linkActivated(QString) ), this, SLOT( showDetails( QString ) ) );
         sourceInfo->addWidget( repoName );
         sourceInfo->addWidget( detailsLabel );
@@ -61,7 +65,8 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
         foreach( OCI::Package *iter, m_packages ){
             m_backend->addPackage( iter->name() );
             QCheckBox *checkPackage = new QCheckBox( iter->name() );
-            checkPackage->setStyleSheet( "background-color : white ");
+            checkPackage->setContentsMargins( 20,20,20,20 );
+            checkPackage->setStyleSheet( "background-color : white; border-left : 1 px solid rgb(196,181,147); padding-top : 10px; padding-bottom : 10px; padding-left : 3px;" );
             repoPackages->addWidget( checkPackage );
         }
         mainLayout->addLayout( repoPackages );
@@ -74,8 +79,8 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
     QObject::connect( m_cancel, SIGNAL(clicked()), parent, SLOT(deleteLater()) );
 
     mainLayout->addLayout( installLayout );
-    mainLayout->addSpacing( 5 );
     mainLayout->addWidget( warningWidget );
+    mainLayout->addSpacing( 10 );
     mainLayout->addLayout( buttonLayout );
 }
 
@@ -86,7 +91,7 @@ void FirstScreen::showSettings()
 
 void FirstScreen::performInstallation()
 {
-    m_backend->install();
+    //m_backend->install();
     m_stageWidget->hide();
     //InstallScreen *installer = new InstallScreen( m_backend );
     Summary *installSummary = new Summary( m_backend, m_stageWidget );
