@@ -2,7 +2,7 @@
 #define DETAILS_H
 
 #include <QWidget>
-#include "PackageBackend.h"
+#include "packagebackend.h"
 #include <QLabel>
 #include <QVBoxLayout>
 

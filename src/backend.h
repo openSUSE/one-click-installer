@@ -18,7 +18,7 @@
 #include <zypp/misc/DefaultLoadSystem.h>
 #include <list>
 #include "keyringcallbacks.h"
-#include "PackageBackend.h"
+#include "packagebackend.h"
 
 class Backend : public PackageBackend
 {

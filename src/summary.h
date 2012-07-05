@@ -7,7 +7,7 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QList>
-#include "PackageBackend.h"
+#include "packagebackend.h"
 #include "installscreen.h"
 
 class Summary : public QWidget

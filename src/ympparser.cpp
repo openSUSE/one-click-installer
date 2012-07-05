@@ -1,4 +1,4 @@
-#include "YmpParser.h"
+#include "ympparser.h"
 #include <QDebug>
 #include <QFile>
 

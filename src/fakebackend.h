@@ -1,7 +1,7 @@
 #ifndef FAKEBACKEND_H
 #define FAKEBACKEND_H
 
-#include "PackageBackend.h"
+#include "packagebackend.h"
 #include "repository.h"
 #include <QList>
 #include <QString>

@@ -1,4 +1,4 @@
-#include "PackageBackend.h"
+#include "packagebackend.h"
 
 void PackageBackend::addRepository( const QUrl& url )
 {

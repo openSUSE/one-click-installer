@@ -10,8 +10,8 @@
 #include <QList>
 #include <QUrl>
 #include <QDebug>
-#include "PackageBackend.h"
-#include "FakeBackend.h"
+#include "packagebackend.h"
+#include "fakebackend.h"
 
 class InstallScreen : public QWidget
 {

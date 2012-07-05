@@ -8,9 +8,9 @@
 #include <QCheckBox>
 #include <QHBoxLayout>
 #include <QList>
-#include "FakeBackend.h"
-#include "PackageBackend.h"
-#include "YmpParser.h"
+#include "fakebackend.h"
+#include "packagebackend.h"
+#include "ympparser.h"
 #include "settings.h"
 #include "package.h"
 #include "repository.h"

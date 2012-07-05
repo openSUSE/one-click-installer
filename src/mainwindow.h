@@ -7,8 +7,8 @@
 #include <QList>
 #include <QPixmap>
 #include "firstscreen.h"
-#include "FakeBackend.h"
-#include "PackageBackend.h"
+#include "fakebackend.h"
+#include "packagebackend.h"
 #include "backend.h"
 
 class MainWindow : public QDialog
