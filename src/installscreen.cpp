@@ -7,7 +7,7 @@ InstallScreen::InstallScreen( PackageBackend *backend, QObject *parent )
     QVBoxLayout * installLayout = new QVBoxLayout;
     m_installStatus = new QLabel( "Downloading and Installing Packages" );
     m_cancel = new QPushButton( "Cancel Installation" );
-    foreach( QString iter, m_backend->packages() ){
+    foreach( QString iter, m_backend->packages() ) {
         QHBoxLayout *packageLayout = new QHBoxLayout;
         QLabel *package = new QLabel( iter );
         QProgressBar * progressBar = new QProgressBar;

@@ -18,11 +18,11 @@ Summary::Summary( PackageBackend *backend, QWidget *stageWidget, QObject *parent
     mainLayout->addLayout( buttonsLayout );
     setLayout( mainLayout );
 
-    foreach( QUrl repos, m_backend->repositories() ){
+    foreach( QUrl repos, m_backend->repositories() ) {
         m_installationSummary->append( QString( "Add Source <b>%1</b>" ).arg( repos.toString() ) );
     }
 
-    foreach( const QString package, m_backend->packages() ){
+    foreach( const QString package, m_backend->packages() ) {
         m_installationSummary->append( QString( "Install <b>%1</b>" ).arg( package ) );
     }
 

@@ -11,9 +11,9 @@ MainWindow::MainWindow( const QString& filename, bool fakeRequested, QObject *pa
     detailsLayout->addWidget( imgView );
     detailsLayout->addWidget( m_info );
     //Set up the backend
-    if( fakeRequested ){
+    if( fakeRequested ) {
         m_backend = new FakeBackend( this );
-    } else{
+    } else {
         m_backend = new Backend;
     }
     m_firstScreen = new FirstScreen( m_backend, m_stageWidget, filename, this );

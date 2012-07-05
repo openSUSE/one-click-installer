@@ -6,11 +6,11 @@ int main( int argc, char *argv[] )
 {
     QApplication app( argc, argv );
     bool fakeRequested = false;
-    if( argc == 1){
+    if( argc == 1) {
         qDebug() << "No Valid File Passed";
         return 0;
     }
-    if( !QString( "--fake" ).compare( argv[ 2 ] ) ){
+    if( !QString( "--fake" ).compare( argv[ 2 ] ) ) {
         qDebug()<< "FakeBackend being used";
         fakeRequested = true;
     }

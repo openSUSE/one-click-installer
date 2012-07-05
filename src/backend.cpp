@@ -10,7 +10,7 @@ void Backend::install()
     zypp_pointer->initializeTarget( "/" );
     zypp::ResPoolProxy selectablePool( zypp::ResPool::instance().proxy() );
 
-    foreach( QString package, packages() ){
+    foreach( QString package, packages() ) {
         zypp::ui::Selectable::Ptr s = zypp::ui::Selectable::get( package.toStdString() );
         zypp::PoolItem p = s->highestAvailableVersionObj();
         s->setCandidate( p );
@@ -20,10 +20,10 @@ void Backend::install()
     bool resolved = false;
     resolved = pool.resolver().resolvePool();
 
-    if( !resolved ){
+    if( !resolved ) {
         std::cout << "Failed to Resolve Pool" << std::endl;
         //Code for further resolving
-    } else{
+    } else {
         std::cout << "Resolved Pool" << std::endl;
         //Perform Instalation
         zypp::ZYppCommitPolicy policy;
@@ -32,9 +32,9 @@ void Backend::install()
         policy.syncPoolAfterCommit();
         zypp::ZYppCommitResult result = zypp_pointer->commit( policy );
 
-        if( result.allDone() ){
+        if( result.allDone() ) {
             std::cout << "Installation Succeeded" << std::endl;
-        } else{
+        } else {
             std::cout << "Installation did not succeed" << std::cout;
         }
     }
@@ -50,7 +50,7 @@ Backend::Backend()
 void Backend::addRepositories()
 {
     qDebug() << "add repos called";
-    foreach( QUrl iter, repositories() ){
+    foreach( QUrl iter, repositories() ) {
         zypp::RepoInfo repoInfo;
         std::string url = iter.toString().toStdString();
         repoInfo.addBaseUrl( zypp::Url( url ) );

@@ -10,11 +10,11 @@ void FakeBackend::install()
     QString packList = "";
     QString repoList = "";
 
-    foreach( QUrl iter, repositories() ){
+    foreach( QUrl iter, repositories() ) {
         repoList.append( QString( iter.toString() ) );
         repoList.append( "\n" );
     }
-    foreach ( QString iter, packages() ){
+    foreach ( QString iter, packages() ) {
         packList.append( iter );
         packList.append( "\n ");
     }
