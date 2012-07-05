@@ -21,6 +21,7 @@ public:
 private:
     QLabel *m_installStatus;
     QLabel *m_sources;
+
     QPushButton *m_cancel;
     PackageBackend *m_backend;
 };

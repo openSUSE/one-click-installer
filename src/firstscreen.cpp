@@ -56,11 +56,14 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
         repoName->setContentsMargins( 10,10,10,10 );
         repoName->setStyleSheet( "background-color: rgb(254, 250, 210); border-bottom : 1px solid rgb(252,233,79); border-left : 1px solid rgb(196,181,147); border-top : 1px solid rgb(196,181,147);" );
         detailsLabel->setStyleSheet( "background-color: rgb(254, 250, 210); border-bottom : 1px solid rgb(252,233,79); border-right : 1px solid rgb(196,181,147); border-top : 1px solid rgb(196,181,147);" );
+
         QObject::connect( detailsLabel, SIGNAL( linkActivated(QString) ), this, SLOT( showDetails( QString ) ) );
+
         sourceInfo->addWidget( repoName );
         sourceInfo->addWidget( detailsLabel );
         repoDetails->addLayout( sourceInfo );
         mainLayout->addLayout( repoDetails );
+
         QVBoxLayout *repoPackages = new QVBoxLayout;
         foreach( OCI::Package *iter, m_packages ){
             m_backend->addPackage( iter->name() );

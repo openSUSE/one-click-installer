@@ -12,22 +12,22 @@ class YmpParser
 {
 public:
     /**
-    Default Constructor
+        Default Constructor
     */
     YmpParser( const QString& ympfile );
 
     /**
-    Parse the YMP file to extract the contents
+        Parse the YMP file to extract the contents
     */
     void parse();
 
     /**
-    Returns the list of packages from the parsing
+        Returns the list of packages from the parsing
     */
     QList< OCI::Package* > packages() const;
 
     /**
-    Returns the list of repositories from the parsing
+        Returns the list of repositories from the parsing
     */
     QList< OCI::Repository* > repositories() const;
 

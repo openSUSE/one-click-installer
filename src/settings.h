@@ -12,7 +12,7 @@ class Settings : public QDialog
     Q_OBJECT
 public:
     /**
-    Constructor for the Settings dialog
+        Constructor for the Settings dialog
     */
     Settings( QObject *parent = 0 );
 private:

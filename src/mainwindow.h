@@ -15,7 +15,7 @@ class MainWindow : public QDialog
 {
 public:
     /**
-    Default Constructor taking the YMP file as argument
+        Default Constructor taking the YMP file as argument
     */
     MainWindow( const QString& filename, bool fakeRequested, QObject *parent = 0 );
 private:

@@ -25,42 +25,46 @@ class FirstScreen : public QWidget
     Q_OBJECT
 private:
     QLabel *m_warning;
+
     QPushButton *m_settings;
     QPushButton *m_cancel;
     QPushButton *m_install;
+
     PackageBackend *m_backend;
     QWidget *m_stageWidget;
+
     QList< QVBoxLayout* > m_repoLayouts;
     QList< Details* > m_detailsWidgets;
     QList< QLabel* > m_detailsLabels;
+
     QList< bool > m_visible;
     QList< OCI::Package* > m_packages;
     QList< OCI::Repository* > m_repos;
 
 public:
-    /**
-   Default constructor taking the backend, and the filename as argument
+   /**
+        Default constructor taking the backend, and the filename as argument
    */
     FirstScreen( PackageBackend *backend, QWidget* stageWidget, const QString& filename, QObject *parent = 0 );
 private slots:
 
-    /**
-   Shows the Settings dialog
+   /**
+        Shows the Settings dialog
    */
     void showSettings();
 
-    /**
-   Triggers the installation when the Install software button is clicked
+   /**
+        Triggers the installation when the Install software button is clicked
    */
     void performInstallation();
 
     /**
-    More Details on untrusted repositories
+        More Details on untrusted repositories
     */
     void untrusedRepoDetails( QString link);
 
     /**
-    Shows Details of Repositories
+        Shows Details of Repositories
     */
     void showDetails( QString link );
 };

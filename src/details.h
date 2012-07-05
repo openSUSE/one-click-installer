@@ -12,6 +12,7 @@ public:
     Details( PackageBackend *backend, QString url, QObject *parent = 0 );
 private:
     PackageBackend *m_backend;
+
     QLabel *m_url;
     QLabel *m_id;
     QLabel *m_fingerprint;
