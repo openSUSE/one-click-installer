@@ -38,6 +38,7 @@ public:
      */
     void addRepositories();
 
+protected:
     /**
         Check if repo exists in the Repository database or not
      */
