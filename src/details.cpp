@@ -21,5 +21,4 @@ Details::Details( PackageBackend *backend, QString url, QObject *parent )
     mainLayout->addWidget( m_created );
     mainLayout->addWidget( m_expires );
     setLayout( mainLayout );
-    show();
 }

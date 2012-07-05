@@ -8,6 +8,7 @@
 #include <QCheckBox>
 #include <QHBoxLayout>
 #include <QList>
+#include <QHash>
 #include "fakebackend.h"
 #include "packagebackend.h"
 #include "ympparser.h"
@@ -23,24 +24,6 @@ class MainWindow;
 class FirstScreen : public QWidget
 {
     Q_OBJECT
-private:
-    QLabel *m_warning;
-
-    QPushButton *m_settings;
-    QPushButton *m_cancel;
-    QPushButton *m_install;
-
-    PackageBackend *m_backend;
-    QWidget *m_stageWidget;
-
-    QList< QVBoxLayout* > m_repoLayouts;
-    QList< Details* > m_detailsWidgets;
-    QList< QLabel* > m_detailsLabels;
-
-    QList< bool > m_visible;
-    QList< OCI::Package* > m_packages;
-    QList< OCI::Repository* > m_repos;
-
 public:
    /**
         Default constructor taking the backend, and the filename as argument
@@ -67,6 +50,25 @@ private slots:
         Shows Details of Repositories
     */
     void showDetails( QString link );
+
+private:
+    QLabel *m_warning;
+
+    QPushButton *m_settings;
+    QPushButton *m_cancel;
+    QPushButton *m_install;
+
+    PackageBackend *m_backend;
+    QWidget *m_stageWidget;
+
+    QList< QVBoxLayout* > m_repoLayouts;
+
+    QList< bool > m_visible;
+    QList< OCI::Package* > m_packages;
+    QList< OCI::Repository* > m_repos;
+
+    QHash< int, QWidget* > m_details;
+    QHash< int, QLabel*> m_detailsLabels;
 };
 
 #endif

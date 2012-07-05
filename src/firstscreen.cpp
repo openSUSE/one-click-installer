@@ -47,12 +47,14 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
     foreach( OCI::Repository *iter, m_repos) {
         m_backend->addRepository( QUrl( iter->url() ) );
         QHBoxLayout *sourceInfo = new QHBoxLayout;
+        Details *detailsWidget = new Details( m_backend, m_repos.at( i )->url() );
+        m_details.insert( i, detailsWidget );
         repoDetails = new QVBoxLayout;
         m_repoLayouts.append( repoDetails );
         m_visible.append( false );
         QLabel *repoName = new QLabel( "<b>Source:</b> " + iter->name() );
         QLabel *detailsLabel = new QLabel( QString("<a href = %1>Show Details</a>").arg( i ) );
-        m_detailsLabels.replace( i, detailsLabel );
+        m_detailsLabels.insert( i, detailsLabel );
         repoName->setContentsMargins( 10,10,10,10 );
         repoName->setStyleSheet( "background-color: rgb(254, 250, 210); border-bottom : 1px solid rgb(252,233,79); border-left : 1px solid rgb(196,181,147); border-top : 1px solid rgb(196,181,147);" );
         detailsLabel->setStyleSheet( "background-color: rgb(254, 250, 210); border-bottom : 1px solid rgb(252,233,79); border-right : 1px solid rgb(196,181,147); border-top : 1px solid rgb(196,181,147);" );
@@ -106,19 +108,14 @@ void FirstScreen::showDetails( QString link )
 {
     int linkNo = link.toInt();
     if( m_visible.at( linkNo ) ) {
-        Details *temp = m_detailsWidgets.at( linkNo );
-        m_detailsWidgets.removeAt( linkNo );
-        delete temp;
-        m_visible.replace( linkNo, false);
-        m_detailsLabels.at( linkNo )->setText( QString( "<a href = %1>Show Details</a>" ).arg( linkNo ) );
+        m_detailsLabels[ linkNo ]->setText( QString( "<a href = %1>Show Details</a>" ).arg( linkNo ) );
+        m_details[ linkNo ]->hide();
+        m_visible.replace( linkNo, false );
     } else {
-        qDebug() << linkNo;
-        Details *detailsWidget = new Details( m_backend, m_repos.at( linkNo )->url() );
-        qDebug() << linkNo;
-        m_repoLayouts.at( linkNo )->addWidget( detailsWidget );
-        m_detailsWidgets.replace( linkNo, detailsWidget );
-        m_visible.replace( linkNo, true);
-        m_detailsLabels.at( linkNo )->setText( QString( "<a href = %1>Hide Details</a>" ).arg( linkNo ) );
+        m_detailsLabels[ linkNo ]->setText( QString( "<a href = %1>Hide Details</a>" ).arg( linkNo ) );
+        m_repoLayouts.at( linkNo )->addWidget( m_details[ linkNo ] );
+        m_details[ linkNo ]->show();
+        m_visible.replace( linkNo, true );
     }
 }
 
