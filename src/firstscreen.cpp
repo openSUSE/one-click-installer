@@ -54,8 +54,8 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
         QLabel *detailsLabel = new QLabel( QString("<a href = %1>Show Details</a>").arg( i ) );
         m_detailsLabels.replace( i, detailsLabel );
         repoName->setContentsMargins( 10,10,10,10 );
-        repoName->setStyleSheet( "background-color: rgb(254, 250, 210); border-bottom : 1px solid rgb(252,233,79); border-left : 1 px solid rgb(196,181,147); border-top : 1px solid rgb(196,181,147);" );
-        detailsLabel->setStyleSheet( "background-color: rgb(254, 250, 210); border-bottom : 1px solid rgb(252,233,79); border-right : 1 px solid rgb(196,181,147); border-top : 1px solid rgb(196,181,147);" );
+        repoName->setStyleSheet( "background-color: rgb(254, 250, 210); border-bottom : 1px solid rgb(252,233,79); border-left : 1px solid rgb(196,181,147); border-top : 1px solid rgb(196,181,147);" );
+        detailsLabel->setStyleSheet( "background-color: rgb(254, 250, 210); border-bottom : 1px solid rgb(252,233,79); border-right : 1px solid rgb(196,181,147); border-top : 1px solid rgb(196,181,147);" );
         QObject::connect( detailsLabel, SIGNAL( linkActivated(QString) ), this, SLOT( showDetails( QString ) ) );
         sourceInfo->addWidget( repoName );
         sourceInfo->addWidget( detailsLabel );
@@ -66,7 +66,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
             m_backend->addPackage( iter->name() );
             QCheckBox *checkPackage = new QCheckBox( iter->name() );
             checkPackage->setContentsMargins( 20,20,20,20 );
-            checkPackage->setStyleSheet( "background-color : white; border-left : 1 px solid rgb(196,181,147); padding-top : 10px; padding-bottom : 10px; padding-left : 3px;" );
+            checkPackage->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147); border-bottom : 1px solid rgb(196,181,147) ; padding-top : 10px; padding-bottom : 10px; padding-left : 3px;" );
             repoPackages->addWidget( checkPackage );
         }
         mainLayout->addLayout( repoPackages );
