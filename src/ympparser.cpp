@@ -32,31 +32,37 @@ void OCI::YmpParser::parse()
         xml.readNextStartElement();
         if( xml.name()=="repository" && !xml.isEndElement() ) {
             OCI::Repository *repo = new OCI::Repository;
+
             //Set whether recommended or not
             repo->setRecommended( xml.attributes().value( "recommended" ).toString() );
             xml.readNextStartElement();
+
             //Read the Name of the Repository
             if( xml.name() == "name" ) {
                 //qDebug()<<"Name"<<xml.readElementText();
                 repo->setName( xml.readElementText() );
             }
             xml.readNextStartElement();
+
             //Read the Summary
             if( xml.name()=="summary" ) {
                 //qDebug()<<"Summary"<<xml.readElementText();
                 repo->setSummary( xml.readElementText() );
             }
             xml.readNextStartElement();
+
             //Read Description
             if( xml.name() == "description" ) {
                 //qDebug()<<"Description"<<xml.readElementText();
                 repo->setDescription( xml.readElementText() );
             }
             xml.readNextStartElement();
+
             //Read Url
             if( xml.name() == "url" ) {
                 repo->setUrl( xml.readElementText() );
             }
+
             //Add Repository to the List or Repositories
             repositoryList.append( repo );
         }
@@ -66,9 +72,11 @@ void OCI::YmpParser::parse()
         xml.readNextStartElement();
         if( xml.name() == "name" && !xml.isEndElement() ) {
             OCI::Package *pkg = new Package;
+
             //Read Element Text
             pkg->setName( xml.readElementText() );
             xml.readNextStartElement();
+
             //Read Summary
             if( xml.name() == "summary" )
                 pkg->setSummary( xml.readElementText() );

@@ -44,6 +44,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
     //Add Repository
     int i = 0;
     QVBoxLayout *repoDetails;
+
     foreach( OCI::Repository *iter, m_repos) {
         m_backend->addRepository( QUrl( iter->url() ) );
         QHBoxLayout *sourceInfo = new QHBoxLayout;
@@ -67,6 +68,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
         mainLayout->addLayout( repoDetails );
 
         QVBoxLayout *repoPackages = new QVBoxLayout;
+
         foreach( OCI::Package *iter, m_packages ) {
             m_backend->addPackage( iter->name() );
             QCheckBox *checkPackage = new QCheckBox( iter->name() );
@@ -107,6 +109,7 @@ void FirstScreen::performInstallation()
 void FirstScreen::showDetails( QString link )
 {
     int linkNo = link.toInt();
+
     if( m_visible.at( linkNo ) ) {
         m_detailsLabels[ linkNo ]->setText( QString( "<a href = %1>Show Details</a>" ).arg( linkNo ) );
         m_details[ linkNo ]->hide();

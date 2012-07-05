@@ -16,6 +16,7 @@ void Backend::install()
         s->setCandidate( p );
         p.status().setToBeInstalled( zypp::ResStatus::USER );
     }
+
     zypp::ResPool pool = zypp::ResPool::instance();
     bool resolved = false;
     resolved = pool.resolver().resolvePool();
@@ -50,6 +51,7 @@ Backend::Backend()
 void Backend::addRepositories()
 {
     qDebug() << "add repos called";
+
     foreach( QUrl iter, repositories() ) {
         zypp::RepoInfo repoInfo;
         std::string url = iter.toString().toStdString();
@@ -70,10 +72,12 @@ bool Backend::exists( std::string repo )
 {
     std::cout << "Parameter is " << repo << std::endl;
     std::list< zypp::RepoInfo > repoList = std::list< zypp::RepoInfo >( m_manager->repoBegin(), m_manager->repoEnd() );
+
     for( std::list< zypp::RepoInfo >::iterator it = repoList.begin(); it != repoList.end(); it++ ){
         //std::cout <<std::endl<<"Repo URL is " << it->url().asString();
         if( repo.compare( it->url().asString() ) == 0 )
                 return true;
     }
+
     return false;
 }

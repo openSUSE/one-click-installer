@@ -5,6 +5,7 @@ Settings::Settings( QObject *parent )
     //Create Layouts
     QVBoxLayout *mainLayout = new QVBoxLayout;
     QHBoxLayout *closeLayout = new QHBoxLayout;
+
     //Create Interface Elements
     m_repos = new QLabel( "<b>Repository Sources</b>" );
     m_subscribe = new QCheckBox( "Subscribe to new Repository Sources automatically", this );

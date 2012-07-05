@@ -10,6 +10,7 @@ Summary::Summary( PackageBackend *backend, QWidget *stageWidget, QObject *parent
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
+
     mainLayout->addWidget( m_installationSummary );
     buttonsLayout->addSpacing( 100 );
     buttonsLayout->addWidget( m_cancel );
