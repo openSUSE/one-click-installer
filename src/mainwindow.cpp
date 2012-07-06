@@ -1,18 +1,31 @@
 #include "mainwindow.h"
-
-MainWindow::MainWindow( const QString& filename, QObject *parent)
+MainWindow::MainWindow( const QString& filename, bool fakeRequested, QObject *parent)
 {
-	m_info = new QLabel( "This installer will install and download packages" );
-	QVBoxLayout *mainLayout = new QVBoxLayout;
+    setStyleSheet( "background-color : rgb(251,248,241)" );
+    m_info = new QLabel( "This installer will install and download packages" );
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    QHBoxLayout *detailsLayout = new QHBoxLayout;
+    const QPixmap icon( "res/oneclickinstall.png" );
+    QLabel *imgView = new QLabel;
+    imgView->setPixmap( icon );
+    detailsLayout->addWidget( imgView );
+    detailsLayout->addWidget( m_info );
 
-        //Set up the backend
+    //Set up the backend
+    if( fakeRequested ) {
         m_backend = new FakeBackend( this );
+    } else {
+        m_backend = new Backend;
+    }
 
-        m_stageWidget = new FirstScreen( m_backend, filename );
-	mainLayout->addWidget( m_info );
-	mainLayout->addWidget( m_stageWidget );
-	setLayout( mainLayout );
-	setWindowTitle( "One Click Install" );
+    m_firstScreen = new FirstScreen( m_backend, m_stageWidget, filename, this );
+    m_stageWidget = m_firstScreen;
+    QObject::connect(m_stageWidget, SIGNAL(destroyed()), this, SLOT(close()));
 
-	show();
+    mainLayout->addLayout( detailsLayout );
+    mainLayout->addWidget( m_stageWidget );
+    setLayout( mainLayout );
+    setWindowTitle( "One Click Install" );
+    setWindowIcon( QIcon("res/oneclickinstall.png") );
+    show();
 }

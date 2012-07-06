@@ -37,7 +37,7 @@ class PackageBackend
      */
     virtual void install() = 0;
 
-    private:
+private:
     QList< QString > m_packages;
     QList< QUrl > m_repositories;
 
