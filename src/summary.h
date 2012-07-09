@@ -7,6 +7,8 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QList>
+#include <QProcess>
+#include <cstdlib>
 #include "packagebackend.h"
 #include "installscreen.h"
 
@@ -21,6 +23,8 @@ private:
     QPushButton *m_cancel;
     PackageBackend *m_backend;
     QWidget *m_stageWidget;
+    QProcess backendProcess;
+
 private slots:
     void continueInstallation();
     void cancel();

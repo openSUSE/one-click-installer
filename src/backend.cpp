@@ -5,7 +5,7 @@ void Backend::install()
     addRepositories();
 
     //Code to install packages
-    zypp::misc::defaultLoadSystem( "/" );
+//    zypp::misc::defaultLoadSystem( "/" );
     zypp::ZYpp::Ptr zypp_pointer = zypp::getZYpp();
     zypp_pointer->initializeTarget( "/" );
     zypp::ResPoolProxy selectablePool( zypp::ResPool::instance().proxy() );

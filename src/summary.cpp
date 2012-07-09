@@ -1,4 +1,5 @@
 #include "summary.h"
+#include <unistd.h>
 
 Summary::Summary( PackageBackend *backend, QWidget *stageWidget, QObject *parent )
 {
@@ -29,6 +30,7 @@ Summary::Summary( PackageBackend *backend, QWidget *stageWidget, QObject *parent
 
     QObject::connect( m_continue, SIGNAL( clicked() ), this, SLOT( continueInstallation() ) );
     QObject::connect( m_cancel, SIGNAL( clicked() ), this, SLOT( cancel() ) );
+
     show();
 }
 
@@ -37,7 +39,15 @@ void Summary::continueInstallation()
     InstallScreen *installer = new InstallScreen( m_backend );
     m_stageWidget->parentWidget()->layout()->addWidget( installer );
     m_stageWidget = installer;
-    delete this;
+
+    //QStringList args;
+    //QString cmd( "kdesu -c./backendinterface" );
+    //backendProcess.start( cmd, args );
+    //backendProcess.waitForStarted();
+
+    //execve( "xdg-su -u root -c ./backendinterface", NULL );
+//    popen( "xdg-su -u root -c ./backendinterface", NULL );
+    this->hide();
 }
 
 void Summary::cancel()

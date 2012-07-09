@@ -9,6 +9,8 @@
 #include <QHBoxLayout>
 #include <QList>
 #include <QHash>
+#include <QFile>
+#include <QTextStream>
 #include "fakebackend.h"
 #include "packagebackend.h"
 #include "ympparser.h"

@@ -13,6 +13,21 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setSpacing( 0 );
+
+    //Initialise Files
+    QFile repoFile( "repos" );
+    QFile packageFile( "packages" );
+    QTextStream outRepo( &repoFile );
+    QTextStream outPackages( &packageFile );
+//    outRepo.setVersion( QDataStream::Qt_4_8 );
+//    outPackages.setVersion( QDataStream::Qt_4_8 );
+    if( !repoFile.open( QIODevice::WriteOnly | QIODevice::Truncate ) ) {
+        qDebug() << "Could not Write Repository data to file";
+    }
+
+    if( !packageFile.open( QIODevice::WriteOnly | QIODevice::Truncate ) ) {
+        qDebug() << "Could not Write Package data to file";
+    }
         
     //Create Interface Elemenets
     m_warning = new	QLabel( "<b>Be careful!</b> Some Sources are not currently known. Installing<br />software requires trusting these sources" );
@@ -46,6 +61,8 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
     QVBoxLayout *repoDetails;
 
     foreach( OCI::Repository *iter, m_repos) {
+        outRepo << iter->url();
+        outRepo << "\n";
         m_backend->addRepository( QUrl( iter->url() ) );
         QHBoxLayout *sourceInfo = new QHBoxLayout;
         Details *detailsWidget = new Details( m_backend, m_repos.at( i )->url() );
@@ -70,6 +87,8 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
         QVBoxLayout *repoPackages = new QVBoxLayout;
 
         foreach( OCI::Package *iter, m_packages ) {
+            outPackages << iter->name();
+            outPackages << "\n";
             m_backend->addPackage( iter->name() );
             QCheckBox *checkPackage = new QCheckBox( iter->name() );
             checkPackage->setContentsMargins( 20,20,20,20 );
@@ -89,6 +108,9 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
     mainLayout->addWidget( warningWidget );
     mainLayout->addSpacing( 10 );
     mainLayout->addLayout( buttonLayout );
+
+    repoFile.close();
+    packageFile.close();
 }
 
 void FirstScreen::showSettings()

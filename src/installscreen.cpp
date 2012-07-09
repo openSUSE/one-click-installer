@@ -24,6 +24,8 @@ InstallScreen::InstallScreen( PackageBackend *backend, QObject *parent )
     mainLayout->addWidget( m_cancel );
     setLayout( mainLayout );
     show();
+    system( "kdesu -c /home/saurabh/workspace/one-click-installer/src/backendinterface" );
+    qDebug() << "Done";
 }
 
 
