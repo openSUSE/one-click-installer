@@ -6,6 +6,7 @@ Summary::Summary( PackageBackend *backend, QWidget *stageWidget, QObject *parent
     m_backend = backend;
     m_stageWidget = stageWidget;
     m_installationSummary = new QTextBrowser;
+    m_installationSummary->addScrollBarWidget( new QScrollBar, Qt::AlignRight );
     m_continue = new QPushButton( "Continue Installation ");
     m_cancel = new QPushButton( "Cancel ");
 

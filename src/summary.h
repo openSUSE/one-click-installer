@@ -8,6 +8,7 @@
 #include <QPushButton>
 #include <QList>
 #include <QProcess>
+#include <QScrollBar>
 #include <cstdlib>
 #include "packagebackend.h"
 #include "installscreen.h"
