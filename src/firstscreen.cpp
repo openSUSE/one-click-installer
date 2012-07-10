@@ -1,7 +1,8 @@
 #include "firstscreen.h"
 
-FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const QString& filename, QObject *parent )
+FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, QWidget *stageWidget, const QString& filename, QObject *parent )
 {
+    m_tmpFileName = tmpFileName;
     QWidget *warningWidget = new QWidget;
     QWidget *repoWidget = new QWidget;
     QWidget *packageWidget = new QWidget;
@@ -14,20 +15,13 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setSpacing( 0 );
 
-    //Initialise Files
-    QFile repoFile( "repos" );
-    QFile packageFile( "packages" );
-    QTextStream outRepo( &repoFile );
-    QTextStream outPackages( &packageFile );
-//    outRepo.setVersion( QDataStream::Qt_4_8 );
-//    outPackages.setVersion( QDataStream::Qt_4_8 );
-    if( !repoFile.open( QIODevice::WriteOnly | QIODevice::Truncate ) ) {
-        qDebug() << "Could not Write Repository data to file";
+    QFile dataFile( m_tmpFileName->toAscii() );
+    if( !dataFile.open( QIODevice::Truncate | QIODevice::WriteOnly ) ) {
+        qDebug() << "Could not open Data File";
     }
 
-    if( !packageFile.open( QIODevice::WriteOnly | QIODevice::Truncate ) ) {
-        qDebug() << "Could not Write Package data to file";
-    }
+    QTextStream outData( &dataFile );
+    outData << "repositories" << "\n";
         
     //Create Interface Elemenets
     m_warning = new	QLabel( "<b>Be careful!</b> Some Sources are not currently known. Installing<br />software requires trusting these sources" );
@@ -61,8 +55,6 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
     QVBoxLayout *repoDetails;
 
     foreach( OCI::Repository *iter, m_repos) {
-        outRepo << iter->url();
-        outRepo << "\n";
         m_backend->addRepository( QUrl( iter->url() ) );
         QHBoxLayout *sourceInfo = new QHBoxLayout;
         Details *detailsWidget = new Details( m_backend, m_repos.at( i )->url() );
@@ -87,8 +79,6 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
         QVBoxLayout *repoPackages = new QVBoxLayout;
 
         foreach( OCI::Package *iter, m_packages ) {
-            outPackages << iter->name();
-            outPackages << "\n";
             m_backend->addPackage( iter->name() );
             QCheckBox *checkPackage = new QCheckBox( iter->name() );
             checkPackage->setContentsMargins( 20,20,20,20 );
@@ -97,6 +87,16 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
         }
         mainLayout->addLayout( repoPackages );
         i++;
+    }
+
+    foreach( QUrl iter, m_backend->repositories()) {
+        outData << iter.toString() << "\n";
+    }
+
+    outData << "packages" << "\n";
+
+    foreach( QString iter, m_backend->packages() ) {
+        outData << iter << "\n";
     }
 
     //Signal Slot connections
@@ -109,8 +109,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
     mainLayout->addSpacing( 10 );
     mainLayout->addLayout( buttonLayout );
 
-    repoFile.close();
-    packageFile.close();
+    dataFile.close();
 }
 
 void FirstScreen::showSettings()
@@ -123,7 +122,7 @@ void FirstScreen::performInstallation()
     //m_backend->install();
     m_stageWidget->hide();
     //InstallScreen *installer = new InstallScreen( m_backend );
-    Summary *installSummary = new Summary( m_backend, m_stageWidget );
+    Summary *installSummary = new Summary( m_backend, m_tmpFileName, m_stageWidget );
     m_stageWidget->parentWidget()->layout()->addWidget( installSummary );
     m_stageWidget = installSummary;
 }

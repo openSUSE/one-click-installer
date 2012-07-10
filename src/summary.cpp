@@ -1,9 +1,10 @@
 #include "summary.h"
 #include <unistd.h>
 
-Summary::Summary( PackageBackend *backend, QWidget *stageWidget, QObject *parent )
+Summary::Summary( PackageBackend *backend, QString *tmpFileName, QWidget *stageWidget, QObject *parent )
 {
     m_backend = backend;
+    m_tmpFileName = tmpFileName;
     m_stageWidget = stageWidget;
     m_installationSummary = new QTextBrowser;
     m_installationSummary->addScrollBarWidget( new QScrollBar, Qt::AlignRight );
@@ -37,7 +38,7 @@ Summary::Summary( PackageBackend *backend, QWidget *stageWidget, QObject *parent
 
 void Summary::continueInstallation()
 {
-    InstallScreen *installer = new InstallScreen( m_backend );
+    InstallScreen *installer = new InstallScreen( m_backend, m_tmpFileName );
     m_stageWidget->parentWidget()->layout()->addWidget( installer );
     m_stageWidget = installer;
 

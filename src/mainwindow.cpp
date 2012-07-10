@@ -1,8 +1,9 @@
 #include "mainwindow.h"
-MainWindow::MainWindow( const QString& filename, bool fakeRequested, QObject *parent)
+MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeRequested, QObject *parent)
 {
     setStyleSheet( "background-color : rgb(251,248,241)" );
     m_info = new QLabel( "This installer will install and download packages" );
+    m_tmpFileName = new QString( tmpFileName );
     QVBoxLayout *mainLayout = new QVBoxLayout;
     QHBoxLayout *detailsLayout = new QHBoxLayout;
     const QPixmap icon( "res/oneclickinstall.png" );
@@ -18,7 +19,7 @@ MainWindow::MainWindow( const QString& filename, bool fakeRequested, QObject *pa
         m_backend = new Backend;
     }
 
-    m_firstScreen = new FirstScreen( m_backend, m_stageWidget, filename, this );
+    m_firstScreen = new FirstScreen( m_backend, m_tmpFileName, m_stageWidget, filename, this );
     m_stageWidget = m_firstScreen;
     QObject::connect(m_stageWidget, SIGNAL(destroyed()), this, SLOT(close()));
 

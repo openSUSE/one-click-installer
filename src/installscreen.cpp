@@ -1,8 +1,9 @@
 #include "installscreen.h"
 
-InstallScreen::InstallScreen( PackageBackend *backend, QObject *parent )
+InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObject *parent )
 {
     m_backend = backend;
+    m_tmpFileName = tmpFileName;
     QVBoxLayout *mainLayout = new QVBoxLayout;
     QVBoxLayout * installLayout = new QVBoxLayout;
 
@@ -23,9 +24,10 @@ InstallScreen::InstallScreen( PackageBackend *backend, QObject *parent )
     mainLayout->addLayout( installLayout );
     mainLayout->addWidget( m_cancel );
     setLayout( mainLayout );
+    QString command( "kdesu -c /home/saurabh/workspace/one-click-installer/src/backendinterface " );
+    command.append(m_tmpFileName);
+    system( command.toLocal8Bit().data() );
     show();
-    system( "kdesu -c /home/saurabh/workspace/one-click-installer/src/backendinterface" );
-    qDebug() << "Done";
 }
 
 

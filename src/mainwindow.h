@@ -17,12 +17,13 @@ public:
     /**
         Default Constructor taking the YMP file as argument
     */
-    MainWindow( const QString& filename, bool fakeRequested, QObject *parent = 0 );
+    MainWindow( const QString& filename, QString tmpFileName, bool fakeRequested, QObject *parent = 0 );
 private:
     QLabel *m_info;
     QWidget *m_stageWidget;	//This will load the corresponding widget to the layout depending on the stage of the installation
     PackageBackend *m_backend;
     FirstScreen *m_firstScreen;
+    QString *m_tmpFileName;
 };
 
 #endif

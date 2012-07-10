@@ -10,6 +10,7 @@
 #include <QList>
 #include <QUrl>
 #include <QDebug>
+#include <iostream>
 #include "packagebackend.h"
 #include "fakebackend.h"
 
@@ -17,13 +18,15 @@ class InstallScreen : public QWidget
 {
     Q_OBJECT
 public:
-    InstallScreen( PackageBackend *backend,  QObject *parent = 0 );
+    InstallScreen( PackageBackend *backend, QString *tmpFileName,  QObject *parent = 0 );
 private:
     QLabel *m_installStatus;
     QLabel *m_sources;
 
     QPushButton *m_cancel;
     PackageBackend *m_backend;
+
+    QString *m_tmpFileName;
 };
 
 #endif

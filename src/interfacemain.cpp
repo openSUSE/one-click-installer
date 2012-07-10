@@ -7,37 +7,33 @@
 
 int main( int argc, char *argv[] )
 {
-    QApplication app( argc, argv );
+    QApplication app( argc, argv, false );
     qDebug() << "Created new Application";
-    QFile repoFile( "repos" );
-    QFile packagesFile( "packages" );
+    QFile dataFile( argv[ 1 ] );
 
-    if( !repoFile.open( QIODevice::ReadOnly ) ) {
-        qDebug() << "Could not Read Repos File";
+    if( !dataFile.open( QIODevice::ReadOnly ) ) {
+        qDebug() << "Failed to open Data File";
     }
 
-    if( !packagesFile.open( QIODevice::ReadOnly ) ) {
-        qDebug() << "Could not Read Packages File";
-    }
-
-    QTextStream inRepos( &repoFile );
-    QTextStream inPackages( &packagesFile );
+    QTextStream inData( &dataFile );
 
     Backend *ptr = new Backend;
 
     QString line;
+    line = inData.readLine();
+    if( line == "repositories" ) {
+        do {
+            line = inData.readLine();
+            if( line != "packages") {
+                //qDebug() << line;
+                ptr->addRepository( QUrl( line ) );
+            }
+        } while( line !="packages" );
+    }
     do {
-        line = inRepos.readLine();
+        line = inData.readLine();
         if( !line.isNull() ) {
-            qDebug() << line;
-            ptr->addRepository( QUrl( line ) );
-        }
-    } while( !line.isNull() );
-
-    do {
-        line = inPackages.readLine();
-        if( !line.isNull() ) {
-            qDebug() << line;
+            //qDebug() << line;
             ptr->addPackage( line );
         }
     } while( !line.isNull() );
