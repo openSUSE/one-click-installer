@@ -28,7 +28,7 @@ InstallScreen::InstallScreen(PackageBackend *backend, bool fakeRequested, QStrin
     mainLayout->addWidget( m_cancel );
     setLayout( mainLayout );
     if( !fakeRequested ) {
-        QString command( "xdg-su -u root -c \"/home/saurabh/workspace/one-click-installer/src/backendinterface " );
+        QString command( "xdg-su -u root -c \"/sbin/oneclickhelper " );
         command.append(m_tmpFileName);
         command.append( "\"" );
         system( command.toLocal8Bit().data() );
