@@ -24,6 +24,8 @@ private:
     PackageBackend *m_backend;
     FirstScreen *m_firstScreen;
     QString *m_tmpFileName;
+
+    bool m_fakeRequested;
 };
 
 #endif

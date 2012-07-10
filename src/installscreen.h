@@ -18,7 +18,7 @@ class InstallScreen : public QWidget
 {
     Q_OBJECT
 public:
-    InstallScreen( PackageBackend *backend, QString *tmpFileName,  QObject *parent = 0 );
+    InstallScreen( PackageBackend *backend, bool fakeRequested, QString *tmpFileName,  QObject *parent = 0 );
 private:
     QLabel *m_installStatus;
     QLabel *m_sources;
@@ -27,6 +27,7 @@ private:
     PackageBackend *m_backend;
 
     QString *m_tmpFileName;
+    bool m_fakeRequested;
 };
 
 #endif

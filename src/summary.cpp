@@ -1,9 +1,10 @@
 #include "summary.h"
 #include <unistd.h>
 
-Summary::Summary( PackageBackend *backend, QString *tmpFileName, QWidget *stageWidget, QObject *parent )
+Summary::Summary( PackageBackend *backend, bool fakeRequested, QString *tmpFileName, QWidget *stageWidget, QObject *parent )
 {
     m_backend = backend;
+    m_fakeRequested = fakeRequested;
     m_tmpFileName = tmpFileName;
     m_stageWidget = stageWidget;
     m_installationSummary = new QTextBrowser;
@@ -38,17 +39,9 @@ Summary::Summary( PackageBackend *backend, QString *tmpFileName, QWidget *stageW
 
 void Summary::continueInstallation()
 {
-    InstallScreen *installer = new InstallScreen( m_backend, m_tmpFileName );
+    InstallScreen *installer = new InstallScreen( m_backend, m_fakeRequested, m_tmpFileName );
     m_stageWidget->parentWidget()->layout()->addWidget( installer );
     m_stageWidget = installer;
-
-    //QStringList args;
-    //QString cmd( "kdesu -c./backendinterface" );
-    //backendProcess.start( cmd, args );
-    //backendProcess.waitForStarted();
-
-    //execve( "xdg-su -u root -c ./backendinterface", NULL );
-//    popen( "xdg-su -u root -c ./backendinterface", NULL );
     this->hide();
 }
 

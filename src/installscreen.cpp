@@ -1,9 +1,11 @@
 #include "installscreen.h"
 
-InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObject *parent )
+InstallScreen::InstallScreen(PackageBackend *backend, bool fakeRequested, QString *tmpFileName, QObject *parent )
 {
     m_backend = backend;
+    m_fakeRequested = fakeRequested;
     m_tmpFileName = tmpFileName;
+
     QVBoxLayout *mainLayout = new QVBoxLayout;
     QVBoxLayout * installLayout = new QVBoxLayout;
 
@@ -16,6 +18,7 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
         QProgressBar * progressBar = new QProgressBar;
         progressBar->setMinimum( 0 );
         progressBar->setMaximum( 0 );
+        progressBar->setRange( 0, 0 );
         packageLayout->addWidget( package );
         packageLayout->addWidget( progressBar );
         installLayout->addLayout( packageLayout );
@@ -24,10 +27,14 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
     mainLayout->addLayout( installLayout );
     mainLayout->addWidget( m_cancel );
     setLayout( mainLayout );
-    QString command( "kdesu -c /home/saurabh/workspace/one-click-installer/src/backendinterface " );
-    command.append(m_tmpFileName);
-    system( command.toLocal8Bit().data() );
-    show();
+    if( !fakeRequested ) {
+        QString command( "xdg-su -u root -c \"/home/saurabh/workspace/one-click-installer/src/backendinterface " );
+        command.append(m_tmpFileName);
+        command.append( "\"" );
+        system( command.toLocal8Bit().data() );
+        show();
+    } else {
+        m_backend->install();
+        show();
+    }
 }
-
-

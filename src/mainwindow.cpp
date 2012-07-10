@@ -15,11 +15,13 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     //Set up the backend
     if( fakeRequested ) {
         m_backend = new FakeBackend( this );
+        m_fakeRequested = true;
     } else {
         m_backend = new Backend;
+        m_fakeRequested = false;
     }
 
-    m_firstScreen = new FirstScreen( m_backend, m_tmpFileName, m_stageWidget, filename, this );
+    m_firstScreen = new FirstScreen( m_backend, m_tmpFileName, m_fakeRequested, m_stageWidget, filename, this );
     m_stageWidget = m_firstScreen;
     QObject::connect(m_stageWidget, SIGNAL(destroyed()), this, SLOT(close()));
 
