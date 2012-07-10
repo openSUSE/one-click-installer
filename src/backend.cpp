@@ -81,3 +81,11 @@ bool Backend::exists( std::string repo )
 
     return false;
 }
+
+void Backend::callBackendHelper()
+{
+    QString command( "xdg-su -u root -c \"/sbin/oneclickhelper " );
+    command.append( getFileName() );
+    command.append( "\"" );
+    system( command.toLocal8Bit().data() );
+}

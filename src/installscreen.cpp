@@ -28,13 +28,12 @@ InstallScreen::InstallScreen(PackageBackend *backend, bool fakeRequested, QStrin
     mainLayout->addWidget( m_cancel );
     setLayout( mainLayout );
     if( !fakeRequested ) {
-        QString command( "xdg-su -u root -c \"/sbin/oneclickhelper " );
-        command.append(m_tmpFileName);
-        command.append( "\"" );
-        system( command.toLocal8Bit().data() );
+        m_backend->setFileName( *m_tmpFileName );
+        m_backend->callBackendHelper();
         show();
     } else {
-        m_backend->install();
+        m_backend->setFileName( *m_tmpFileName );
+        m_backend->callBackendHelper();
         show();
     }
 }
