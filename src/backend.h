@@ -34,24 +34,31 @@ public:
     void install();
 
     /**
-        Add Repositories
-     */
-    void addRepositories();
-
-    /**
         Call the Backend Helper
      */
     void callBackendHelper();
+
+    /**
+        Return Error Code;
+     */
+    int errorCode();
 
 protected:
     /**
         Check if repo exists in the Repository database or not
      */
     bool exists( std::string repo );
+
+    /**
+        Add Repositories
+     */
+    void addRepositories();
+
 private:
     zypp::RepoManager *m_manager;
     zypp::ZYpp::Ptr *m_ptr;
     zypp::KeyRingCallbacks *m_keyRingManager;
+    int m_errorCode;
 };
 
 #endif

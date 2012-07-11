@@ -20,7 +20,8 @@ add_executable(oneclickinstaller ${QT_LIBRARIES} ${oneclickinstaller_SOURCES} ${
 target_link_libraries(oneclickhelper ${QT_LIBRARIES} zypp)
 target_link_libraries(oneclickinstaller ${QT_LIBRARIES} zypp)
 
-INSTALL(FILES oneclickhelper DESTINATION /sbin)
+INSTALL(TARGETS oneclickhelper DESTINATION /sbin)
+#INSTALL_TARGETS(/sbin oneclickhelper)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_BINARY_DIR}
