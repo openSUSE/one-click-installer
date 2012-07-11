@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QTextStream>
 #include <QUrl>
+#include <QStringList>
 #include "backend.h"
 
 int main( int argc, char *argv[] )
@@ -13,6 +14,7 @@ int main( int argc, char *argv[] )
 
     if( !dataFile.open( QIODevice::ReadOnly ) ) {
         qDebug() << "Failed to open Data File";
+        return 1;
     }
 
     QTextStream inData( &dataFile );
@@ -20,25 +22,18 @@ int main( int argc, char *argv[] )
     Backend *ptr = new Backend;
 
     QString line;
-    line = inData.readLine();
-    if( line == "repositories" ) {
-        do {
-            line = inData.readLine();
-            if( line != "packages") {
-                //qDebug() << line;
-                ptr->addRepository( QUrl( line ) );
-            }
-        } while( line !="packages" );
-    }
     do {
         line = inData.readLine();
         if( !line.isNull() ) {
-            //qDebug() << line;
-            ptr->addPackage( line );
+            if( line.at( 0 ) == 'R' ) {
+                qDebug() << line.split( " " ).at( 1 );
+            } else if( line.at( 0 ) == 'P' ) {
+                qDebug() << line.split( " " ).at( 1 );
+            }
         }
     } while( !line.isNull() );
 
-    ptr->install();
+//    ptr->install();
 
-    return 0;
+    return ptr->errorCode();
 }

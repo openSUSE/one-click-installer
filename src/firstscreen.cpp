@@ -23,8 +23,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, bool fa
     }
 
     QTextStream outData( &dataFile );
-    outData << "repositories" << "\n";
-        
+
     //Create Interface Elemenets
     m_warning = new	QLabel( "<b>Be careful!</b> Some Sources are not currently known. Installing<br />software requires trusting these sources" );
     m_warning->setStyleSheet( "border : 1px solid rgb(196,181,147); background-color: rgb(253, 227, 187); border-radius : 5px" );
@@ -92,13 +91,11 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, bool fa
     }
 
     foreach( QUrl iter, m_backend->repositories()) {
-        outData << iter.toString() << "\n";
+        outData << "R " << iter.toString() << "\n";
     }
 
-    outData << "packages" << "\n";
-
     foreach( QString iter, m_backend->packages() ) {
-        outData << iter << "\n";
+        outData << "P " << iter << "\n";
     }
 
     //Signal Slot connections
