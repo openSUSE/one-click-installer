@@ -26,9 +26,13 @@ int main( int argc, char *argv[] )
         line = inData.readLine();
         if( !line.isNull() ) {
             if( line.at( 0 ) == 'R' ) {
-                qDebug() << line.split( " " ).at( 1 );
+                QString repo = line.split( " " ).at( 1 );
+                qDebug() << repo;
+                ptr->addRepository( repo );
             } else if( line.at( 0 ) == 'P' ) {
-                qDebug() << line.split( " " ).at( 1 );
+                QString package = line.split( " " ).at( 1 );
+                qDebug() << package;
+                ptr->addPackage( package );
             }
         }
     } while( !line.isNull() );
