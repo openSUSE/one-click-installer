@@ -6,8 +6,11 @@
 #include <QVBoxLayout>
 #include <QList>
 #include <QPixmap>
+#include <QStackedLayout>
 #include "mainheader.h"
 #include "firstscreen.h"
+#include "summary.h"
+#include "installscreen.h"
 #include "fakebackend.h"
 #include "packagebackend.h"
 #include "backend.h"
@@ -20,11 +23,11 @@ public:
     */
     MainWindow( const QString& filename, QString tmpFileName, bool fakeRequested, QObject *parent = 0 );
 private:
-    QWidget *m_stageWidget;	//This will load the corresponding widget to the layout depending on the stage of the installation
     PackageBackend *m_backend;
     FirstScreen *m_firstScreen;
     QString *m_tmpFileName;
     MainHeader *m_header;
+    QStackedLayout *m_screenStack;
 
     bool m_fakeRequested;
 };

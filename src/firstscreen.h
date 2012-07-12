@@ -12,6 +12,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QUuid>
+#include <QStackedLayout>
 #include "fakebackend.h"
 #include "packagebackend.h"
 #include "ympparser.h"
@@ -31,7 +32,7 @@ public:
    /**
         Default constructor taking the backend, and the filename as argument
    */
-    FirstScreen( PackageBackend *backend, QString *tmpFileName, QWidget* stageWidget, const QString& filename, QObject *parent = 0 );
+    FirstScreen( PackageBackend *backend, QString *tmpFileName, QStackedLayout *screenStack, const QString& filename, QObject *parent = 0 );
 private slots:
 
    /**
@@ -62,7 +63,6 @@ private:
     QPushButton *m_install;
 
     PackageBackend *m_backend;
-    QWidget *m_stageWidget;
 
     QList< QVBoxLayout* > m_repoLayouts;
 
@@ -74,6 +74,7 @@ private:
     QHash< int, QLabel*> m_detailsLabels;
 
     QString *m_tmpFileName;
+    QStackedLayout *m_screenStack;
 };
 
 #endif
