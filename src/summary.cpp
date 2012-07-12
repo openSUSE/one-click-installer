@@ -1,10 +1,14 @@
 #include "summary.h"
+#include <unistd.h>
 
-Summary::Summary( PackageBackend *backend, QWidget *stageWidget, QObject *parent )
+Summary::Summary( PackageBackend *backend, bool fakeRequested, QString *tmpFileName, QWidget *stageWidget, QObject *parent )
 {
     m_backend = backend;
+    m_fakeRequested = fakeRequested;
+    m_tmpFileName = tmpFileName;
     m_stageWidget = stageWidget;
     m_installationSummary = new QTextBrowser;
+    m_installationSummary->addScrollBarWidget( new QScrollBar, Qt::AlignRight );
     m_continue = new QPushButton( "Continue Installation ");
     m_cancel = new QPushButton( "Cancel ");
 
@@ -29,15 +33,16 @@ Summary::Summary( PackageBackend *backend, QWidget *stageWidget, QObject *parent
 
     QObject::connect( m_continue, SIGNAL( clicked() ), this, SLOT( continueInstallation() ) );
     QObject::connect( m_cancel, SIGNAL( clicked() ), this, SLOT( cancel() ) );
+
     show();
 }
 
 void Summary::continueInstallation()
 {
-    InstallScreen *installer = new InstallScreen( m_backend );
+    InstallScreen *installer = new InstallScreen( m_backend, m_fakeRequested, m_tmpFileName );
     m_stageWidget->parentWidget()->layout()->addWidget( installer );
     m_stageWidget = installer;
-    delete this;
+    this->hide();
 }
 
 void Summary::cancel()

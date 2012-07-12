@@ -1,8 +1,11 @@
 #include "installscreen.h"
 
-InstallScreen::InstallScreen( PackageBackend *backend, QObject *parent )
+InstallScreen::InstallScreen(PackageBackend *backend, bool fakeRequested, QString *tmpFileName, QObject *parent )
 {
     m_backend = backend;
+    m_fakeRequested = fakeRequested;
+    m_tmpFileName = tmpFileName;
+
     QVBoxLayout *mainLayout = new QVBoxLayout;
     QVBoxLayout * installLayout = new QVBoxLayout;
 
@@ -15,6 +18,7 @@ InstallScreen::InstallScreen( PackageBackend *backend, QObject *parent )
         QProgressBar * progressBar = new QProgressBar;
         progressBar->setMinimum( 0 );
         progressBar->setMaximum( 0 );
+        progressBar->setRange( 0, 0 );
         packageLayout->addWidget( package );
         packageLayout->addWidget( progressBar );
         installLayout->addLayout( packageLayout );
@@ -23,7 +27,13 @@ InstallScreen::InstallScreen( PackageBackend *backend, QObject *parent )
     mainLayout->addLayout( installLayout );
     mainLayout->addWidget( m_cancel );
     setLayout( mainLayout );
-    show();
+    if( !fakeRequested ) {
+        m_backend->setFileName( *m_tmpFileName );
+        m_backend->callBackendHelper();
+        show();
+    } else {
+        m_backend->setFileName( *m_tmpFileName );
+        m_backend->callBackendHelper();
+        show();
+    }
 }
-
-

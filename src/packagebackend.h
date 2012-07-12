@@ -37,10 +37,26 @@ class PackageBackend
      */
     virtual void install() = 0;
 
+    /**
+        Call the Backend Helper
+     */
+    virtual void callBackendHelper() = 0;
+
+    /**
+        Set the Temporary Filename
+     */
+    virtual void setFileName( QString fileName );
+
+    /**
+        Get the Temporary Filename
+     */
+    virtual QString getFileName();
+
 private:
     QList< QString > m_packages;
     QList< QUrl > m_repositories;
 
+    QString m_tmpFileName;
 };
 
 #endif

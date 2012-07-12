@@ -5,7 +5,7 @@ void Backend::install()
     addRepositories();
 
     //Code to install packages
-    zypp::misc::defaultLoadSystem( "/" );
+
     zypp::ZYpp::Ptr zypp_pointer = zypp::getZYpp();
     zypp_pointer->initializeTarget( "/" );
     zypp::ResPoolProxy selectablePool( zypp::ResPool::instance().proxy() );
@@ -23,7 +23,8 @@ void Backend::install()
 
     if( !resolved ) {
         std::cout << "Failed to Resolve Pool" << std::endl;
-        //Code for further resolving
+        m_errorCode = 2;
+        return;
     } else {
         std::cout << "Resolved Pool" << std::endl;
         //Perform Instalation
@@ -37,6 +38,7 @@ void Backend::install()
             std::cout << "Installation Succeeded" << std::endl;
         } else {
             std::cout << "Installation did not succeed" << std::cout;
+            m_errorCode = 3;
         }
     }
 }
@@ -46,6 +48,7 @@ Backend::Backend()
     m_manager = new zypp::RepoManager;
     m_ptr = new zypp::ZYpp::Ptr;
     m_keyRingManager = new zypp::KeyRingCallbacks;
+    m_errorCode = 0;
 }
 
 void Backend::addRepositories()
@@ -59,8 +62,16 @@ void Backend::addRepositories()
         repoInfo.setAlias( url );
         repoInfo.setGpgCheck( true );
 
-        if( !exists( url ) )
-            m_manager->addRepository( repoInfo );
+        if( !exists( url ) ) {
+            try {
+                m_manager->addRepository( repoInfo );
+            } catch( zypp::repo::RepoMetadataException e ) {
+                m_errorCode = 4;
+            }
+            catch( zypp::repo::RepoException ) {
+                m_errorCode = 5;
+            }
+        }
         else
             qDebug() << "Repository Exists";
         m_manager->buildCache( repoInfo );
@@ -80,4 +91,17 @@ bool Backend::exists( std::string repo )
     }
 
     return false;
+}
+
+void Backend::callBackendHelper()
+{
+    QString command( "xdg-su -u root -c \"/sbin/oneclickhelper " );
+    command.append( getFileName() );
+    command.append( "\"" );
+    qDebug() << system( command.toLocal8Bit().data() );
+}
+
+int Backend::errorCode()
+{
+    return m_errorCode;
 }

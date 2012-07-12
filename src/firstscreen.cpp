@@ -1,7 +1,10 @@
 #include "firstscreen.h"
 
-FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const QString& filename, QObject *parent )
+FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, bool fakeRequested, QWidget *stageWidget, const QString& filename, QObject *parent )
 {
+    m_tmpFileName = tmpFileName;
+    m_fakeRequested = fakeRequested;
+
     QWidget *warningWidget = new QWidget;
     QWidget *repoWidget = new QWidget;
     QWidget *packageWidget = new QWidget;
@@ -13,7 +16,14 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setSpacing( 0 );
-        
+
+    QFile dataFile( m_tmpFileName->toAscii() );
+    if( !dataFile.open( QIODevice::Truncate | QIODevice::WriteOnly ) ) {
+        qDebug() << "Could not open Data File";
+    }
+
+    QTextStream outData( &dataFile );
+
     //Create Interface Elemenets
     m_warning = new	QLabel( "<b>Be careful!</b> Some Sources are not currently known. Installing<br />software requires trusting these sources" );
     m_warning->setStyleSheet( "border : 1px solid rgb(196,181,147); background-color: rgb(253, 227, 187); border-radius : 5px" );
@@ -80,6 +90,14 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
         i++;
     }
 
+    foreach( QUrl iter, m_backend->repositories()) {
+        outData << "R " << iter.toString() << "\n";
+    }
+
+    foreach( QString iter, m_backend->packages() ) {
+        outData << "P " << iter << "\n";
+    }
+
     //Signal Slot connections
     QObject::connect( m_settings, SIGNAL( clicked() ), this, SLOT( showSettings() ) );
     QObject::connect( m_install, SIGNAL( clicked() ), this, SLOT( performInstallation() ) );
@@ -89,6 +107,8 @@ FirstScreen::FirstScreen( PackageBackend *backend, QWidget *stageWidget, const Q
     mainLayout->addWidget( warningWidget );
     mainLayout->addSpacing( 10 );
     mainLayout->addLayout( buttonLayout );
+
+    dataFile.close();
 }
 
 void FirstScreen::showSettings()
@@ -101,7 +121,7 @@ void FirstScreen::performInstallation()
     //m_backend->install();
     m_stageWidget->hide();
     //InstallScreen *installer = new InstallScreen( m_backend );
-    Summary *installSummary = new Summary( m_backend, m_stageWidget );
+    Summary *installSummary = new Summary( m_backend, m_fakeRequested, m_tmpFileName, m_stageWidget );
     m_stageWidget->parentWidget()->layout()->addWidget( installSummary );
     m_stageWidget = installSummary;
 }

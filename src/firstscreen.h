@@ -9,6 +9,9 @@
 #include <QHBoxLayout>
 #include <QList>
 #include <QHash>
+#include <QFile>
+#include <QTextStream>
+#include <QUuid>
 #include "fakebackend.h"
 #include "packagebackend.h"
 #include "ympparser.h"
@@ -28,7 +31,7 @@ public:
    /**
         Default constructor taking the backend, and the filename as argument
    */
-    FirstScreen( PackageBackend *backend, QWidget* stageWidget, const QString& filename, QObject *parent = 0 );
+    FirstScreen( PackageBackend *backend, QString *tmpFileName, bool fakeRequested, QWidget* stageWidget, const QString& filename, QObject *parent = 0 );
 private slots:
 
    /**
@@ -69,6 +72,9 @@ private:
 
     QHash< int, QWidget* > m_details;
     QHash< int, QLabel*> m_detailsLabels;
+
+    QString *m_tmpFileName;
+    bool m_fakeRequested;
 };
 
 #endif

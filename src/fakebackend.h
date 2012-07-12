@@ -1,14 +1,14 @@
 #ifndef FAKEBACKEND_H
 #define FAKEBACKEND_H
 
-#include "packagebackend.h"
-#include "repository.h"
 #include <QList>
 #include <QString>
 #include <QWidget>
 #include <QMessageBox>
+#include <QDebug>
 #include <QUrl>
-
+#include "packagebackend.h"
+#include "repository.h"
 
 class FakeBackend : public PackageBackend
 {
@@ -22,6 +22,11 @@ class FakeBackend : public PackageBackend
     	Fake implementation of the install function
      */
     void install();
+
+    /**
+        Fake Call to the Backend Helper
+     */
+    void callBackendHelper();
 
     private:
     QWidget *m_main;
