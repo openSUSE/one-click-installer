@@ -6,7 +6,7 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     m_tmpFileName = new QString( tmpFileName );
     QVBoxLayout *mainLayout = new QVBoxLayout;
     QHBoxLayout *detailsLayout = new QHBoxLayout;
-    const QPixmap icon( "res/oneclickinstall.png" );
+    const QPixmap icon( "/usr/share/icons/oneclickinstall.png" );
     QLabel *imgView = new QLabel;
     imgView->setPixmap( icon );
     detailsLayout->addWidget( imgView );
@@ -29,6 +29,6 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     mainLayout->addWidget( m_stageWidget );
     setLayout( mainLayout );
     setWindowTitle( "One Click Install" );
-    setWindowIcon( QIcon("res/oneclickinstall.png") );
+    setWindowIcon( QIcon("/usr/share/icons/oneclickinstall.png") );
     show();
 }

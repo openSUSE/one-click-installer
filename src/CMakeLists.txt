@@ -21,7 +21,29 @@ target_link_libraries(oneclickhelper ${QT_LIBRARIES} zypp)
 target_link_libraries(oneclickinstaller ${QT_LIBRARIES} zypp)
 
 INSTALL(TARGETS oneclickhelper DESTINATION /sbin)
+INSTALL(TARGETS oneclickinstaller DESTINATION /bin)
 #INSTALL_TARGETS(/sbin oneclickhelper)
+
+if( UNIX AND NOT APPLE )
+    if( NOT DESKTOP_ENTRY )
+      set( DESKTOP_ENTRY oci.desktop )
+    endif( NOT DESKTOP_ENTRY )
+
+    add_custom_command( OUTPUT ${DESKTOP_ENTRY}
+      COMMAND touch ${DESKTOP_ENTRY}
+      COMMAND sh oci-desktop.sh ${CMAKE_INSTALL_PREFIX} >${DESKTOP_ENTRY}
+      DEPENDS oci-desktop.sh
+      COMMENT "Generating desktop entry file"
+      )
+    add_custom_target( DESKTOP_ENTRY_FILE ALL
+      DEPENDS ${DESKTOP_ENTRY}
+      )
+
+    set( APP_ICON res/oneclickinstall.png )
+  endif( UNIX AND NOT APPLE )
+
+INSTALL(FILES ${DESKTOP_ENTRY} DESTINATION /usr/share/applications)
+INSTALL(FILES res/oneclickinstall.png DESTINATION /usr/share/icons/)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_BINARY_DIR}
