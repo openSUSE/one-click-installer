@@ -9,6 +9,7 @@
 #include <QList>
 #include <QProcess>
 #include <QScrollBar>
+#include <QStackedLayout>
 #include <cstdlib>
 #include "packagebackend.h"
 #include "installscreen.h"
@@ -17,18 +18,17 @@ class Summary : public QWidget
 {
     Q_OBJECT
 public:
-    Summary( PackageBackend *backend, bool fakeRequested, QString *tmpFileName, QWidget *stageWidget, QObject *parent = 0 );
+    Summary( PackageBackend *backend, QStackedLayout *screenStack, QString *tmpFileName, QObject *parent = 0 );
 private:
     QTextBrowser *m_installationSummary;
     QPushButton *m_continue;
     QPushButton *m_cancel;
     PackageBackend *m_backend;
-    QWidget *m_stageWidget;
     QProcess backendProcess;
 
-    bool m_fakeRequested;
-
     QString *m_tmpFileName;
+
+    QStackedLayout *m_screenStack;
 
 private slots:
     void continueInstallation();

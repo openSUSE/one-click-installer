@@ -10,6 +10,7 @@
 #include <QList>
 #include <QUrl>
 #include <QDebug>
+#include <QStackedLayout>
 #include <iostream>
 #include "packagebackend.h"
 #include "fakebackend.h"
@@ -18,7 +19,8 @@ class InstallScreen : public QWidget
 {
     Q_OBJECT
 public:
-    InstallScreen( PackageBackend *backend, bool fakeRequested, QString *tmpFileName,  QObject *parent = 0 );
+    InstallScreen( PackageBackend *backend, QStackedLayout *screenStack, QString *tmpFileName,  QObject *parent = 0 );
+    void showEvent( QShowEvent *s );
 private:
     QLabel *m_installStatus;
     QLabel *m_sources;
@@ -27,7 +29,8 @@ private:
     PackageBackend *m_backend;
 
     QString *m_tmpFileName;
-    bool m_fakeRequested;
+
+    QStackedLayout *m_screenStack;
 };
 
 #endif

@@ -1,9 +1,9 @@
 #include "firstscreen.h"
 
-FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, bool fakeRequested, QWidget *stageWidget, const QString& filename, QObject *parent )
+FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, QStackedLayout *screenStack, const QString& filename, QObject *parent )
 {
     m_tmpFileName = tmpFileName;
-    m_fakeRequested = fakeRequested;
+    m_screenStack = screenStack;
 
     QWidget *warningWidget = new QWidget;
     QWidget *repoWidget = new QWidget;
@@ -40,9 +40,6 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, bool fa
     buttonLayout->addSpacing( 10 );
     buttonLayout->addWidget( m_install );
     setLayout( mainLayout );
-    show();
-
-    m_stageWidget = this;
 
     //Parse YMP File
     m_backend = backend;
@@ -118,12 +115,7 @@ void FirstScreen::showSettings()
 
 void FirstScreen::performInstallation()
 {
-    //m_backend->install();
-    m_stageWidget->hide();
-    //InstallScreen *installer = new InstallScreen( m_backend );
-    Summary *installSummary = new Summary( m_backend, m_fakeRequested, m_tmpFileName, m_stageWidget );
-    m_stageWidget->parentWidget()->layout()->addWidget( installSummary );
-    m_stageWidget = installSummary;
+    m_screenStack->setCurrentIndex( 1 );
 }
 
 void FirstScreen::showDetails( QString link )
