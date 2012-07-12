@@ -1,10 +1,9 @@
 #include "summary.h"
 #include <unistd.h>
 
-Summary::Summary( PackageBackend *backend, bool fakeRequested, QString *tmpFileName, QWidget *stageWidget, QObject *parent )
+Summary::Summary( PackageBackend *backend, QString *tmpFileName, QWidget *stageWidget, QObject *parent )
 {
     m_backend = backend;
-    m_fakeRequested = fakeRequested;
     m_tmpFileName = tmpFileName;
     m_stageWidget = stageWidget;
     m_installationSummary = new QTextBrowser;
@@ -39,7 +38,7 @@ Summary::Summary( PackageBackend *backend, bool fakeRequested, QString *tmpFileN
 
 void Summary::continueInstallation()
 {
-    InstallScreen *installer = new InstallScreen( m_backend, m_fakeRequested, m_tmpFileName );
+    InstallScreen *installer = new InstallScreen( m_backend, m_tmpFileName );
     m_stageWidget->parentWidget()->layout()->addWidget( installer );
     m_stageWidget = installer;
     this->hide();

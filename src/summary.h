@@ -17,7 +17,7 @@ class Summary : public QWidget
 {
     Q_OBJECT
 public:
-    Summary( PackageBackend *backend, bool fakeRequested, QString *tmpFileName, QWidget *stageWidget, QObject *parent = 0 );
+    Summary( PackageBackend *backend, QString *tmpFileName, QWidget *stageWidget, QObject *parent = 0 );
 private:
     QTextBrowser *m_installationSummary;
     QPushButton *m_continue;
@@ -25,8 +25,6 @@ private:
     PackageBackend *m_backend;
     QWidget *m_stageWidget;
     QProcess backendProcess;
-
-    bool m_fakeRequested;
 
     QString *m_tmpFileName;
 

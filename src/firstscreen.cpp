@@ -1,9 +1,8 @@
 #include "firstscreen.h"
 
-FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, bool fakeRequested, QWidget *stageWidget, const QString& filename, QObject *parent )
+FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, QWidget *stageWidget, const QString& filename, QObject *parent )
 {
     m_tmpFileName = tmpFileName;
-    m_fakeRequested = fakeRequested;
 
     QWidget *warningWidget = new QWidget;
     QWidget *repoWidget = new QWidget;
@@ -121,7 +120,7 @@ void FirstScreen::performInstallation()
     //m_backend->install();
     m_stageWidget->hide();
     //InstallScreen *installer = new InstallScreen( m_backend );
-    Summary *installSummary = new Summary( m_backend, m_fakeRequested, m_tmpFileName, m_stageWidget );
+    Summary *installSummary = new Summary( m_backend, m_tmpFileName, m_stageWidget );
     m_stageWidget->parentWidget()->layout()->addWidget( installSummary );
     m_stageWidget = installSummary;
 }

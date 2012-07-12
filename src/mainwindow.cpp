@@ -21,7 +21,7 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
         m_fakeRequested = false;
     }
 
-    m_firstScreen = new FirstScreen( m_backend, m_tmpFileName, m_fakeRequested, m_stageWidget, filename, this );
+    m_firstScreen = new FirstScreen( m_backend, m_tmpFileName, m_stageWidget, filename, this );
     m_stageWidget = m_firstScreen;
     QObject::connect(m_stageWidget, SIGNAL(destroyed()), this, SLOT(close()));
 
