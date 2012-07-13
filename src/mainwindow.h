@@ -7,6 +7,7 @@
 #include <QList>
 #include <QPixmap>
 #include <QStackedLayout>
+#include <QScrollArea>
 #include "mainheader.h"
 #include "firstscreen.h"
 #include "summary.h"
