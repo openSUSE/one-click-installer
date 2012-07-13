@@ -21,15 +21,16 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     Summary *installSummary = new Summary( m_backend, m_screenStack, m_tmpFileName );
     InstallScreen *installer = new InstallScreen( m_backend, m_screenStack, m_tmpFileName );
 
-    m_screenStack->addWidget( m_firstScreen );
+    QScrollArea *scroll = new QScrollArea;
+    scroll->setWidget( m_firstScreen );
+    scroll->setWidgetResizable( true );
+
+    m_screenStack->addWidget( scroll );
     m_screenStack->addWidget( installSummary );
     m_screenStack->addWidget( installer );
 
     m_screenStack->setCurrentIndex( 0 );
 
-    //QObject::connect(m_stageWidget, SIGNAL(destroyed()), this, SLOT(close()));
-
-//    mainLayout->addLayout( detailsLayout );
     mainLayout->addWidget( m_header );
     mainLayout->addLayout( m_screenStack );
     setLayout( mainLayout );
