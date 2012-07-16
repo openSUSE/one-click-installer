@@ -22,19 +22,21 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, QStacke
         qDebug() << "Could not open Data File";
     }
 
+    m_settings.sync();
+
     QTextStream outData( &dataFile );
 
     //Create Interface Elemenets
     m_warning = new	QLabel( "<b>Be careful!</b> Some Sources are not currently known. Installing<br />software requires trusting these sources" );
     m_warning->setStyleSheet( "border : 1px solid rgb(196,181,147); background-color: rgb(253, 227, 187); border-radius : 5px" );
     m_warning->setContentsMargins( 10,10,10,10 );
-    m_settings = new QPushButton( "Settings" );
+    m_showSettings = new QPushButton( "Settings" );
     m_cancel = new QPushButton( "Cancel" );
     m_install = new QPushButton( "Install" );
 
     //Add Elements to corresponding Layouts;
     warningLayout->addWidget( m_warning );
-    buttonLayout->addWidget( m_settings );
+    buttonLayout->addWidget( m_showSettings );
     buttonLayout->addSpacing( 100 );
     buttonLayout->addWidget( m_cancel );
     buttonLayout->addSpacing( 10 );
@@ -96,7 +98,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, QStacke
     }
 
     //Signal Slot connections
-    QObject::connect( m_settings, SIGNAL( clicked() ), this, SLOT( showSettings() ) );
+    QObject::connect( m_showSettings, SIGNAL( clicked() ), this, SLOT( showSettings() ) );
     QObject::connect( m_install, SIGNAL( clicked() ), this, SLOT( performInstallation() ) );
     QObject::connect( m_cancel, SIGNAL( clicked()), parent, SLOT( close() ) );
 
@@ -105,23 +107,34 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, QStacke
     mainLayout->addSpacing( 10 );
     mainLayout->addLayout( buttonLayout );
 
+    //Show the widgets if the setting for showing the details is set
+    if( m_settings.value( "showdetails", 1 ).toInt() == 1 ) {
+        for( int i = 0; i < m_repos.count(); i++ ) {
+            showDetails( QString( "%1" ).arg( i ) );
+        }
+    }
+
     dataFile.close();
 }
 
 void FirstScreen::showSettings()
 {
-    new Settings();
+    new Settings( &m_settings );
 }
 
 void FirstScreen::performInstallation()
 {
-    m_screenStack->setCurrentIndex( 1 );
+    if( m_settings.value( "proposal", 1 ).toInt() == 1 ) {
+        m_screenStack->setCurrentIndex( 1 );
+    } else {
+        m_screenStack->setCurrentIndex( 2 );
+    }
 }
 
 void FirstScreen::showDetails( QString link )
 {
     int linkNo = link.toInt();
-
+    qDebug() << linkNo;
     if( m_visible.at( linkNo ) ) {
         m_detailsLabels[ linkNo ]->setText( QString( "<a href = %1>Show Details</a>" ).arg( linkNo ) );
         m_details[ linkNo ]->hide();

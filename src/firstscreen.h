@@ -13,6 +13,7 @@
 #include <QTextStream>
 #include <QUuid>
 #include <QStackedLayout>
+#include <QSettings>
 #include "fakebackend.h"
 #include "packagebackend.h"
 #include "ympparser.h"
@@ -58,7 +59,7 @@ private slots:
 private:
     QLabel *m_warning;
 
-    QPushButton *m_settings;
+    QPushButton *m_showSettings;
     QPushButton *m_cancel;
     QPushButton *m_install;
 
@@ -75,6 +76,8 @@ private:
 
     QString *m_tmpFileName;
     QStackedLayout *m_screenStack;
+
+    QSettings m_settings;
 };
 
 #endif
