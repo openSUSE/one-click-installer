@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QCheckBox>
 #include <QVBoxLayout>
+#include <QSettings>
 
 class Settings : public QDialog
 {
@@ -14,13 +15,15 @@ public:
     /**
         Constructor for the Settings dialog
     */
-    Settings( QObject *parent = 0 );
+    Settings(QSettings *settings, QObject *parent = 0 );
 private:
     QPushButton *m_confirm;
-    QCheckBox *m_subscribe;
-    QCheckBox *m_trust;
+    QCheckBox *m_showDetails;
+    QCheckBox *m_proposal;
     QPushButton *m_close;
     QLabel *m_repos;
+
+    QSettings *m_settings;
 private slots:
     void saveSettingsAndClose();
 };
