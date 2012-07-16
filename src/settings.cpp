@@ -2,6 +2,8 @@
 
 Settings::Settings( QSettings* settings, QObject *parent )
 {
+    setStyleSheet( "background-color : rgb(251,248,241)" );
+
     m_settings = settings;
     m_settings->sync();
 
