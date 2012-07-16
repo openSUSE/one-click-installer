@@ -34,6 +34,9 @@ private:
     bool m_fakeRequested;
 private slots:
     void showNextScreen( int index );
+    void updateCount(int repoCount , int packageCount);
+signals:
+    void countChanged( int repoCount, int packageCount );
 };
 
 #endif

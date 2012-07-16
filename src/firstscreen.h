@@ -55,6 +55,11 @@ private slots:
     */
     void showDetails( QString link );
 
+    /**
+        Show Event
+     */
+    void showEvent( QShowEvent * s);
+
 private:
     QLabel *m_warning;
 
@@ -78,6 +83,7 @@ private:
     QSettings m_settings;
 signals:
     void showNextScreen( int );
+    void countChanged( int, int );
 };
 
 #endif

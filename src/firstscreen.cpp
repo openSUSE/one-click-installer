@@ -149,6 +149,11 @@ void FirstScreen::showDetails( QString link )
     }
 }
 
+void FirstScreen::showEvent( QShowEvent *s )
+{
+    emit countChanged( m_repos.count(), m_packages.count() );
+}
+
 void FirstScreen::untrusedRepoDetails( QString link )
 {
 }

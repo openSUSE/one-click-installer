@@ -37,8 +37,10 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     setWindowTitle( "One Click Install" );
     setWindowIcon( QIcon("/usr/share/icons/oneclickinstall.png") );
 
-    QObject::connect( m_firstScreen, SIGNAL(showNextScreen(int)), this, SLOT(showNextScreen(int)) );
-    QObject::connect( installSummary, SIGNAL(showNextScreen(int)), this, SLOT(showNextScreen(int)) );
+    QObject::connect( m_firstScreen, SIGNAL( showNextScreen( int ) ), this, SLOT( showNextScreen( int ) ) );
+    QObject::connect( installSummary, SIGNAL( showNextScreen( int ) ), this, SLOT( showNextScreen( int ) ) );
+    QObject::connect( m_firstScreen, SIGNAL( countChanged( int, int )), this, SLOT( updateCount( int, int ) ) );
+    QObject::connect( this, SIGNAL( countChanged( int, int ) ), m_header, SLOT( changeStatusLabel( int, int) ) );
 
     show();
 }
@@ -46,4 +48,9 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
 void MainWindow::showNextScreen( int index )
 {
     m_screenStack->setCurrentIndex( index );
+}
+
+void MainWindow::updateCount( int repoCount, int packageCount )
+{
+    emit countChanged( repoCount, packageCount );
 }
