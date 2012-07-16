@@ -24,11 +24,6 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, QStacke
 
     m_settings.sync();
 
-    if( m_settings.childKeys().count() == 0 ) {
-        m_showDetails = false;
-        m_proposal = false;
-    }
-
     QTextStream outData( &dataFile );
 
     //Create Interface Elemenets

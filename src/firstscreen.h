@@ -78,9 +78,6 @@ private:
     QStackedLayout *m_screenStack;
 
     QSettings m_settings;
-
-    bool m_proposal;
-    bool m_showDetails;
 };
 
 #endif
