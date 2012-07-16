@@ -1,9 +1,8 @@
 #include "firstscreen.h"
 
-FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, QStackedLayout *screenStack, const QString& filename, QObject *parent )
+FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const QString& filename, QObject *parent )
 {
     m_tmpFileName = tmpFileName;
-    m_screenStack = screenStack;
 
     QWidget *warningWidget = new QWidget;
     QWidget *repoWidget = new QWidget;
@@ -128,9 +127,9 @@ void FirstScreen::showSettings()
 void FirstScreen::performInstallation()
 {
     if( m_settings.value( "proposal", 1 ).toInt() == 1 ) {
-        m_screenStack->setCurrentIndex( 1 );
+        emit showNextScreen( 1 );
     } else {
-        m_screenStack->setCurrentIndex( 2 );
+        emit showNextScreen( 2 );
     }
 }
 

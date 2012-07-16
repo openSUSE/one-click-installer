@@ -17,9 +17,9 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
 
     m_header = new MainHeader;
 
-    m_firstScreen = new FirstScreen( m_backend, m_tmpFileName, m_screenStack, filename, this );
-    Summary *installSummary = new Summary( m_backend, m_screenStack, m_tmpFileName );
-    InstallScreen *installer = new InstallScreen( m_backend, m_screenStack, m_tmpFileName );
+    m_firstScreen = new FirstScreen( m_backend, m_tmpFileName, filename, this );
+    Summary *installSummary = new Summary( m_backend, m_tmpFileName );
+    InstallScreen *installer = new InstallScreen( m_backend, m_tmpFileName );
 
     QScrollArea *scroll = new QScrollArea;
     scroll->setWidget( m_firstScreen );
@@ -36,5 +36,14 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     setLayout( mainLayout );
     setWindowTitle( "One Click Install" );
     setWindowIcon( QIcon("/usr/share/icons/oneclickinstall.png") );
+
+    QObject::connect( m_firstScreen, SIGNAL(showNextScreen(int)), this, SLOT(showNextScreen(int)) );
+    QObject::connect( installSummary, SIGNAL(showNextScreen(int)), this, SLOT(showNextScreen(int)) );
+
     show();
+}
+
+void MainWindow::showNextScreen( int index )
+{
+    m_screenStack->setCurrentIndex( index );
 }

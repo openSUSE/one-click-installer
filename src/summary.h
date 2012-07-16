@@ -9,7 +9,6 @@
 #include <QList>
 #include <QProcess>
 #include <QScrollBar>
-#include <QStackedLayout>
 #include <cstdlib>
 #include "packagebackend.h"
 #include "installscreen.h"
@@ -18,7 +17,7 @@ class Summary : public QWidget
 {
     Q_OBJECT
 public:
-    Summary( PackageBackend *backend, QStackedLayout *screenStack, QString *tmpFileName, QObject *parent = 0 );
+    Summary( PackageBackend *backend, QString *tmpFileName, QObject *parent = 0 );
 private:
     QTextBrowser *m_installationSummary;
     QPushButton *m_continue;
@@ -28,11 +27,11 @@ private:
 
     QString *m_tmpFileName;
 
-    QStackedLayout *m_screenStack;
-
 private slots:
     void continueInstallation();
     void cancel();
+signals:
+    void showNextScreen( int );
 };
 
 #endif

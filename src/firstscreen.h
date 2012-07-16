@@ -12,7 +12,6 @@
 #include <QFile>
 #include <QTextStream>
 #include <QUuid>
-#include <QStackedLayout>
 #include <QSettings>
 #include "fakebackend.h"
 #include "packagebackend.h"
@@ -33,7 +32,7 @@ public:
    /**
         Default constructor taking the backend, and the filename as argument
    */
-    FirstScreen( PackageBackend *backend, QString *tmpFileName, QStackedLayout *screenStack, const QString& filename, QObject *parent = 0 );
+    FirstScreen( PackageBackend *backend, QString *tmpFileName, const QString& filename, QObject *parent = 0 );
 private slots:
 
    /**
@@ -75,9 +74,10 @@ private:
     QHash< int, QLabel*> m_detailsLabels;
 
     QString *m_tmpFileName;
-    QStackedLayout *m_screenStack;
 
     QSettings m_settings;
+signals:
+    void showNextScreen( int );
 };
 
 #endif

@@ -18,6 +18,7 @@
 
 class MainWindow : public QDialog
 {
+    Q_OBJECT
 public:
     /**
         Default Constructor taking the YMP file as argument
@@ -31,6 +32,8 @@ private:
     QStackedLayout *m_screenStack;
 
     bool m_fakeRequested;
+private slots:
+    void showNextScreen( int index );
 };
 
 #endif
