@@ -57,7 +57,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, QStacke
     foreach( OCI::Repository *iter, m_repos) {
         m_backend->addRepository( QUrl( iter->url() ) );
         QHBoxLayout *sourceInfo = new QHBoxLayout;
-        Details *detailsWidget = new Details( m_backend, m_repos.at( i )->url() );
+        Details *detailsWidget = new Details( m_backend, m_repos.at( i ) );
         m_details.insert( i, detailsWidget );
         repoDetails = new QVBoxLayout;
         m_repoLayouts.append( repoDetails );
@@ -80,10 +80,13 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, QStacke
 
         foreach( OCI::Package *iter, m_packages ) {
             m_backend->addPackage( iter->name() );
+            QLabel *packageSummary = new QLabel( QString( "<b>Summary:</b> %1" ).arg( iter->summary() ) );
             QCheckBox *checkPackage = new QCheckBox( iter->name() );
             checkPackage->setContentsMargins( 20,20,20,20 );
-            checkPackage->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147); border-bottom : 1px solid rgb(196,181,147) ; padding-top : 10px; padding-bottom : 10px; padding-left : 3px;" );
+            checkPackage->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147); padding-top : 10px; padding-bottom : 10px; padding-left : 3px;" );
+            packageSummary->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147); border-bottom : 1px solid rgb(196,181,147) ; padding-top : 10px; padding-bottom : 10px; padding-left : 3px;" );
             repoPackages->addWidget( checkPackage );
+            repoPackages->addWidget( packageSummary );
         }
         mainLayout->addLayout( repoPackages );
         i++;
