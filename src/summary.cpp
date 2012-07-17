@@ -1,10 +1,9 @@
 #include "summary.h"
 #include <unistd.h>
 
-Summary::Summary(PackageBackend *backend, QStackedLayout *screenStack, QString *tmpFileName, QObject *parent )
+Summary::Summary(PackageBackend *backend, QString *tmpFileName, QObject *parent )
 {
     m_backend = backend;
-    m_screenStack = screenStack;
     m_tmpFileName = tmpFileName;
     m_installationSummary = new QTextBrowser;
     m_installationSummary->addScrollBarWidget( new QScrollBar, Qt::AlignRight );
@@ -36,7 +35,7 @@ Summary::Summary(PackageBackend *backend, QStackedLayout *screenStack, QString *
 
 void Summary::continueInstallation()
 {
-    m_screenStack->setCurrentIndex( 2 );
+    emit showNextScreen( 2 );
 }
 
 void Summary::cancel()

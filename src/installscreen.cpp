@@ -1,11 +1,10 @@
 #include "installscreen.h"
 
-InstallScreen::InstallScreen(PackageBackend *backend, QStackedLayout *screenStack, QString *tmpFileName, QObject *parent )
+InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObject *parent )
 {
     setStyleSheet( "" );
     m_backend = backend;
     m_tmpFileName = tmpFileName;
-    m_screenStack = screenStack;
 
     QWidget *packageWidget = new QWidget;
     packageWidget->setObjectName( "packageWidget" );

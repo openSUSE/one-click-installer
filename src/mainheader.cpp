@@ -17,3 +17,8 @@ MainHeader::MainHeader( QWidget *parent )
     setLayout( mainLayout );
     show();
 }
+
+void MainHeader::changeStatusLabel( int repoCount, int packageCount )
+{
+    m_statusLabel->setText( QString( "This installer will download and install %1 packages from %2 sources" ).arg( packageCount ).arg( repoCount ) );
+}

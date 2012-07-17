@@ -1,9 +1,8 @@
 #include "firstscreen.h"
 
-FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, QStackedLayout *screenStack, const QString& filename, QObject *parent )
+FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const QString& filename, QObject *parent )
 {
     m_tmpFileName = tmpFileName;
-    m_screenStack = screenStack;
 
     QWidget *warningWidget = new QWidget;
     QWidget *repoWidget = new QWidget;
@@ -57,7 +56,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, QStacke
     foreach( OCI::Repository *iter, m_repos) {
         m_backend->addRepository( QUrl( iter->url() ) );
         QHBoxLayout *sourceInfo = new QHBoxLayout;
-        Details *detailsWidget = new Details( m_backend, m_repos.at( i )->url() );
+        Details *detailsWidget = new Details( m_backend, m_repos.at( i ) );
         m_details.insert( i, detailsWidget );
         repoDetails = new QVBoxLayout;
         m_repoLayouts.append( repoDetails );
@@ -78,12 +77,12 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, QStacke
 
         QVBoxLayout *repoPackages = new QVBoxLayout;
 
+        static int j = 0;
         foreach( OCI::Package *iter, m_packages ) {
             m_backend->addPackage( iter->name() );
-            QCheckBox *checkPackage = new QCheckBox( iter->name() );
-            checkPackage->setContentsMargins( 20,20,20,20 );
-            checkPackage->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147); border-bottom : 1px solid rgb(196,181,147) ; padding-top : 10px; padding-bottom : 10px; padding-left : 3px;" );
-            repoPackages->addWidget( checkPackage );
+            PackageDetails *packDetails = new PackageDetails( iter, j );
+            repoPackages->addWidget( packDetails );
+            j++;
         }
         mainLayout->addLayout( repoPackages );
         i++;
@@ -125,9 +124,9 @@ void FirstScreen::showSettings()
 void FirstScreen::performInstallation()
 {
     if( m_settings.value( "proposal", 1 ).toInt() == 1 ) {
-        m_screenStack->setCurrentIndex( 1 );
+        emit showNextScreen( 1 );
     } else {
-        m_screenStack->setCurrentIndex( 2 );
+        emit showNextScreen( 2 );
     }
 }
 
@@ -145,6 +144,11 @@ void FirstScreen::showDetails( QString link )
         m_details[ linkNo ]->show();
         m_visible.replace( linkNo, true );
     }
+}
+
+void FirstScreen::showEvent( QShowEvent *s )
+{
+    emit countChanged( m_repos.count(), m_packages.count() );
 }
 
 void FirstScreen::untrusedRepoDetails( QString link )

@@ -12,8 +12,8 @@
 #include <QFile>
 #include <QTextStream>
 #include <QUuid>
-#include <QStackedLayout>
 #include <QSettings>
+#include "packagedetails.h"
 #include "fakebackend.h"
 #include "packagebackend.h"
 #include "ympparser.h"
@@ -33,7 +33,7 @@ public:
    /**
         Default constructor taking the backend, and the filename as argument
    */
-    FirstScreen( PackageBackend *backend, QString *tmpFileName, QStackedLayout *screenStack, const QString& filename, QObject *parent = 0 );
+    FirstScreen( PackageBackend *backend, QString *tmpFileName, const QString& filename, QObject *parent = 0 );
 private slots:
 
    /**
@@ -56,6 +56,11 @@ private slots:
     */
     void showDetails( QString link );
 
+    /**
+        Show Event
+     */
+    void showEvent( QShowEvent * s);
+
 private:
     QLabel *m_warning;
 
@@ -66,18 +71,22 @@ private:
     PackageBackend *m_backend;
 
     QList< QVBoxLayout* > m_repoLayouts;
+    QList< QVBoxLayout* > m_packageLayouts;
 
     QList< bool > m_visible;
+
     QList< OCI::Package* > m_packages;
     QList< OCI::Repository* > m_repos;
 
     QHash< int, QWidget* > m_details;
-    QHash< int, QLabel*> m_detailsLabels;
+    QHash< int, QLabel* > m_detailsLabels;
 
     QString *m_tmpFileName;
-    QStackedLayout *m_screenStack;
 
     QSettings m_settings;
+signals:
+    void showNextScreen( int );
+    void countChanged( int, int );
 };
 
 #endif
