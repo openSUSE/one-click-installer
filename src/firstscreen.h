@@ -13,6 +13,7 @@
 #include <QTextStream>
 #include <QUuid>
 #include <QSettings>
+#include "packagedetails.h"
 #include "fakebackend.h"
 #include "packagebackend.h"
 #include "ympparser.h"
@@ -60,11 +61,6 @@ private slots:
      */
     void showEvent( QShowEvent * s);
 
-    /**
-        Show Package Description
-     */
-    void showPackageDescription( QString link );
-
 private:
     QLabel *m_warning;
 
@@ -78,14 +74,12 @@ private:
     QList< QVBoxLayout* > m_packageLayouts;
 
     QList< bool > m_visible;
-    QList< bool > m_descriptionVisible;
+
     QList< OCI::Package* > m_packages;
     QList< OCI::Repository* > m_repos;
 
     QHash< int, QWidget* > m_details;
     QHash< int, QLabel* > m_detailsLabels;
-    QHash< int, QLabel* > m_descriptionLabels;
-    QHash< int, QLabel* > m_showDescriptionLabels;
 
     QString *m_tmpFileName;
 

@@ -80,32 +80,8 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
         static int j = 0;
         foreach( OCI::Package *iter, m_packages ) {
             m_backend->addPackage( iter->name() );
-
-            QHBoxLayout *packageLayout = new QHBoxLayout;
-            QLabel *packageSummary = new QLabel( QString( "<b>Summary:</b> %1" ).arg( iter->summary() ) );
-            QCheckBox *checkPackage = new QCheckBox( iter->name() );
-            QLabel *showDescription = new QLabel( QString( "<a href = %1>Show Details</a>" ).arg( j ) );
-            QLabel *description = new QLabel( QString( "%1" ).arg( iter->description() ) );
-
-            m_showDescriptionLabels.insert( j, showDescription );
-            m_descriptionLabels.insert( j, description );
-            m_descriptionVisible.append( false );
-
-            QObject::connect( showDescription, SIGNAL( linkActivated( QString ) ), this, SLOT( showPackageDescription( QString ) ) );
-
-            checkPackage->setContentsMargins( 20,20,20,20 );
-            checkPackage->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147);  padding-top : 10px; padding-bottom : 10px; padding-left : 3px;" );
-            packageSummary->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147);  padding-top : 10px; padding-bottom : 10px; padding-left : 3px;" );
-
-            showDescription->setStyleSheet( "background-color : white;border-right : 1px solid rgb(196,181,147); " );
-            description->setStyleSheet( "background-color : white; border-bottom : 1px solid rgb(196,181,147); border-left : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147);" );
-            description->setContentsMargins( 10, 10, 10, 10 );
-
-            packageLayout->addWidget( checkPackage );
-            packageLayout->addWidget( showDescription );
-            repoPackages->addLayout( packageLayout );
-            repoPackages->addWidget( packageSummary );
-            m_packageLayouts.append( repoPackages );
+            PackageDetails *packDetails = new PackageDetails( iter, j );
+            repoPackages->addWidget( packDetails );
             j++;
         }
         mainLayout->addLayout( repoPackages );
@@ -177,21 +153,4 @@ void FirstScreen::showEvent( QShowEvent *s )
 
 void FirstScreen::untrusedRepoDetails( QString link )
 {
-}
-
-void FirstScreen::showPackageDescription( QString link )
-{
-    int linkNo = link.toInt();
-    qDebug() << linkNo;
-
-    if( m_descriptionVisible.at( linkNo ) ) {
-        m_showDescriptionLabels[ linkNo ]->setText( QString( "<a href = %1>Show Details</a>" ).arg( linkNo ) );
-        m_descriptionLabels[ linkNo ]->hide();
-        m_descriptionVisible.replace( linkNo, false );
-    } else {
-        m_showDescriptionLabels[ linkNo ]->setText( QString( "<a href = %1>Hide Details</a>" ).arg( linkNo ) );
-        m_packageLayouts.at( linkNo )->addWidget( m_descriptionLabels[ linkNo ] );
-        m_descriptionLabels[ linkNo ]->show();
-        m_descriptionVisible.replace( linkNo, true );
-    }
 }
