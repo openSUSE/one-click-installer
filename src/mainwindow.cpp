@@ -22,6 +22,7 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     InstallScreen *installer = new InstallScreen( m_backend, m_tmpFileName );
 
     QScrollArea *scroll = new QScrollArea;
+    scroll->setFrameShape( QFrame::NoFrame );
     scroll->setWidget( m_firstScreen );
     scroll->setWidgetResizable( true );
 
