@@ -12,12 +12,12 @@ Details::Details(PackageBackend *backend, OCI::Repository *repo, QObject *parent
     m_fingerprint = new QLabel( "<b>Fingerprint: </b>" );
     m_created = new QLabel( "<b>Created: </b>" );
     m_expires = new QLabel( "<b>Expires : </b> ");
-    m_url->setStyleSheet( "background-color: rgb(254, 250, 210);" );
-    m_id->setStyleSheet( "background-color: rgb(254, 250, 210);" );
-    m_fingerprint->setStyleSheet( "background-color: rgb(254, 250, 210)" );
-    m_created->setStyleSheet( "background-color: rgb(254, 250, 210)" );
-    m_expires->setStyleSheet( "background-color: rgb(254, 250, 210)" );
-    m_summary->setStyleSheet( "background-color: rgb(254, 250, 210)" );
+    m_url->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px;" );
+    m_id->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px;" );
+    m_fingerprint->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px;" );
+    m_created->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px;" );
+    m_expires->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px;" );
+    m_summary->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px;" );
 
     mainLayout->addWidget( m_summary );
     mainLayout->addWidget( m_url );
