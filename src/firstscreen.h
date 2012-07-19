@@ -52,11 +52,6 @@ private slots:
     void untrusedRepoDetails( QString link);
 
     /**
-        Shows Details of Repositories
-    */
-    void showDetails( QString link );
-
-    /**
         Show Event
      */
     void showEvent( QShowEvent * s);
@@ -70,16 +65,9 @@ private:
 
     PackageBackend *m_backend;
 
-    QList< QVBoxLayout* > m_repoLayouts;
-    QList< QVBoxLayout* > m_packageLayouts;
-
-    QList< bool > m_visible;
-
     QList< OCI::Package* > m_packages;
     QList< OCI::Repository* > m_repos;
 
-    QHash< int, QWidget* > m_details;
-    QHash< int, QLabel* > m_detailsLabels;
 
     QString *m_tmpFileName;
 

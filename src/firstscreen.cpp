@@ -55,36 +55,16 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
 
     foreach( OCI::Repository *iter, m_repos) {
         m_backend->addRepository( QUrl( iter->url() ) );
-        QHBoxLayout *sourceInfo = new QHBoxLayout;
-        Details *detailsWidget = new Details( m_backend, m_repos.at( i ) );
-        m_details.insert( i, detailsWidget );
-        repoDetails = new QVBoxLayout;
-        m_repoLayouts.append( repoDetails );
-        m_visible.append( false );
-        QLabel *repoName = new QLabel( "<b>Source:</b> " + iter->name() );
-        QLabel *detailsLabel = new QLabel( QString("<a href = %1>Show Details</a>").arg( i ) );
-        m_detailsLabels.insert( i, detailsLabel );
-        repoName->setContentsMargins( 10,10,10,10 );
-        repoName->setStyleSheet( "background-color: rgb(254, 250, 210); border-bottom : 1px solid rgb(252,233,79); border-left : 1px solid rgb(196,181,147); border-top : 1px solid rgb(196,181,147);" );
-        detailsLabel->setStyleSheet( "background-color: rgb(254, 250, 210); border-bottom : 1px solid rgb(252,233,79); border-right : 1px solid rgb(196,181,147); border-top : 1px solid rgb(196,181,147);" );
-
-        QObject::connect( detailsLabel, SIGNAL( linkActivated(QString) ), this, SLOT( showDetails( QString ) ) );
-
-        sourceInfo->addWidget( repoName );
-        sourceInfo->addWidget( detailsLabel );
-        repoDetails->addLayout( sourceInfo );
-        mainLayout->addLayout( repoDetails );
-
-        QVBoxLayout *repoPackages = new QVBoxLayout;
+        Details *detailsWidget = new Details( m_backend, i, m_repos.at( i ) );
+        mainLayout->addWidget( detailsWidget );
 
         static int j = 0;
         foreach( OCI::Package *iter, m_packages ) {
             m_backend->addPackage( iter->name() );
             PackageDetails *packDetails = new PackageDetails( iter, j );
-            repoPackages->addWidget( packDetails );
+            mainLayout->addWidget( packDetails );
             j++;
         }
-        mainLayout->addLayout( repoPackages );
         i++;
     }
 
@@ -107,11 +87,11 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
     mainLayout->addLayout( buttonLayout );
 
     //Show the widgets if the setting for showing the details is set
-    if( m_settings.value( "showdetails", 1 ).toInt() == 1 ) {
-        for( int i = 0; i < m_repos.count(); i++ ) {
-            showDetails( QString( "%1" ).arg( i ) );
-        }
-    }
+//    if( m_settings.value( "showdetails", 1 ).toInt() == 1 ) {
+//        for( int i = 0; i < m_repos.count(); i++ ) {
+//            showDetails( QString( "%1" ).arg( i ) );
+//        }
+//    }
 
     dataFile.close();
 }
@@ -127,22 +107,6 @@ void FirstScreen::performInstallation()
         emit showNextScreen( 1 );
     } else {
         emit showNextScreen( 2 );
-    }
-}
-
-void FirstScreen::showDetails( QString link )
-{
-    int linkNo = link.toInt();
-    qDebug() << linkNo;
-    if( m_visible.at( linkNo ) ) {
-        m_detailsLabels[ linkNo ]->setText( QString( "<a href = %1>Show Details</a>" ).arg( linkNo ) );
-        m_details[ linkNo ]->hide();
-        m_visible.replace( linkNo, false );
-    } else {
-        m_detailsLabels[ linkNo ]->setText( QString( "<a href = %1>Hide Details</a>" ).arg( linkNo ) );
-        m_repoLayouts.at( linkNo )->addWidget( m_details[ linkNo ] );
-        m_details[ linkNo ]->show();
-        m_visible.replace( linkNo, true );
     }
 }
 
