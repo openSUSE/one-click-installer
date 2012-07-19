@@ -8,6 +8,7 @@
 #include <QPixmap>
 #include <QStackedLayout>
 #include <QScrollArea>
+#include <QSettings>
 #include "mainheader.h"
 #include "firstscreen.h"
 #include "summary.h"
@@ -31,10 +32,20 @@ private:
     MainHeader *m_header;
     QStackedLayout *m_screenStack;
 
+    QPushButton *m_showSettings;
+    QPushButton *m_cancel;
+    QPushButton *m_install;
+
+    QSettings m_settings;
+
     bool m_fakeRequested;
+
 private slots:
     void showNextScreen( int index );
     void updateCount(int repoCount , int packageCount);
+    void performInstallation();
+    void showSettings();
+
 signals:
     void countChanged( int repoCount, int packageCount );
 };

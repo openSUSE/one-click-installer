@@ -35,17 +35,6 @@ public:
    */
     FirstScreen( PackageBackend *backend, QString *tmpFileName, const QString& filename, QObject *parent = 0 );
 private slots:
-
-   /**
-        Shows the Settings dialog
-   */
-    void showSettings();
-
-   /**
-        Triggers the installation when the Install software button is clicked
-   */
-    void performInstallation();
-
     /**
         More Details on untrusted repositories
     */
@@ -59,10 +48,6 @@ private slots:
 private:
     QLabel *m_warning;
 
-    QPushButton *m_showSettings;
-    QPushButton *m_cancel;
-    QPushButton *m_install;
-
     PackageBackend *m_backend;
 
     QList< OCI::Package* > m_packages;
@@ -71,7 +56,6 @@ private:
 
     QString *m_tmpFileName;
 
-    QSettings m_settings;
 signals:
     void showNextScreen( int );
     void countChanged( int, int );
