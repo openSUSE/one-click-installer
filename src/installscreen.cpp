@@ -55,6 +55,11 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
 
 void InstallScreen::showEvent( QShowEvent *s )
 {
+    QTimer::singleShot( 0, this, SLOT( callBackend() ) );
+}
+
+void InstallScreen::callBackend()
+{
     m_backend->setFileName( *m_tmpFileName );
     m_backend->callBackendHelper();
 }
