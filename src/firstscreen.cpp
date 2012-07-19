@@ -4,13 +4,8 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
 {
     m_tmpFileName = tmpFileName;
 
-    QWidget *warningWidget = new QWidget;
-    QWidget *repoWidget = new QWidget;
-    QWidget *packageWidget = new QWidget;
-    QHBoxLayout *warningLayout = new QHBoxLayout( warningWidget );
-    repoWidget->setStyleSheet( "background-color : white" );
-    packageWidget->setStyleSheet( "background-color : white" );
-    QVBoxLayout *installLayout = new QVBoxLayout;
+    setStyleSheet( "background-color : rgb(251,248,241)" );
+
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setSpacing( 0 );
 
@@ -25,8 +20,6 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
     m_warning = new	QLabel( "<b>Be careful!</b> Some Sources are not currently known. Installing<br />software requires trusting these sources" );
     m_warning->setStyleSheet( "border : 1px solid rgb(196,181,147); background-color: rgb(253, 227, 187); border-radius : 5px" );
     m_warning->setContentsMargins( 10,10,10,10 );
-
-    warningLayout->addWidget( m_warning );
 
     setLayout( mainLayout );
 
@@ -49,11 +42,13 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
         static int j = 0;
         foreach( OCI::Package *iter, m_packages ) {
             m_backend->addPackage( iter->name() );
+            mainLayout->addSpacing( -10 );
             PackageDetails *packDetails = new PackageDetails( iter, j );
             mainLayout->addWidget( packDetails );
             j++;
         }
         i++;
+        mainLayout->addSpacing( -10 );
     }
 
     foreach( QUrl iter, m_backend->repositories()) {
@@ -64,9 +59,9 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
         outData << "P " << iter << "\n";
     }
 
-    mainLayout->addLayout( installLayout );
-    mainLayout->addWidget( warningWidget );
-    mainLayout->addSpacing( 10 );
+    mainLayout->addSpacing( 20 );
+    mainLayout->addWidget( m_warning );
+
     dataFile.close();
 }
 

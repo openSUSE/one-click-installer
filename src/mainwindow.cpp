@@ -2,6 +2,7 @@
 MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeRequested, QObject *parent )
 {
     setStyleSheet( "background-color : rgb(251,248,241)" );
+    setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
 
