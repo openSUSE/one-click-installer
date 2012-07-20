@@ -75,6 +75,8 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     QObject::connect( this, SIGNAL( countChanged( int, int ) ), m_header, SLOT( changeStatusLabel( int, int) ) );
 
     show();
+
+    setFixedSize( this->width(), this->height() );
 }
 
 void MainWindow::showNextScreen( int index )
