@@ -9,6 +9,7 @@
 #include <QStackedLayout>
 #include <QScrollArea>
 #include <QSettings>
+#include <QSpacerItem>
 #include "mainheader.h"
 #include "firstscreen.h"
 #include "summary.h"
