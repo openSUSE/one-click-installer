@@ -46,8 +46,6 @@ private slots:
     void showEvent( QShowEvent * s);
 
 private:
-    QLabel *m_warning;
-
     PackageBackend *m_backend;
 
     QList< OCI::Package* > m_packages;

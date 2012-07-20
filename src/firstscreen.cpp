@@ -16,11 +16,6 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
 
     QTextStream outData( &dataFile );
 
-    //Create Interface Elemenets
-    m_warning = new	QLabel( "<b>Be careful!</b> Some Sources are not currently known. Installing<br />software requires trusting these sources" );
-    m_warning->setStyleSheet( "border : 1px solid rgb(196,181,147); background-color: rgb(253, 227, 187); border-radius : 5px" );
-    m_warning->setContentsMargins( 10,10,10,10 );
-
     setLayout( mainLayout );
 
     //Parse YMP File
@@ -58,9 +53,6 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
     foreach( QString iter, m_backend->packages() ) {
         outData << "P " << iter << "\n";
     }
-
-    mainLayout->addSpacing( 20 );
-    mainLayout->addWidget( m_warning );
 
     dataFile.close();
 }

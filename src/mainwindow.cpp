@@ -39,6 +39,10 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     Summary *installSummary = new Summary( m_backend, m_tmpFileName );
     InstallScreen *installer = new InstallScreen( m_backend, m_tmpFileName );
 
+    m_warning = new	QLabel( "<b>Be careful!</b> Some Sources are not currently known. Installing<br />software requires trusting these sources" );
+    m_warning->setStyleSheet( "border : 1px solid rgb(196,181,147); background-color: rgb(253, 227, 187); border-radius : 10px" );
+    m_warning->setContentsMargins( 10,10,10,10 );
+
     QScrollArea *scroll = new QScrollArea;
     scroll->setFrameShape( QFrame::NoFrame );
     scroll->setWidget( m_firstScreen );
@@ -52,6 +56,8 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
 
     mainLayout->addWidget( m_header );
     mainLayout->addLayout( m_screenStack );
+    mainLayout->addSpacing( 5 );
+    mainLayout->addWidget( m_warning );
     mainLayout->addSpacing( 20 );
     mainLayout->addLayout( buttonLayout );
 

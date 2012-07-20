@@ -32,6 +32,8 @@ private:
     MainHeader *m_header;
     QStackedLayout *m_screenStack;
 
+    QLabel *m_warning;
+
     QPushButton *m_showSettings;
     QPushButton *m_cancel;
     QPushButton *m_install;
