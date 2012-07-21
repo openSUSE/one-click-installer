@@ -104,5 +104,6 @@ void MainWindow::performInstallation()
     }
     m_install->hide();
     m_showSettings->hide();
+    m_warning->hide();
     m_cancel->hide();
 }
