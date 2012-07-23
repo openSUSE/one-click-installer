@@ -15,8 +15,8 @@ PackageDetails::PackageDetails(OCI::Package *package, int count, QObject *parent
 
     QObject::connect( m_showDescription, SIGNAL( linkActivated( QString ) ), this, SLOT( showPackageDescription( QString ) ) );
 
-    m_packageName->setContentsMargins( 20,20,20,20 );
-    m_packageName->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147);  padding-top : 10px; padding-bottom : 10px; padding-left : 3px;" );
+    m_packageName->setContentsMargins( 10, 10, 10, 10 );
+    m_packageName->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147);  padding-top : 20px; padding-bottom : 20px; padding-left : 3px;" );
     m_summary->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147);  padding-top : 10px; padding-bottom : 10px; padding-left : 3px;" );
 
     m_showDescription->setStyleSheet( "background-color : white;border-right : 1px solid rgb(196,181,147); " );

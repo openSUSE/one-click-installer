@@ -21,7 +21,7 @@
 #include "package.h"
 #include "repository.h"
 #include "installscreen.h"
-#include "details.h"
+#include "repositorywidget.h"
 #include "summary.h"
 
 class MainWindow;
@@ -35,26 +35,10 @@ public:
    */
     FirstScreen( PackageBackend *backend, QString *tmpFileName, const QString& filename, QObject *parent = 0 );
 private slots:
-
-   /**
-        Shows the Settings dialog
-   */
-    void showSettings();
-
-   /**
-        Triggers the installation when the Install software button is clicked
-   */
-    void performInstallation();
-
     /**
         More Details on untrusted repositories
     */
     void untrusedRepoDetails( QString link);
-
-    /**
-        Shows Details of Repositories
-    */
-    void showDetails( QString link );
 
     /**
         Show Event
@@ -62,28 +46,14 @@ private slots:
     void showEvent( QShowEvent * s);
 
 private:
-    QLabel *m_warning;
-
-    QPushButton *m_showSettings;
-    QPushButton *m_cancel;
-    QPushButton *m_install;
-
     PackageBackend *m_backend;
-
-    QList< QVBoxLayout* > m_repoLayouts;
-    QList< QVBoxLayout* > m_packageLayouts;
-
-    QList< bool > m_visible;
 
     QList< OCI::Package* > m_packages;
     QList< OCI::Repository* > m_repos;
 
-    QHash< int, QWidget* > m_details;
-    QHash< int, QLabel* > m_detailsLabels;
 
     QString *m_tmpFileName;
 
-    QSettings m_settings;
 signals:
     void showNextScreen( int );
     void countChanged( int, int );

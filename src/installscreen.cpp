@@ -24,14 +24,17 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
         sourceLabel->setStyleSheet( "background-color: rgb(254, 250, 210); border-bottom : 1px solid rgb(252,233,79); border-left : 1px solid rgb(196,181,147); border-top : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147);" );
         sourceLayout->addWidget( sourceLabel );
         sourceLayout->setSpacing( 0 );
-
+        sourceLabel->setFixedHeight( 40 );
+//        sourceLabel->setContentsMargins( 20, 20, 20, 20 );
     }
 
     foreach( QString iter, m_backend->packages() ) {
         QHBoxLayout *packageLayout = new QHBoxLayout;
         QLabel *package = new QLabel( QString( "<b>Installing: </b> %1" ).arg( iter ) );
+        package->setFixedHeight( 40 );
         package->setStyleSheet( "background-color : white" );
         QProgressBar * progressBar = new QProgressBar;
+        progressBar->setFixedHeight( 20 );
         progressBar->setMinimum( 0 );
         progressBar->setMaximum( 0 );
         progressBar->setRange( 0, 0 );
@@ -54,6 +57,11 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
 }
 
 void InstallScreen::showEvent( QShowEvent *s )
+{
+    QTimer::singleShot( 0, this, SLOT( callBackend() ) );
+}
+
+void InstallScreen::callBackend()
 {
     m_backend->setFileName( *m_tmpFileName );
     m_backend->callBackendHelper();

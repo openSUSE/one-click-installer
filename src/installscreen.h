@@ -10,6 +10,7 @@
 #include <QList>
 #include <QUrl>
 #include <QDebug>
+#include <QTimer>
 #include <iostream>
 #include "packagebackend.h"
 #include "fakebackend.h"
@@ -19,7 +20,10 @@ class InstallScreen : public QWidget
     Q_OBJECT
 public:
     InstallScreen( PackageBackend *backend, QString *tmpFileName,  QObject *parent = 0 );
+protected:
     void showEvent( QShowEvent *s );
+private slots:
+    void callBackend();
 private:
     QLabel *m_installStatus;
     QLabel *m_sources;

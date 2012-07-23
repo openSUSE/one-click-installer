@@ -5,8 +5,8 @@ find_package(Qt4 REQUIRED)
 include(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS})
 
-set(oneclickinstaller_SOURCES main.cpp mainwindow.cpp firstscreen.cpp settings.cpp fakebackend.cpp repository.cpp package.cpp ympparser.cpp packagebackend.cpp installscreen.cpp details.cpp summary.cpp backend.cpp keyringcallbacks.cpp mainheader.cpp packagedetails.cpp)
-set(oneclickinstaller_HEADERS mainwindow.h firstscreen.h settings.h fakebackend.h packagebackend.h package.h repository.h ympparser.h installscreen.h details.h summary.h backend.h keyringcallbacks.h keyring.h mainheader.h packagedetails.h)
+set(oneclickinstaller_SOURCES main.cpp mainwindow.cpp firstscreen.cpp settings.cpp fakebackend.cpp repository.cpp package.cpp ympparser.cpp packagebackend.cpp installscreen.cpp repositorywidget.cpp summary.cpp backend.cpp keyringcallbacks.cpp mainheader.cpp packagedetails.cpp)
+set(oneclickinstaller_HEADERS mainwindow.h firstscreen.h settings.h fakebackend.h packagebackend.h package.h repository.h ympparser.h installscreen.h repositorywidget.h summary.h backend.h keyringcallbacks.h keyring.h mainheader.h packagedetails.h)
 
 set(oneclickhelper_SOURCES interfacemain.cpp backend.cpp keyringcallbacks.cpp packagebackend.cpp)
 set(oneclickhelper_HEADERS backend.h keyringcallbacks.h packagebackend.h)
