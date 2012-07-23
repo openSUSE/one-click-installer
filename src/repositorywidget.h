@@ -1,5 +1,5 @@
-#ifndef DETAILS_H
-#define DETAILS_H
+#ifndef REPOSITORYWIDGET_H
+#define REPOSITORYWIDGET_H
 
 #include <QWidget>
 #include <QLabel>
@@ -9,11 +9,11 @@
 #include "package.h"
 #include "packagebackend.h"
 
-class Details : public QWidget
+class RepositoryWidget : public QWidget
 {
     Q_OBJECT
 public:
-    Details(PackageBackend *backend, int i, OCI::Repository *repo, QObject *parent = 0 );
+    RepositoryWidget(PackageBackend *backend, int index, OCI::Repository *repo, QObject *parent = 0 );
 private slots:
     void showDetails( QString link );
 private:

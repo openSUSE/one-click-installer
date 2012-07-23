@@ -1,6 +1,6 @@
-#include "details.h"
+#include "repositorywidget.h"
 
-Details::Details(PackageBackend *backend, int i, OCI::Repository *repo, QObject *parent )
+RepositoryWidget::RepositoryWidget(PackageBackend *backend, int index, OCI::Repository *repo, QObject *parent )
 {
     m_settings.sync();
 
@@ -11,7 +11,7 @@ Details::Details(PackageBackend *backend, int i, OCI::Repository *repo, QObject 
     mainLayout->setSpacing( 0 );
 
     m_name = new QLabel( QString( "Source: <b>%1</b>" ).arg( repo->name() ) );
-    m_showDetails = new QLabel( QString( "<a href = %1>Show Details</a>" ).arg( i ) );
+    m_showDetails = new QLabel( QString( "<a href = %1>Show Details</a>" ).arg( index ) );
 
     m_name->setContentsMargins( 10, 10, 10, 10 );
     m_showDetails->setContentsMargins( 10, 10, 10, 10 );
@@ -44,11 +44,11 @@ Details::Details(PackageBackend *backend, int i, OCI::Repository *repo, QObject 
     setLayout( mainLayout );
 
     if( m_settings.value( "showdetails", 1 ).toInt() == 1 ) {
-        showDetails( QString( "%1" ).arg( i ) );
+        showDetails( QString( "%1" ).arg( index ) );
     }
 }
 
-void Details::showDetails( QString link )
+void RepositoryWidget::showDetails( QString link )
 {
     int linkNo = link.toInt();
     if( m_detailsVisible ) {

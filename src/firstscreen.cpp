@@ -31,8 +31,8 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
 
     foreach( OCI::Repository *iter, m_repos) {
         m_backend->addRepository( QUrl( iter->url() ) );
-        Details *detailsWidget = new Details( m_backend, i, m_repos.at( i ) );
-        mainLayout->addWidget( detailsWidget );
+        RepositoryWidget *repositoryDetails = new RepositoryWidget( m_backend, i, m_repos.at( i ) );
+        mainLayout->addWidget( repositoryDetails );
 
         static int j = 0;
         foreach( OCI::Package *iter, m_packages ) {

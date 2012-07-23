@@ -21,7 +21,7 @@
 #include "package.h"
 #include "repository.h"
 #include "installscreen.h"
-#include "details.h"
+#include "repositorywidget.h"
 #include "summary.h"
 
 class MainWindow;
