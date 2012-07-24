@@ -8,6 +8,7 @@
 #include "repository.h"
 #include "package.h"
 #include "packagebackend.h"
+#include "repositorymetadata.h"
 
 class RepositoryWidget : public QWidget
 {
