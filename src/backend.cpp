@@ -95,7 +95,7 @@ bool Backend::exists( std::string repo )
 
 void Backend::callBackendHelper()
 {
-    QString command( "xdg-su -u root -c \"/sbin/oneclickhelper " );
+    QString command( "xdg-su -u root -c \"/usr/sbin/oneclickhelper " );
     command.append( getFileName() );
     command.append( "\"" );
     qDebug() << system( command.toLocal8Bit().data() );

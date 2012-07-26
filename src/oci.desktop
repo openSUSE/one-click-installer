@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=One Click Installer
+GenericName=Beautiful One Click Installer
+Comment=A Tool to Install Software with a single click
+TryExec=/usr/local/bin/oneclickinstaller
+Exec=/usr/local/bin/oneclickinstaller &
+Categories=System;Settings;Utilities;
+Icon=/usr/share/icons/hicolor/32x32/apps/oneclickinstall.png
