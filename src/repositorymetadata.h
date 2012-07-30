@@ -15,16 +15,18 @@
 #include <zypp/base/LogControl.h>
 #include <zypp/ByteCount.h>
 #include <string>
+#include <QString>
+#include "repository.h"
 #include "keyringcallbacks.h"
 
 class RepositoryMetadata
 {
 public:
-    RepositoryMetadata( std::string url );
-    std::string fingerprint();
-    std::string created();
-    std::string expires();
-    std::string id();
+    RepositoryMetadata( OCI::Repository *repository );
+    QString fingerprint();
+    QString created();
+    QString expires();
+    QString id();
 private:
     zypp::KeyRingCallbacks m_keyRing;
 };

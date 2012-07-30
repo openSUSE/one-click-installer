@@ -1,14 +1,14 @@
 #include "repositorymetadata.h"
 
-RepositoryMetadata::RepositoryMetadata( std::string url )
+RepositoryMetadata::RepositoryMetadata(OCI::Repository *repository )
 {
     zypp::RepoManagerOptions options( "/tmp" );
     zypp::RepoInfo repo;
     zypp::RepoManager repoManager( options );
-    repo.addBaseUrl( zypp::Url( url ) );
+    repo.addBaseUrl( zypp::Url( repository->url().toStdString() ) );
     zypp::KeyRing::setDefaultAccept( zypp::KeyRing::TRUST_KEY_TEMPORARILY );
     repo.setGpgCheck( true );
-    repo.setAlias( url );
+    repo.setAlias( repository->url().toStdString() );
     repo.setEnabled( true );
     repo.setAutorefresh( true );
     try{
@@ -19,22 +19,22 @@ RepositoryMetadata::RepositoryMetadata( std::string url )
     repoManager.cleanMetadata( repo );
 }
 
-std::string RepositoryMetadata::created()
+QString RepositoryMetadata::created()
 {
-    return m_keyRing.created();
+    return QString::fromStdString( m_keyRing.created() );
 }
 
-std::string RepositoryMetadata::expires()
+QString RepositoryMetadata::expires()
 {
-    return m_keyRing.expires();
+    return QString::fromStdString( m_keyRing.expires() );
 }
 
-std::string RepositoryMetadata::fingerprint()
+QString RepositoryMetadata::fingerprint()
 {
-    return m_keyRing.fingerprint();
+    return QString::fromStdString( m_keyRing.fingerprint() );
 }
 
-std::string RepositoryMetadata::id()
+QString RepositoryMetadata::id()
 {
-    return m_keyRing.id();
+    return QString::fromStdString( m_keyRing.id() );
 }
