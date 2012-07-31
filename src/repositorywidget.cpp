@@ -4,6 +4,8 @@ RepositoryWidget::RepositoryWidget(PackageBackend *backend, int index, OCI::Repo
 {
     m_settings.sync();
 
+    RepositoryMetadata meta( repo );
+
     m_backend = backend;
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -30,10 +32,10 @@ RepositoryWidget::RepositoryWidget(PackageBackend *backend, int index, OCI::Repo
 
     m_url = new QLabel( QString( "<b>URL :</b> %1" ).arg( repo->url() ) );
     m_summary = new QLabel( QString( "<b>Summary :</b> %1" ).arg( repo->summary() ) );
-    m_id = new QLabel( "<b>ID: </b>" );
-    m_fingerprint = new QLabel( "<b>Fingerprint: </b>" );
-    m_created = new QLabel( "<b>Created: </b>" );
-    m_expires = new QLabel( "<b>Expires : </b> ");
+    m_id = new QLabel( QString( "<b>ID:</b> %1" ).arg( meta.id() ) );
+    m_fingerprint = new QLabel( QString( "<b>Fingerprint:</b> %1" ).arg( meta.fingerprint() ) );
+    m_created = new QLabel( QString( "<b>Created:</b> %1" ).arg( meta.created() ) );
+    m_expires = new QLabel( QString( "<b>Expires :</b> %1" ).arg( meta.expires() ) );
     m_url->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px;" );
     m_id->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px;" );
     m_fingerprint->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px;" );

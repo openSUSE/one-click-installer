@@ -5,8 +5,8 @@ find_package(Qt4 REQUIRED)
 include(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS})
 
-set(oneclickinstaller_SOURCES main.cpp mainwindow.cpp firstscreen.cpp settings.cpp fakebackend.cpp repository.cpp package.cpp ympparser.cpp packagebackend.cpp installscreen.cpp repositorywidget.cpp summary.cpp backend.cpp keyringcallbacks.cpp mainheader.cpp packagedetails.cpp)
-set(oneclickinstaller_HEADERS mainwindow.h firstscreen.h settings.h fakebackend.h packagebackend.h package.h repository.h ympparser.h installscreen.h repositorywidget.h summary.h backend.h keyringcallbacks.h keyring.h mainheader.h packagedetails.h)
+set(oneclickinstaller_SOURCES main.cpp mainwindow.cpp firstscreen.cpp settings.cpp fakebackend.cpp repository.cpp package.cpp ympparser.cpp packagebackend.cpp installscreen.cpp repositorywidget.cpp summary.cpp backend.cpp keyringcallbacks.cpp mainheader.cpp packagedetails.cpp repositorymetadata.cpp)
+set(oneclickinstaller_HEADERS mainwindow.h firstscreen.h settings.h fakebackend.h packagebackend.h package.h repository.h ympparser.h installscreen.h repositorywidget.h summary.h backend.h keyringcallbacks.h keyring.h mainheader.h packagedetails.h repositorymetadata.h)
 
 set(oneclickhelper_SOURCES interfacemain.cpp backend.cpp keyringcallbacks.cpp packagebackend.cpp)
 set(oneclickhelper_HEADERS backend.h keyringcallbacks.h packagebackend.h)
@@ -20,30 +20,13 @@ add_executable(oneclickinstaller ${QT_LIBRARIES} ${oneclickinstaller_SOURCES} ${
 target_link_libraries(oneclickhelper ${QT_LIBRARIES} zypp)
 target_link_libraries(oneclickinstaller ${QT_LIBRARIES} zypp)
 
-INSTALL(TARGETS oneclickhelper DESTINATION /sbin)
-INSTALL(TARGETS oneclickinstaller DESTINATION /bin)
+INSTALL(TARGETS oneclickhelper DESTINATION /usr/sbin)
+INSTALL(TARGETS oneclickinstaller DESTINATION /usr/bin)
 #INSTALL_TARGETS(/sbin oneclickhelper)
 
-if( UNIX AND NOT APPLE )
-    if( NOT DESKTOP_ENTRY )
-      set( DESKTOP_ENTRY oci.desktop )
-    endif( NOT DESKTOP_ENTRY )
 
-    add_custom_command( OUTPUT ${DESKTOP_ENTRY}
-      COMMAND touch ${DESKTOP_ENTRY}
-      COMMAND sh oci-desktop.sh ${CMAKE_INSTALL_PREFIX} >${DESKTOP_ENTRY}
-      DEPENDS oci-desktop.sh
-      COMMENT "Generating desktop entry file"
-      )
-    add_custom_target( DESKTOP_ENTRY_FILE ALL
-      DEPENDS ${DESKTOP_ENTRY}
-      )
-
-    set( APP_ICON res/oneclickinstall.png )
-  endif( UNIX AND NOT APPLE )
-
-INSTALL(FILES ${DESKTOP_ENTRY} DESTINATION /usr/share/applications)
-INSTALL(FILES res/oneclickinstall.png DESTINATION /usr/share/icons/)
+INSTALL(FILES oci.desktop DESTINATION /usr/share/applications)
+INSTALL(FILES res/oneclickinstall.png DESTINATION /usr/share/icons/hicolor/32x32/apps/oneclickinstall.png)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_BINARY_DIR}
