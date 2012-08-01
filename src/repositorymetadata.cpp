@@ -1,4 +1,19 @@
 #include "repositorymetadata.h"
+#include <zypp/Capabilities.h>
+#include <zypp/sat/WhatProvides.h>
+#include <zypp/sat/Solvable.h>
+#include <zypp/RepoManager.h>
+#include <zypp/misc/DefaultLoadSystem.h>
+#include <zypp/ZYppFactory.h>
+#include <zypp/ui/Selectable.h>
+#include <zypp/ResObject.h>
+#include <zypp/ResKind.h>
+#include <zypp/base/LogTools.h>
+#include <zypp/base/LogControl.h>
+#include <zypp/ByteCount.h>
+#include "keyringcallbacks.h"
+
+zypp::KeyRingCallbacks m_keyRing;
 
 RepositoryMetadata::RepositoryMetadata(OCI::Repository *repository )
 {
@@ -12,7 +27,8 @@ RepositoryMetadata::RepositoryMetadata(OCI::Repository *repository )
     repo.setEnabled( true );
     repo.setAutorefresh( true );
     try{
-    repoManager.refreshMetadata( repo );
+        repoManager.cleanCache( repo );
+        repoManager.refreshMetadata( repo );
     } catch( zypp::repo::RepoException s) {
         std::cout << s;
     }
