@@ -5,7 +5,6 @@
 #include <string>
 #include <QString>
 #include "repository.h"
-#include "keyringcallbacks.h"
 
 class RepositoryMetadata
 {
