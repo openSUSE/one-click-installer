@@ -15,7 +15,7 @@ echo $branch
 
 if [ $branch == "tags" ]; then
 git tag -a v$version -m 'version '.$version
-git push -u origin
+git push --tags
 else
 	echo "Not in tags. Not pushed"
 fi
