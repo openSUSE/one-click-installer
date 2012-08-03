@@ -13,12 +13,8 @@ cp src/res/oneclickinstall.png /tmp/$foldername/src/res
 branch=$( git branch | grep -o tags )
 echo $branch
 
-if [ $branch == "tags" ]; then
 git tag -a v$version -m 'version '.$version
 git push --tags
-else
-	echo "Not in tags. Not pushed"
-fi
 
 cd /tmp
 tar -cvf oneclickinstaller-$version.tar.gz oneclickinstaller-$version
