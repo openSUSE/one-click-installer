@@ -1,5 +1,3 @@
-//      package.cpp
-//      
 //      Copyright 2012 Saurabh Sood <saurabh@saurabh.geeko>
 //      
 //      This program is free software; you can redistribute it and/or modify
