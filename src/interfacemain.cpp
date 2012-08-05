@@ -57,7 +57,7 @@ int main( int argc, char *argv[] )
         }
     } while( !line.isNull() );
 
-//    ptr->install();
+    ptr->install();
 
     return ptr->errorCode();
 }

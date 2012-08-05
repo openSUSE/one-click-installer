@@ -24,9 +24,9 @@ RepositoryWidget::RepositoryWidget(PackageBackend *backend, int index, OCI::Repo
 {
     m_settings.sync();
 
-    RepositoryMetadata meta( repo );
-
     m_backend = backend;
+
+    m_repo = repo;
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     QHBoxLayout *sourceLayout = new QHBoxLayout;
@@ -52,15 +52,9 @@ RepositoryWidget::RepositoryWidget(PackageBackend *backend, int index, OCI::Repo
 
     m_url = new QLabel( QString( "<b>URL :</b> %1" ).arg( repo->url() ) );
     m_summary = new QLabel( QString( "<b>Summary :</b> %1" ).arg( repo->summary() ) );
-    m_id = new QLabel( QString( "<b>ID:</b> %1" ).arg( meta.id() ) );
-    m_fingerprint = new QLabel( QString( "<b>Fingerprint:</b> %1" ).arg( meta.fingerprint() ) );
-    m_created = new QLabel( QString( "<b>Created:</b> %1" ).arg( meta.created() ) );
-    m_expires = new QLabel( QString( "<b>Expires :</b> %1" ).arg( meta.expires() ) );
+
     m_url->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px;" );
-    m_id->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px;" );
-    m_fingerprint->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px;" );
-    m_created->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px;" );
-    m_expires->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px;" );
+
     m_summary->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px;" );
 
     setLayout( mainLayout );
@@ -72,6 +66,21 @@ RepositoryWidget::RepositoryWidget(PackageBackend *backend, int index, OCI::Repo
 
 void RepositoryWidget::showDetails( QString link )
 {
+    static int shownOnce = 0;
+
+    if( shownOnce == 0 ) {
+        m_meta = new RepositoryMetadata( m_repo );
+        m_id = new QLabel( QString( "<b>ID:</b> %1" ).arg( m_meta->id() ) );
+        m_fingerprint = new QLabel( QString( "<b>Fingerprint:</b> %1" ).arg( m_meta->fingerprint() ) );
+        m_created = new QLabel( QString( "<b>Created:</b> %1" ).arg( m_meta->created() ) );
+        m_expires = new QLabel( QString( "<b>Expires :</b> %1" ).arg( m_meta->expires() ) );
+        m_id->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px;" );
+        m_fingerprint->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px;" );
+        m_created->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px;" );
+        m_expires->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px;" );
+        shownOnce++;
+    }
+
     int linkNo = link.toInt();
     if( m_detailsVisible ) {
         m_url->hide();
