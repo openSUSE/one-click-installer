@@ -28,6 +28,7 @@ PackageDetails::PackageDetails(OCI::Package *package, int count, QObject *parent
     QHBoxLayout *packageLayout = new QHBoxLayout;
     m_summary = new QLabel( QString( "<b>Summary:</b> %1" ).arg( package->summary() ) );
     m_packageName = new QCheckBox( package->name() );
+    m_packageName->setChecked( true );
     m_showDescription = new QLabel( QString( "<a href = %1>Show Details</a>" ).arg( count ) );
     m_description = new QLabel( QString( "%1" ).arg( package->description() ) );
 
@@ -37,9 +38,10 @@ PackageDetails::PackageDetails(OCI::Package *package, int count, QObject *parent
 
     m_packageName->setContentsMargins( 10, 10, 10, 10 );
     m_packageName->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147);  padding-top : 20px; padding-bottom : 20px; padding-left : 3px;" );
-    m_summary->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147);  padding-top : 10px; padding-bottom : 10px; padding-left : 3px;" );
+    m_summary->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147); padding-top : 10px; padding-bottom : 10px; padding-left : 3px;" );
 
     m_showDescription->setStyleSheet( "background-color : white;border-right : 1px solid rgb(196,181,147); " );
+
     m_description->setStyleSheet( "background-color : white; border-bottom : 1px solid rgb(196,181,147); border-left : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147);" );
     m_description->setContentsMargins( 10, 10, 10, 10 );
 
