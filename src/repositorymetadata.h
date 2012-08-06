@@ -5,6 +5,7 @@
 #include <string>
 #include <QString>
 #include "repository.h"
+#include "repositorydata.h"
 
 class RepositoryMetadata
 {
@@ -14,6 +15,10 @@ public:
     QString created();
     QString expires();
     QString id();
+
+    void refresh();
+private:
+    RepositoryData *m_repoData;
 };
 
 #endif
