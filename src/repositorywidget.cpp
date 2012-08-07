@@ -62,13 +62,13 @@ RepositoryWidget::RepositoryWidget(PackageBackend *backend, int index, OCI::Repo
     if( m_settings.value( "showdetails", 1 ).toInt() == 1 ) {
         showDetails( QString( "%1" ).arg( index ) );
     }
+
+    m_visible = false;
 }
 
 void RepositoryWidget::showDetails( QString link )
 {
-    static int shownOnce = 0;
-
-    if( shownOnce == 0 ) {
+    if( !m_visible ) {
         m_meta = new RepositoryMetadata( m_repo );
         m_meta->refresh();
         m_id = new QLabel( QString( "<b>ID:</b> %1" ).arg( m_meta->id() ) );
@@ -79,7 +79,7 @@ void RepositoryWidget::showDetails( QString link )
         m_fingerprint->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px; border-right : 1px solid rgb(196,181,147); border-left : 1px solid rgb(196,181,147);" );
         m_created->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px; border-right : 1px solid rgb(196,181,147); border-left : 1px solid rgb(196,181,147);" );
         m_expires->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px; border-right : 1px solid rgb(196,181,147); border-left : 1px solid rgb(196,181,147);" );
-        shownOnce++;
+        m_visible = true;
     }
 
     int linkNo = link.toInt();
