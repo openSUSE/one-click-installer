@@ -26,7 +26,13 @@ PackageDetails::PackageDetails(OCI::Package *package, int count, QObject *parent
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setSpacing( 0 );
     QHBoxLayout *packageLayout = new QHBoxLayout;
+
+    PackageMetadata meta( package->name() );
+
+
     m_summary = new QLabel( QString( "<b>Summary:</b> %1" ).arg( package->summary() ) );
+    m_version = new QLabel( meta.version() );
+    m_size = new QLabel( meta.size() );
     m_packageName = new QCheckBox( package->name() );
     m_packageName->setChecked( true );
     m_showDescription = new QLabel( QString( "<a href = %1>Show Details</a>" ).arg( count ) );
@@ -38,6 +44,8 @@ PackageDetails::PackageDetails(OCI::Package *package, int count, QObject *parent
 
     m_packageName->setContentsMargins( 10, 10, 10, 10 );
     m_packageName->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147);  padding-top : 20px; padding-bottom : 20px; padding-left : 3px;" );
+    m_size->setStyleSheet( "background-color : white; padding-top : 20px; padding-bottom : 20px; padding-left : 3px;" );
+    m_version->setStyleSheet( "background-color : white; padding-top : 20px; padding-bottom : 20px; padding-left : 3px;" );
     m_summary->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147); padding-top : 10px; padding-bottom : 10px; padding-left : 3px;" );
 
     m_showDescription->setStyleSheet( "background-color : white;border-right : 1px solid rgb(196,181,147); " );
@@ -46,6 +54,8 @@ PackageDetails::PackageDetails(OCI::Package *package, int count, QObject *parent
     m_description->setContentsMargins( 10, 10, 10, 10 );
 
     packageLayout->addWidget( m_packageName );
+    packageLayout->addWidget( m_version );
+    packageLayout->addWidget( m_size );
     packageLayout->addWidget( m_showDescription );
     mainLayout->addLayout( packageLayout );
     mainLayout->addWidget( m_summary );
@@ -67,4 +77,9 @@ void PackageDetails::showPackageDescription( QString link )
         m_description->show();
         m_descriptionVisible = true;
     }
+}
+
+void PackageDetails::showEvent( QShowEvent *e )
+{
+
 }
