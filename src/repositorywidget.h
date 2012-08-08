@@ -30,6 +30,12 @@ private:
     QLabel *m_summary;
     QSettings m_settings;
 
+    OCI::Repository *m_repo;
+
+    RepositoryMetadata *m_meta;
+
+    bool m_visible;
+
     bool m_detailsVisible;
 };
 
