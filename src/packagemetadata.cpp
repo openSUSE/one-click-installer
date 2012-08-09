@@ -30,7 +30,7 @@ void PackageMetadata::getData()
     qDebug() << processName;
     m_process = new QProcess;
     m_process->setProcessChannelMode( QProcess::MergedChannels );
-    QObject::connect( m_process, SIGNAL( finished( int ) ), this, SLOT( dataChanged( int ) ) );
+    QObject::connect( m_process, SIGNAL( finished( int ) ), this, SLOT( isFinished( int ) ) );
     QObject::connect( m_process, SIGNAL( started() ), this, SLOT( isStarted() ) );
     m_process->start( processName );
 }
@@ -50,7 +50,7 @@ void PackageMetadata::isStarted()
     qDebug() << "zypper called";
 }
 
-void PackageMetadata::dataChanged( int v )
+void PackageMetadata::isFinished( int v )
 {
     m_stdout = m_process->readAllStandardOutput();
     qDebug() << "finished process";
@@ -68,5 +68,5 @@ void PackageMetadata::dataChanged( int v )
     qDebug() << m_size;
     qDebug() << m_version;
 
-    emit data( m_version, m_size );
+    emit finished( m_version, m_size );
 }

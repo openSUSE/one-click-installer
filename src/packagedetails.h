@@ -15,7 +15,6 @@ class PackageDetails : public QWidget
     Q_OBJECT
 public:
     PackageDetails( OCI::Package *package, int count, QObject *parent = 0 );
-    void showEvent( QShowEvent *e );
 private:
     bool m_descriptionVisible;
 

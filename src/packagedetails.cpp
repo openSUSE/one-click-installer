@@ -34,7 +34,7 @@ PackageDetails::PackageDetails(OCI::Package *package, int count, QObject *parent
     m_version = new QLabel( "Fetching..." );
     m_size = new QLabel( "Fetching..." );
 
-    QObject::connect( meta, SIGNAL( data( QString,QString ) ), this, SLOT( dataChanged( QString,QString ) ) );
+    QObject::connect( meta, SIGNAL( finished( QString,QString ) ), this, SLOT( dataChanged( QString,QString ) ) );
 
     m_packageName = new QCheckBox( package->name() );
     m_packageName->setChecked( true );
@@ -88,9 +88,4 @@ void PackageDetails::dataChanged( QString version, QString size )
     m_size->setText( size );
 
     emit sizeUpdated( size );
-}
-
-void PackageDetails::showEvent( QShowEvent *e )
-{
-
 }

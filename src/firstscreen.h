@@ -35,10 +35,6 @@ public:
    */
     FirstScreen( PackageBackend *backend, QString *tmpFileName, const QString& filename, QObject *parent = 0 );
 private slots:
-    /**
-        More Details on untrusted repositories
-    */
-    void untrusedRepoDetails( QString link);
 
     /**
         Show Event
@@ -51,10 +47,7 @@ private:
     QList< OCI::Package* > m_packages;
     QList< OCI::Repository* > m_repos;
 
-
     QString *m_tmpFileName;
-private slots:
-    void updateSize( QString size );
 
 signals:
     void showNextScreen( int );

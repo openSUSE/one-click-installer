@@ -24,9 +24,9 @@ private:
     QProcess *m_process;
 private slots:
     void isStarted();
-    void dataChanged( int );
+    void isFinished( int );
 signals:
-    void data( QString version, QString size );
+    void finished( QString version, QString size );
 };
 
 #endif
