@@ -31,6 +31,8 @@ private:
 private slots:
     void showPackageDescription( QString link );
     void dataChanged( QString version, QString size );
+signals:
+    void sizeUpdated( QString size );
 };
 
 #endif

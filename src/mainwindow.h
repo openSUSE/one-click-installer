@@ -48,6 +48,7 @@ private slots:
     void updateCount(int repoCount , int packageCount);
     void performInstallation();
     void showSettings();
+    void updateSize(QString size );
 
 signals:
     void countChanged( int repoCount, int packageCount );

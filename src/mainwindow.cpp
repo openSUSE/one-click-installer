@@ -93,6 +93,7 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     QObject::connect( installSummary, SIGNAL( showNextScreen( int ) ), this, SLOT( showNextScreen( int ) ) );
     QObject::connect( m_firstScreen, SIGNAL( countChanged( int, int )), this, SLOT( updateCount( int, int ) ) );
     QObject::connect( this, SIGNAL( countChanged( int, int ) ), m_header, SLOT( changeStatusLabel( int, int) ) );
+    QObject::connect( m_firstScreen, SIGNAL( sizeUpdated( QString ) ), this, SLOT( updateSize( QString ) ) );
 
     show();
 }
@@ -124,4 +125,9 @@ void MainWindow::performInstallation()
     m_showSettings->hide();
     m_warning->hide();
     m_cancel->hide();
+}
+
+void MainWindow::updateSize( QString size )
+{
+    m_header->updateDetails( size );
 }

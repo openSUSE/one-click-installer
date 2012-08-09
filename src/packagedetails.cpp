@@ -86,6 +86,8 @@ void PackageDetails::dataChanged( QString version, QString size )
 {
     m_version->setText( version );
     m_size->setText( size );
+
+    emit sizeUpdated( size );
 }
 
 void PackageDetails::showEvent( QShowEvent *e )

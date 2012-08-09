@@ -42,5 +42,13 @@ MainHeader::MainHeader( QWidget *parent )
 
 void MainHeader::changeStatusLabel( int repoCount, int packageCount )
 {
+    m_packageCount = packageCount;
+    m_repoCount = repoCount;
+
     m_statusLabel->setText( QString( "This installer will download and install %1 packages from %2 sources" ).arg( packageCount ).arg( repoCount ) );
+}
+
+void MainHeader::updateDetails( QString size )
+{
+    m_statusLabel->setText( QString( "This installer will download and install %1 packages from %2 sources totalling %3" ).arg( m_packageCount ).arg( m_repoCount ).arg( size ) );
 }

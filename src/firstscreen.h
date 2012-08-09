@@ -53,10 +53,14 @@ private:
 
 
     QString *m_tmpFileName;
+private slots:
+    void updateSize( QString size );
 
 signals:
     void showNextScreen( int );
     void countChanged( int, int );
+    void sizeUpdated( QString size );
+
 };
 
 #endif
