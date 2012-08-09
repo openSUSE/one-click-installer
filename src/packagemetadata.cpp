@@ -56,11 +56,11 @@ void PackageMetadata::dataChanged( int v )
     qDebug() << "finished process";
     QStringList details = m_stdout.split( "\n" );
 
-    foreach( QString temp, details ) {
-        if( temp.contains("Version") ) {
-            m_version = temp.split( " " ).at( 1 );
-        } else if( temp.contains( "Installed Size" ) ) {
-            QStringList size = temp.split( " " );
+    foreach( QString line, details ) {
+        if( line.contains("Version") ) {
+            m_version = line.split( " " ).at( 1 );
+        } else if( line.contains( "Installed Size" ) ) {
+            QStringList size = line.split( " " );
             m_size = size.at( 2 ) + " " + size.at( 3 );
         }
     }
