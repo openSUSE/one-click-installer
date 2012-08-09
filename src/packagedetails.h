@@ -26,8 +26,11 @@ private:
     QLabel *m_showDescription;
     QCheckBox *m_packageName;
 
+    PackageMetadata *meta;
+
 private slots:
     void showPackageDescription( QString link );
+    void dataChanged( QString version, QString size );
 };
 
 #endif

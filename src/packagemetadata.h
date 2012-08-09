@@ -13,13 +13,20 @@ public:
     PackageMetadata( QString name );
     QString size();
     QString version();
+    void getData();
 private:
     QString m_size;
     QString m_version;
+    QString m_stdout;
+
+    QString m_package;
 
     QProcess *m_process;
 private slots:
     void isStarted();
+    void dataChanged( int );
+signals:
+    void data( QString version, QString size );
 };
 
 #endif

@@ -27,12 +27,15 @@ PackageDetails::PackageDetails(OCI::Package *package, int count, QObject *parent
     mainLayout->setSpacing( 0 );
     QHBoxLayout *packageLayout = new QHBoxLayout;
 
-    PackageMetadata meta( package->name() );
-
+    meta = new PackageMetadata( package->name() );
+    meta->getData();
 
     m_summary = new QLabel( QString( "<b>Summary:</b> %1" ).arg( package->summary() ) );
-    m_version = new QLabel( meta.version() );
-    m_size = new QLabel( meta.size() );
+    m_version = new QLabel( "Fetching..." );
+    m_size = new QLabel( "Fetching..." );
+
+    QObject::connect( meta, SIGNAL( data( QString,QString ) ), this, SLOT( dataChanged( QString,QString ) ) );
+
     m_packageName = new QCheckBox( package->name() );
     m_packageName->setChecked( true );
     m_showDescription = new QLabel( QString( "<a href = %1>Show Details</a>" ).arg( count ) );
@@ -77,6 +80,12 @@ void PackageDetails::showPackageDescription( QString link )
         m_description->show();
         m_descriptionVisible = true;
     }
+}
+
+void PackageDetails::dataChanged( QString version, QString size )
+{
+    m_version->setText( version );
+    m_size->setText( size );
 }
 
 void PackageDetails::showEvent( QShowEvent *e )
