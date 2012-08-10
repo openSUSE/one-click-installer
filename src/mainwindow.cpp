@@ -67,6 +67,7 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
 
     QScrollArea *scroll = new QScrollArea;
     scroll->setFrameShape( QFrame::NoFrame );
+    scroll->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     scroll->setWidget( m_firstScreen );
     scroll->setWidgetResizable( true );
 

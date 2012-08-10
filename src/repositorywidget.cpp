@@ -22,6 +22,8 @@
 
 RepositoryWidget::RepositoryWidget(PackageBackend *backend, int index, OCI::Repository *repo, QObject *parent )
 {
+    setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+
     m_settings.sync();
 
     m_backend = backend;
