@@ -25,7 +25,8 @@ MainHeader::MainHeader( QWidget *parent )
     setStyleSheet( "background-color : rgb(251,248,241)" );
     m_statusLabel = new QLabel( "This installer will install and download packages" );
 
-//    m_statusLabel->setWordWrap( true );
+    m_statusLabel->setWordWrap( true );
+    m_statusLabel->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
     const QPixmap icon( "/usr/share/icons/oneclickinstall.png" );
     m_icon = new QLabel;
@@ -33,7 +34,7 @@ MainHeader::MainHeader( QWidget *parent )
 
     QHBoxLayout *mainLayout = new QHBoxLayout;
     mainLayout->addWidget( m_icon );
-    mainLayout->setSpacing( 0 );
+    mainLayout->setSpacing( 20 );
     mainLayout->addWidget( m_statusLabel );
 
     setLayout( mainLayout );
