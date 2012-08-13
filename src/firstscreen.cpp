@@ -59,6 +59,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
             m_backend->addPackage( iter->name() );
             mainLayout->addSpacing( -10 );
             PackageDetails *packDetails = new PackageDetails( iter, j );
+            QObject::connect( packDetails, SIGNAL( sizeUpdated( QString ) ), this, SIGNAL( sizeUpdated( QString ) ) );
             mainLayout->addWidget( packDetails );
             j++;
         }
@@ -80,8 +81,4 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
 void FirstScreen::showEvent( QShowEvent *s )
 {
     emit countChanged( m_repos.count(), m_packages.count() );
-}
-
-void FirstScreen::untrusedRepoDetails( QString link )
-{
 }
