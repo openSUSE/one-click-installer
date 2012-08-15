@@ -1,3 +1,3 @@
 Usage:
 
-./oneclickui <ymp file> [--fake]
+./oneclickinstaller <ymp file> [--fake]
