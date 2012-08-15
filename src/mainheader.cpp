@@ -28,7 +28,7 @@ MainHeader::MainHeader( QWidget *parent )
     m_statusLabel->setWordWrap( true );
     m_statusLabel->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
-    const QPixmap icon( "/usr/share/icons/oneclickinstall.png" );
+    const QPixmap icon( "/usr/share/icons/hicolor/32x32/apps/oneclickinstall.png" );
     m_icon = new QLabel;
     m_icon->setPixmap( icon );
 
