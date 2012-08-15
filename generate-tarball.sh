@@ -18,8 +18,8 @@ cp CMakeLists.txt /$tempfolder/$foldername
 branch=$( git branch | grep -o tags )
 echo $branch
 
-#git tag -a v$version -m 'version '.$version
-#git push --tags
+git tag -a v$version -m 'version '.$version
+git push --tags
 
 cd $tempfolder
 tar -cvf oneclickinstaller-$version.tar.gz oneclickinstaller-$version
