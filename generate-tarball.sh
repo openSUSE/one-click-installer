@@ -13,12 +13,13 @@ mkdir -p $tempfolder/$foldername/src/res
 
 cp src/*.h src/*.cpp src/CMakeLists.txt src/oci.desktop $tempfolder/$foldername/src
 cp src/res/oneclickinstall.png $tempfolder/$foldername/src/res
+cp CMakeLists.txt /$tempfolder/$foldername
 
 branch=$( git branch | grep -o tags )
 echo $branch
 
-git tag -a v$version -m 'version '.$version
-git push --tags
+#git tag -a v$version -m 'version '.$version
+#git push --tags
 
 cd $tempfolder
 tar -cvf oneclickinstaller-$version.tar.gz oneclickinstaller-$version
