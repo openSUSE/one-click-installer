@@ -12,10 +12,12 @@ class Settings : public QDialog
 {
     Q_OBJECT
 public:
+
     /**
         Constructor for the Settings dialog
     */
     Settings(QSettings *settings, QObject *parent = 0 );
+
 private:
     QPushButton *m_confirm;
     QCheckBox *m_showDetails;
@@ -25,6 +27,10 @@ private:
 
     QSettings *m_settings;
 private slots:
+
+    /**
+     * Save Settings and Close the dialog
+     */
     void saveSettingsAndClose();
 };
 

@@ -14,6 +14,10 @@ class PackageDetails : public QWidget
 {
     Q_OBJECT
 public:
+
+    /**
+     * Constructor for Package Widget. Parameter is the index and Package Object
+     */
     PackageDetails( OCI::Package *package, int count, QObject *parent = 0 );
 private:
     bool m_descriptionVisible;
@@ -28,8 +32,17 @@ private:
     PackageMetadata *meta;
 
 private slots:
+
+    /**
+     * Show the Package Description Label
+     */
     void showPackageDescription( QString link );
+
+    /**
+     * Update the version and size of the package
+     */
     void dataChanged( QString version, QString size );
+
 signals:
     void sizeUpdated( QString size );
 };
