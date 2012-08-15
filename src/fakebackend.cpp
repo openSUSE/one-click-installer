@@ -42,6 +42,7 @@ void FakeBackend::install()
 
     QMessageBox::about( m_main, "One Click Installer", QString( "The following repositories will be added \n %1" ).arg( repoList ) );
     QMessageBox::about( m_main, "One Click Installer", QString( "The following packages will be installed \n %1" ).arg( packList ) );
+    emit installationCompleted();
 }
 
 void FakeBackend::callBackendHelper()

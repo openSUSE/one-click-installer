@@ -61,5 +61,5 @@ void MainHeader::installationStarted()
 
 void MainHeader::installationCompleted()
 {
-    m_statusLabel->setText( "Installation Completed!!!" );
+    m_statusLabel->setText( "Success!!!" );
 }

@@ -120,8 +120,8 @@ void Backend::callBackendHelper()
 //    qDebug() << system( command.toLocal8Bit().data() );
     m_process = new QProcess;
 
-    QObject::connect( m_process, SIGNAL(finished(int)), this, SLOT(finished(int)) );
-    QObject::connect( m_process, SIGNAL(started()), this, SLOT(started()) );
+    QObject::connect( m_process, SIGNAL( finished( int) ), this, SLOT( finished( int ) ) );
+    QObject::connect( m_process, SIGNAL( started() ), this, SLOT(started()) );
 
     m_process->start( command );
 }
