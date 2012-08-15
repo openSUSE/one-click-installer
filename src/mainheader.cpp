@@ -53,3 +53,13 @@ void MainHeader::updateDetails( QString size )
 {
     m_statusLabel->setText( QString( "This installer will download and install %1 packages from %2 sources totalling %3" ).arg( m_packageCount ).arg( m_repoCount ).arg( size ) );
 }
+
+void MainHeader::installationStarted()
+{
+    m_statusLabel->setText( "Downloading and Installing Packages..." );
+}
+
+void MainHeader::installationCompleted()
+{
+    m_statusLabel->setText( "Installation Completed!!!" );
+}

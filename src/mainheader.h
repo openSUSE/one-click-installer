@@ -30,6 +30,16 @@ public slots:
      */
     void changeStatusLabel( int repoCount, int packageCount );
 
+    /**
+     * Show installation status in header
+     */
+    void installationStarted();
+
+    /**
+     * Show success/failure message in header
+     */
+    void installationCompleted();
+
 private:
     QLabel *m_statusLabel;
     QLabel *m_icon;

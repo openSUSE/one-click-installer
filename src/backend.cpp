@@ -117,10 +117,28 @@ void Backend::callBackendHelper()
     QString command( "xdg-su -u root -c \"/usr/sbin/oneclickhelper " );
     command.append( getFileName() );
     command.append( "\"" );
-    qDebug() << system( command.toLocal8Bit().data() );
+//    qDebug() << system( command.toLocal8Bit().data() );
+    m_process = new QProcess;
+
+    QObject::connect( m_process, SIGNAL(finished(int)), this, SLOT(finished(int)) );
+    QObject::connect( m_process, SIGNAL(started()), this, SLOT(started()) );
+
+    m_process->start( command );
 }
 
 int Backend::errorCode()
 {
     return m_errorCode;
+}
+
+void Backend::started()
+{
+    qDebug() << "helper started";
+    emit installationStarted();
+}
+
+void Backend::finished( int v )
+{
+    qDebug() << "helper finished";
+    emit installationCompleted();
 }
