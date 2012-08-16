@@ -139,6 +139,11 @@ void Backend::started()
 
 void Backend::finished( int v )
 {
-    qDebug() << "helper finished";
-    emit installationCompleted();
+    if( v != 4 ) {
+        qDebug() << "helper finished but failed";
+        emit installationCompleted();
+    } else {
+        qDebug() << "helper finished successfully";
+        emit installationFailed();
+    }
 }
