@@ -26,7 +26,7 @@ INSTALL(TARGETS oneclickinstaller DESTINATION /usr/bin)
 
 
 INSTALL(FILES oci.desktop DESTINATION /usr/share/applications)
-INSTALL(FILES res/oneclickinstall.png DESTINATION /usr/share/icons/hicolor/32x32/apps/oneclickinstall.png)
+INSTALL(FILES res/oneclickinstall.png DESTINATION /usr/share/icons/hicolor/32x32/apps/)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_BINARY_DIR}
