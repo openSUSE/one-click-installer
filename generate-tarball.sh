@@ -5,7 +5,7 @@ foldername=oneclickinstaller-$version
 echo $version
 echo $foldername
 
-tempfolder=$( mktemp -d /tmp/tmp.XXXX )
+tempfolder=$( mktemp -d /tmp/tmp.XXXX ) || { echo "mktemp failed" >&2 ; exit 1 ; }
 srcfolder=$( pwd )
 echo $tempfolder
 
