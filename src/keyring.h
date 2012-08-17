@@ -33,7 +33,7 @@ struct KeyRingReceive : public zypp::callback::ReceiveReport<zypp::KeyRingReport
             m_keyRingExists = true;
         }
         m_created = key.created().asString().c_str();
-        m_expires = key.created().asString().c_str();
+        m_expires = key.expires().asString().c_str();
 
         //Printing Information
         std::cout<<"Key ID: " << m_id << std::endl;
