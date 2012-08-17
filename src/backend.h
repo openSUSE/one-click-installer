@@ -46,16 +46,18 @@ public:
      */
     int errorCode();
 
+    /**
+        Add Repositories
+     */
+    void addRepositories();
+
 protected:
     /**
         Check if repo exists in the Repository database or not
      */
     bool exists( std::string repo );
 
-    /**
-        Add Repositories
-     */
-    void addRepositories();
+
 
 private slots:
     void finished( int v );

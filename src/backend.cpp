@@ -23,43 +23,14 @@ void Backend::install()
 {
     addRepositories();
 
-    //Code to install packages
+    system( "zypper refresh" );
 
-    zypp::ZYpp::Ptr zypp_pointer = zypp::getZYpp();
-    zypp_pointer->initializeTarget( "/" );
-    zypp::ResPoolProxy selectablePool( zypp::ResPool::instance().proxy() );
-
+    QString zypper_command = "zypper -n in";
     foreach( QString package, packages() ) {
-        zypp::ui::Selectable::Ptr s = zypp::ui::Selectable::get( package.toStdString() );
-        zypp::PoolItem p = s->highestAvailableVersionObj();
-        s->setCandidate( p );
-        p.status().setToBeInstalled( zypp::ResStatus::USER );
+        zypper_command.append( QString( " %1" ).arg( package ) );
     }
 
-    zypp::ResPool pool = zypp::ResPool::instance();
-    bool resolved = false;
-    resolved = pool.resolver().resolvePool();
-
-    if( !resolved ) {
-        std::cout << "Failed to Resolve Pool" << std::endl;
-        m_errorCode = 2;
-        return;
-    } else {
-        std::cout << "Resolved Pool" << std::endl;
-        //Perform Instalation
-        zypp::ZYppCommitPolicy policy;
-        policy.restrictToMedia( 0 );
-        policy.downloadMode( zypp::DownloadInHeaps );
-        policy.syncPoolAfterCommit();
-        zypp::ZYppCommitResult result = zypp_pointer->commit( policy );
-
-        if( result.allDone() ) {
-            std::cout << "Installation Succeeded" << std::endl;
-        } else {
-            std::cout << "Installation did not succeed" << std::cout;
-            m_errorCode = 3;
-        }
-    }
+    system( zypper_command.toStdString().c_str() );
 }
 
 Backend::Backend()
@@ -93,8 +64,8 @@ void Backend::addRepositories()
         }
         else
             qDebug() << "Repository Exists";
-        m_manager->buildCache( repoInfo );
-        m_manager->loadFromCache( repoInfo );
+//        m_manager->buildCache( repoInfo );
+//        m_manager->loadFromCache( repoInfo );
     }
 }
 
@@ -139,11 +110,11 @@ void Backend::started()
 
 void Backend::finished( int v )
 {
-    if( v != 4 ) {
+    if( v != 0 ) {
         qDebug() << "helper finished but failed";
-        emit installationCompleted();
+        emit installationFailed();
     } else {
         qDebug() << "helper finished successfully";
-        emit installationFailed();
+        emit installationCompleted();
     }
 }
