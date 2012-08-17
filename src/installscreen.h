@@ -21,13 +21,17 @@ class InstallScreen : public QWidget
 public:
 
     /**
-     *  Default Constructor
+     * @brief InstallScreen
+     * @param backend : backend pointer
+     * @param tmpFileName : temporary filename
+     * @param parent
      */
     InstallScreen( PackageBackend *backend, QString *tmpFileName,  QObject *parent = 0 );
 protected:
 
     /**
-     *  Default Show Event. To start the timer
+     * @brief showEvent
+     * @param s
      */
     void showEvent( QShowEvent *s );
 

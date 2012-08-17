@@ -16,7 +16,10 @@ class PackageDetails : public QWidget
 public:
 
     /**
-     * Constructor for Package Widget. Parameter is the index and Package Object
+     * @brief PackageDetails
+     * @param package : Package object
+     * @param count : package index
+     * @param parent
      */
     PackageDetails( OCI::Package *package, int count, QObject *parent = 0 );
 private:
@@ -34,12 +37,15 @@ private:
 private slots:
 
     /**
-     * Show the Package Description Label
+     * @brief showPackageDescription : show/hide description
+     * @param link : link no
      */
     void showPackageDescription( QString link );
 
     /**
-     * Update the version and size of the package
+     * @brief dataChanged : update version and size
+     * @param version : package version
+     * @param size : package size
      */
     void dataChanged( QString version, QString size );
 

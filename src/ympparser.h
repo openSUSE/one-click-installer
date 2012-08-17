@@ -12,8 +12,9 @@ class YmpParser
 {
 public:
     /**
-        Default Constructor
-    */
+     * @brief YmpParser
+     * @param ympfile : ymp filename
+     */
     YmpParser( const QString& ympfile );
 
     /**

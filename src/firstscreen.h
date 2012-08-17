@@ -30,14 +30,20 @@ class FirstScreen : public QWidget
 {
     Q_OBJECT
 public:
-   /**
-        Default constructor taking the backend, and the filename as argument
-   */
+
+    /**
+     * @brief FirstScreen
+     * @param backend : backend pointer
+     * @param tmpFileName : temporary filename
+     * @param filename : ymp filename
+     * @param parent
+     */
     FirstScreen( PackageBackend *backend, QString *tmpFileName, const QString& filename, QObject *parent = 0 );
 private slots:
 
     /**
-        Show Event
+     * @brief showEvent
+     * @param s
      */
     void showEvent( QShowEvent * s);
 

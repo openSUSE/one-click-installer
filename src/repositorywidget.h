@@ -16,14 +16,19 @@ class RepositoryWidget : public QWidget
 public:
 
     /**
-     * Construct widget with index, Repository Object and Backend object
+     * @brief RepositoryWidget
+     * @param backend : backend pointer
+     * @param index : repository index
+     * @param repo : Repository object
+     * @param parent
      */
     RepositoryWidget(PackageBackend *backend, int index, OCI::Repository *repo, QObject *parent = 0 );
 
 private slots:
 
     /**
-     * Show Repository Details
+     * @brief showDetails : show repository details
+     * @param link : link no
      */
     void showDetails( QString link );
 

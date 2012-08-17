@@ -45,7 +45,9 @@ public:
 
 protected:
     /**
-        Check if repo exists in the Repository database or not
+     * @brief returns true if repository exists in database
+     * @param repo : the url of the repository
+     * @return
      */
     bool exists( std::string repo );
 

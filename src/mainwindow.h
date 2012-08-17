@@ -23,8 +23,12 @@ class MainWindow : public QDialog
     Q_OBJECT
 public:
     /**
-        Default Constructor taking the YMP file as argument
-    */
+     * @brief MainWindow
+     * @param filename : ymp filename
+     * @param tmpFileName : temporary filename
+     * @param fakeRequested : if fake backend requested
+     * @param parent
+     */
     MainWindow( const QString& filename, QString tmpFileName, bool fakeRequested, QObject *parent = 0 );
 
 private:
@@ -52,7 +56,9 @@ private slots:
     void showNextScreen( int index );
 
     /**
-     *  Update the Repository and Package Counts
+     * @brief updateCount : update repo and package counts
+     * @param repoCount : repository count
+     * @param packageCount : package count
      */
     void updateCount(int repoCount , int packageCount);
 
@@ -67,7 +73,8 @@ private slots:
     void showSettings();
 
     /**
-     * Update the size of packages
+     * @brief updateSize : update size
+     * @param size : size of package
      */
     void updateSize(QString size );
 

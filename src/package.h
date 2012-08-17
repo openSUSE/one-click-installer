@@ -29,18 +29,21 @@ public:
     QString description() const;
 
     /**
-    Sets the name for the package
-    */
+     * @brief setName : set name of package
+     * @param name : package name
+     */
     void setName( const QString& name );
 
     /**
-    Sets the summary for the package
-    */
+     * @brief setSummary : set package summary
+     * @param summary : package summary
+     */
     void setSummary( const QString& summary );
 
     /**
-    Sets the description for the package
-    */
+     * @brief setDescription : set package description
+     * @param description : package description
+     */
     void setDescription( const QString& description );
 private:
         QString m_name;

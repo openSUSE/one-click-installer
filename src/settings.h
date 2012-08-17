@@ -14,8 +14,10 @@ class Settings : public QDialog
 public:
 
     /**
-        Constructor for the Settings dialog
-    */
+     * @brief Settings
+     * @param settings : QSettings object
+     * @param parent
+     */
     Settings(QSettings *settings, QObject *parent = 0 );
 
 private:

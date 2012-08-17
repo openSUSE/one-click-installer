@@ -19,7 +19,10 @@ class Summary : public QWidget
 public:
 
     /**
-     * Construct the object with the filename and backend object
+     * @brief Summary
+     * @param backend : backend pointer
+     * @param tmpFileName : temporary filename
+     * @param parent
      */
     Summary( PackageBackend *backend, QString *tmpFileName, QObject *parent = 0 );
 

@@ -14,7 +14,8 @@ class FakeBackend : public PackageBackend
 {
     public:
     /**
-    	Default Constructor
+     * @brief FakeBackend
+     * @param main : main widget pointer
      */
     FakeBackend( QWidget* main );
 

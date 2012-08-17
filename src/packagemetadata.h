@@ -12,7 +12,8 @@ class PackageMetadata : public QObject
 public:
 
     /**
-     * Construct the Object using the name of the package
+     * @brief PackageMetadata
+     * @param name : package name
      */
     PackageMetadata( QString name );
 

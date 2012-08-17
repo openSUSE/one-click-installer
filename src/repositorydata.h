@@ -23,12 +23,14 @@ public:
     RepositoryData();
 
     /**
-     * Set Base Url of Repository
+     * @brief setBaseUrl : set repo base url
+     * @param url : repo url
      */
     void setBaseUrl( std::string url );
 
     /**
-     * Set Alias of Repository
+     * @brief setAlias : set repo alias
+     * @param alias : repo alias
      */
     void setAlias( std::string alias );
 

@@ -12,7 +12,8 @@ class RepositoryMetadata
 public:
 
     /**
-     * Construct the Object with Repository Object
+     * @brief RepositoryMetadata
+     * @param repository : Repository object
      */
     RepositoryMetadata( OCI::Repository *repository );
 

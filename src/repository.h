@@ -39,28 +39,33 @@ public:
     QString recommended() const;
 
     /**
-    Sets the value of Recommended for the repository
-    */
+     * @brief setRecommended : set recommended value
+     * @param recommmended : recommended value
+     */
     void setRecommended( const QString& recommmended );
 
     /**
-    Sets the name for the repository
-    */
+     * @brief setName : set name of repo
+     * @param name : name of repo
+     */
     void setName( const QString& name );
 
     /**
-    Sets the description for the repository
-    */
+     * @brief setDescription : set repo description
+     * @param description : repo description
+     */
     void setDescription( const QString& description );
 
     /**
-    Sets the summary for the repository
-    */
+     * @brief setSummary : set repo summary
+     * @param summary : repo summary
+     */
     void setSummary( const QString& summary );
 
     /**
-    Set the URL for the repository
-    */
+     * @brief setUrl : set repo url
+     * @param url : repo url
+     */
     void setUrl( const QString& url );
 private:
     QString m_recommended;

@@ -19,14 +19,17 @@ public:
     MainHeader( QWidget *parent = 0 );
 
     /**
-     *  Update the size of the packages
+     * @brief updateDetails : update package size
+     * @param size : size of package
      */
     void updateDetails( QString size );
 
 public slots:
 
     /**
-     *  Recieve the Repository and Package Counts, and set them in the respective labels
+     * @brief changeStatusLabel : update repo and package counts
+     * @param repoCount : repository count
+     * @param packageCount : package counts
      */
     void changeStatusLabel( int repoCount, int packageCount );
 

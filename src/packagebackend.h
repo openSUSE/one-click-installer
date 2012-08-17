@@ -8,12 +8,14 @@ class PackageBackend
 {
     public:
     /**
-     	Adds the repository required to install the selected packages. This will be added to the system as installation and update repository
+     * @brief addRepository : add repository to repo list
+     * @param url : url of repository
      */
     virtual void addRepository( const QUrl& url  );
 
     /**
-    	Add the package to be installed
+     * @brief addPackage : adds package to package list
+     * @param package : name of package
      */
     virtual void addPackage( const QString& package);
 
@@ -43,7 +45,8 @@ class PackageBackend
     virtual void callBackendHelper() = 0;
 
     /**
-        Set the Temporary Filename
+     * @brief setFileName : set temporary filename
+     * @param fileName : temporary filename
      */
     virtual void setFileName( QString fileName );
 
