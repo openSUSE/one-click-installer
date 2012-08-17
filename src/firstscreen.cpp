@@ -23,8 +23,7 @@
 FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const QString& filename, QObject *parent )
 {
     m_tmpFileName = tmpFileName;
-
-    setStyleSheet( "background-color : rgb(251,248,241)" );
+    setStyleSheet( "background-color : white;" );
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setSpacing( 0 );

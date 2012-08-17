@@ -22,7 +22,8 @@
 
 PackageDetails::PackageDetails(OCI::Package *package, int count, QObject *parent )
 {
-    setStyleSheet( "background-color : white" );
+    setObjectName( "pk" );
+    setStyleSheet( "#pk{background-color : white; border : 1px solid rgb(196,181,147);}");
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setSpacing( 0 );
     QHBoxLayout *packageLayout = new QHBoxLayout;
@@ -46,7 +47,7 @@ PackageDetails::PackageDetails(OCI::Package *package, int count, QObject *parent
     QObject::connect( m_showDescription, SIGNAL( linkActivated( QString ) ), this, SLOT( showPackageDescription( QString ) ) );
 
     m_packageName->setContentsMargins( 10, 10, 10, 10 );
-    m_packageName->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147);  padding-top : 20px; padding-bottom : 20px; padding-left : 3px;" );
+    m_packageName->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147);  padding-top : 40px; padding-bottom : 40px; padding-left : 3px;" );
     m_size->setStyleSheet( "background-color : white; padding-top : 20px; padding-bottom : 20px; padding-left : 3px;" );
     m_version->setStyleSheet( "background-color : white; padding-top : 20px; padding-bottom : 20px; padding-left : 3px;" );
     m_summary->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147); padding-top : 10px; padding-bottom : 10px; padding-left : 3px;" );
@@ -55,6 +56,7 @@ PackageDetails::PackageDetails(OCI::Package *package, int count, QObject *parent
 
     m_description->setStyleSheet( "background-color : white; border-bottom : 1px solid rgb(196,181,147); border-left : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147);" );
     m_description->setContentsMargins( 10, 10, 10, 10 );
+    m_description->setWordWrap( true );
 
     packageLayout->addWidget( m_packageName );
     packageLayout->addWidget( m_version );

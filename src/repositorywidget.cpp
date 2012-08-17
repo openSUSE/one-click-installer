@@ -22,6 +22,8 @@
 
 RepositoryWidget::RepositoryWidget(PackageBackend *backend, int index, OCI::Repository *repo, QObject *parent )
 {
+    setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+
     m_settings.sync();
 
     m_backend = backend;
@@ -80,6 +82,7 @@ void RepositoryWidget::showDetails( QString link )
         m_created->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px; border-right : 1px solid rgb(196,181,147); border-left : 1px solid rgb(196,181,147);" );
         m_expires->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px; border-right : 1px solid rgb(196,181,147); border-left : 1px solid rgb(196,181,147);" );
         m_visible = true;
+        delete m_meta;
     }
 
     int linkNo = link.toInt();
