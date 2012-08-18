@@ -28,8 +28,6 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
 
-    QSpacerItem *spacer = new QSpacerItem( 5, 5, QSizePolicy::Expanding, QSizePolicy::Expanding );
-
     m_showSettings = new QPushButton( "Settings" );
     m_cancel = new QPushButton( "Cancel" );
     m_install = new QPushButton( "Install" );
@@ -79,9 +77,7 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
 
     m_screenStack->setCurrentIndex( 0 );
 
-    mainLayout->addSpacerItem( spacer );
     mainLayout->addWidget( m_header );
-    mainLayout->addSpacerItem( spacer );
     mainLayout->addLayout( m_screenStack );
     mainLayout->addSpacing( 5 );
     mainLayout->addWidget( m_warning );
