@@ -30,6 +30,8 @@ void Backend::install()
         zypper_command.append( QString( " %1" ).arg( package ) );
     }
 
+    zypper_command.append( " >> /var/log/oneclick.log" );
+
     system( zypper_command.toStdString().c_str() );
 }
 
