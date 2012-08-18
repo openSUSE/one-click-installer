@@ -24,6 +24,8 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     setStyleSheet( "background-color : rgb(251,248,241)" );
     setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
+    setMinimumSize( 600, 400 );
+
     QHBoxLayout *buttonLayout = new QHBoxLayout;
 
     QSpacerItem *spacer = new QSpacerItem( 5, 5, QSizePolicy::Expanding, QSizePolicy::Expanding );
