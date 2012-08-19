@@ -47,6 +47,7 @@ PackageDetails::PackageDetails(OCI::Package *package, int count, QObject *parent
     QObject::connect( m_showDescription, SIGNAL( linkActivated( QString ) ), this, SLOT( showPackageDescription( QString ) ) );
 
     m_packageName->setContentsMargins( 10, 10, 10, 10 );
+    m_packageName->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Expanding );
     m_packageName->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147);  padding-top : 40px; padding-bottom : 40px; padding-left : 3px;" );
     m_size->setStyleSheet( "background-color : white; padding-top : 20px; padding-bottom : 20px; padding-left : 3px;" );
     m_version->setStyleSheet( "background-color : white; padding-top : 20px; padding-bottom : 20px; padding-left : 3px;" );

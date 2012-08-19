@@ -22,6 +22,7 @@
 
 MainHeader::MainHeader( QWidget *parent )
 {
+    setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
     setStyleSheet( "background-color : rgb(251,248,241)" );
     m_statusLabel = new QLabel( "This installer will install and download packages" );
 
