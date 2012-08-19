@@ -20,7 +20,7 @@
 
 #include "packagedetails.h"
 
-PackageDetails::PackageDetails(OCI::Package *package, int count, QObject *parent )
+PackageDetails::PackageDetails(OCI::Package *package,int count, int packagecount, QObject *parent )
 {
     setObjectName( "pk" );
     setStyleSheet( "#pk{background-color : white; border : 1px solid rgb(196,181,147);}");
@@ -42,6 +42,11 @@ PackageDetails::PackageDetails(OCI::Package *package, int count, QObject *parent
     m_showDescription = new QLabel( QString( "<a href = %1>Show Details</a>" ).arg( count ) );
     m_description = new QLabel( QString( "%1" ).arg( package->description() ) );
 
+    m_singlePackage = new QLabel( package->name() );
+    m_singlePackage->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147);" );
+    m_singlePackage->setContentsMargins( 10, 10, 10, 10 );
+    m_singlePackage->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Expanding );
+
     m_descriptionVisible = false;
 
     QObject::connect( m_showDescription, SIGNAL( linkActivated( QString ) ), this, SLOT( showPackageDescription( QString ) ) );
@@ -59,7 +64,13 @@ PackageDetails::PackageDetails(OCI::Package *package, int count, QObject *parent
     m_description->setContentsMargins( 10, 10, 10, 10 );
     m_description->setWordWrap( true );
 
-    packageLayout->addWidget( m_packageName );
+    if( packagecount == 1 ) {
+        packageLayout->addWidget( m_singlePackage );
+        delete m_packageName;
+    } else {
+        packageLayout->addWidget( m_packageName );
+        delete m_singlePackage;
+    }
     packageLayout->addWidget( m_version );
     packageLayout->addWidget( m_size );
     packageLayout->addWidget( m_showDescription );
