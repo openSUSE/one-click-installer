@@ -63,7 +63,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
             j++;
         }
         i++;
-        mainLayout->addSpacing( -10 );
+        mainLayout->addSpacing( -8 );
     }
 
     foreach( QUrl iter, m_backend->repositories()) {

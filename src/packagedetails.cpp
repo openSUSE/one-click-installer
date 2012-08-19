@@ -40,26 +40,30 @@ PackageDetails::PackageDetails(OCI::Package *package,int count, int packagecount
     m_packageName = new QCheckBox( package->name() );
     m_packageName->setChecked( true );
     m_showDescription = new QLabel( QString( "<a href = %1>Show Details</a>" ).arg( count ) );
+    m_showDescription->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
     m_description = new QLabel( QString( "%1" ).arg( package->description() ) );
+    m_description->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
 
     m_singlePackage = new QLabel( package->name() );
     m_singlePackage->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147);" );
     m_singlePackage->setContentsMargins( 10, 10, 10, 10 );
-    m_singlePackage->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Expanding );
+    m_singlePackage->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
 
     m_descriptionVisible = false;
 
     QObject::connect( m_showDescription, SIGNAL( linkActivated( QString ) ), this, SLOT( showPackageDescription( QString ) ) );
 
     m_packageName->setContentsMargins( 10, 10, 10, 10 );
-    m_packageName->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Expanding );
-    m_packageName->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147);  padding-top : 40px; padding-bottom : 40px; padding-left : 3px;" );
-    m_size->setStyleSheet( "background-color : white; padding-top : 20px; padding-bottom : 20px; padding-left : 3px;" );
-    m_version->setStyleSheet( "background-color : white; padding-top : 20px; padding-bottom : 20px; padding-left : 3px;" );
-    m_summary->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147); padding-top : 10px; padding-bottom : 10px; padding-left : 3px;" );
-
+    m_packageName->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Expanding );
+    m_packageName->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147); padding-left : 3px;" );
+    m_size->setStyleSheet( "background-color : white;  padding-left : 3px;" );
+    m_size->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
+    m_version->setStyleSheet( "background-color : white; padding-left : 3px;" );
+    m_version->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
+    m_summary->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147); padding-left : 3px; border-bottom : 1px solid rgb(196,181,147);" );
+    m_summary->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
     m_showDescription->setStyleSheet( "background-color : white;border-right : 1px solid rgb(196,181,147); " );
-
+    m_showDescription->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
     m_description->setStyleSheet( "background-color : white; border-bottom : 1px solid rgb(196,181,147); border-left : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147);" );
     m_description->setContentsMargins( 10, 10, 10, 10 );
     m_description->setWordWrap( true );
@@ -88,11 +92,13 @@ void PackageDetails::showPackageDescription( QString link )
         m_showDescription->setText( QString( "<a href = %1>Show Details</a>" ).arg( linkNo ) );
         m_description->hide();
         m_descriptionVisible = false;
+        m_summary->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147); padding-left : 3px; border-bottom : 1px solid rgb(196,181,147);" );
     } else {
         m_showDescription->setText( QString( "<a href = %1>Hide Details</a>" ).arg( linkNo ) );
         this->layout()->addWidget( m_description );
         m_description->show();
         m_descriptionVisible = true;
+        m_summary->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147); padding-left : 3px;" );
     }
 }
 
