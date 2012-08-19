@@ -63,6 +63,7 @@ private:
 signals:
     void installationStarted();
     void installationCompleted();
+    void installationFailed();
 };
 
 #endif

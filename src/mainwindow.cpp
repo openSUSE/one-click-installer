@@ -131,5 +131,6 @@ void MainWindow::performInstallation()
 
 void MainWindow::updateSize( QString size )
 {
-    m_header->updateDetails( size );
+    if( m_screenStack->currentIndex() == 0 )
+        m_header->updateDetails( size );
 }
