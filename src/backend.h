@@ -3,6 +3,8 @@
 
 #include <QDebug>
 #include <QUrl>
+#include <QObject>
+#include <QProcess>
 #include <zypp/RepoManager.h>
 #include <zypp/base/Algorithm.h>
 #include <zypp/ResFilters.h>
@@ -22,6 +24,7 @@
 
 class Backend : public PackageBackend
 {
+    Q_OBJECT
 public:
     /**
         Default Constructor
@@ -54,11 +57,17 @@ protected:
      */
     void addRepositories();
 
+private slots:
+    void finished( int v );
+    void started();
+
 private:
     zypp::RepoManager *m_manager;
     zypp::ZYpp::Ptr *m_ptr;
     zypp::KeyRingCallbacks *m_keyRingManager;
     int m_errorCode;
+
+    QProcess *m_process;
 };
 
 #endif

@@ -28,7 +28,7 @@ MainHeader::MainHeader( QWidget *parent )
     m_statusLabel->setWordWrap( true );
     m_statusLabel->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
-    const QPixmap icon( "/usr/share/icons/oneclickinstall.png" );
+    const QPixmap icon( "/usr/share/icons/hicolor/32x32/apps/oneclickinstall.png" );
     m_icon = new QLabel;
     m_icon->setPixmap( icon );
 
@@ -52,4 +52,14 @@ void MainHeader::changeStatusLabel( int repoCount, int packageCount )
 void MainHeader::updateDetails( QString size )
 {
     m_statusLabel->setText( QString( "This installer will download and install %1 packages from %2 sources totalling %3" ).arg( m_packageCount ).arg( m_repoCount ).arg( size ) );
+}
+
+void MainHeader::installationStarted()
+{
+    m_statusLabel->setText( "Downloading and Installing Packages..." );
+}
+
+void MainHeader::installationCompleted()
+{
+    m_statusLabel->setText( "Success!!!" );
 }

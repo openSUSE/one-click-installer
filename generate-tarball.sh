@@ -13,6 +13,7 @@ mkdir -p $tempfolder/$foldername/src/res
 
 cp src/*.h src/*.cpp src/CMakeLists.txt src/oci.desktop $tempfolder/$foldername/src
 cp src/res/oneclickinstall.png $tempfolder/$foldername/src/res
+cp CMakeLists.txt /$tempfolder/$foldername
 
 branch=$( git branch | grep -o tags )
 echo $branch

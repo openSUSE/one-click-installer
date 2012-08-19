@@ -88,13 +88,16 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
 
     setLayout( mainLayout );
     setWindowTitle( "One Click Install" );
-    setWindowIcon( QIcon("/usr/share/icons/oneclickinstall.png") );
+    setWindowIcon( QIcon("/usr/share/icons/hicolor/32x32/apps/oneclickinstall.png") );
 
     QObject::connect( m_firstScreen, SIGNAL( showNextScreen( int ) ), this, SLOT( showNextScreen( int ) ) );
     QObject::connect( installSummary, SIGNAL( showNextScreen( int ) ), this, SLOT( showNextScreen( int ) ) );
     QObject::connect( m_firstScreen, SIGNAL( countChanged( int, int )), this, SLOT( updateCount( int, int ) ) );
     QObject::connect( this, SIGNAL( countChanged( int, int ) ), m_header, SLOT( changeStatusLabel( int, int) ) );
     QObject::connect( m_firstScreen, SIGNAL( sizeUpdated( QString ) ), this, SLOT( updateSize( QString ) ) );
+    QObject::connect( m_backend, SIGNAL( installationStarted() ), m_header, SLOT( installationStarted() ) );
+    QObject::connect( m_backend, SIGNAL( installationCompleted() ), m_header, SLOT( installationCompleted() ) );
+    QObject::connect( installer, SIGNAL( installationCompleted() ), m_header, SLOT( installationCompleted() ) );
 
     show();
 }

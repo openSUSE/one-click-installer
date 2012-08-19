@@ -16,11 +16,32 @@
 class RepositoryData
 {
 public:
+
+    /**
+     * Default Constructor
+     */
     RepositoryData();
+
+    /**
+     * Set Base Url of Repository
+     */
     void setBaseUrl( std::string url );
+
+    /**
+     * Set Alias of Repository
+     */
     void setAlias( std::string alias );
+
+    /**
+     * Return the KeyRing
+     */
     zypp::KeyRingCallbacks keyring();
+
+    /**
+     * Refresh Repository Metadata
+     */
     void refreshMetadata();
+
 private:
     zypp::RepoManagerOptions *m_options;
     zypp::RepoInfo m_repo;

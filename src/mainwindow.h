@@ -26,6 +26,7 @@ public:
         Default Constructor taking the YMP file as argument
     */
     MainWindow( const QString& filename, QString tmpFileName, bool fakeRequested, QObject *parent = 0 );
+
 private:
     PackageBackend *m_backend;
     FirstScreen *m_firstScreen;
@@ -44,10 +45,30 @@ private:
     bool m_fakeRequested;
 
 private slots:
+
+    /**
+     *  Show the next screen
+     */
     void showNextScreen( int index );
+
+    /**
+     *  Update the Repository and Package Counts
+     */
     void updateCount(int repoCount , int packageCount);
+
+    /**
+     * Show the install screen
+     */
     void performInstallation();
+
+    /**
+     * Show the settings dialog
+     */
     void showSettings();
+
+    /**
+     * Update the size of packages
+     */
     void updateSize(QString size );
 
 signals:

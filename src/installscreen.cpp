@@ -48,12 +48,16 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
 //        sourceLabel->setContentsMargins( 20, 20, 20, 20 );
     }
 
+    int i = 0;
+
     foreach( QString iter, m_backend->packages() ) {
         QHBoxLayout *packageLayout = new QHBoxLayout;
+        m_packageLayouts.insert( i, packageLayout );
         QLabel *package = new QLabel( QString( "<b>Installing: </b> %1" ).arg( iter ) );
         package->setFixedHeight( 40 );
         package->setStyleSheet( "background-color : white" );
         QProgressBar * progressBar = new QProgressBar;
+        m_progressBars.insert( i, progressBar );
         progressBar->setFixedHeight( 20 );
         progressBar->setMinimum( 0 );
         progressBar->setMaximum( 0 );
@@ -63,6 +67,8 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
         packageLayout->addWidget( progressBar );
         installLayout->addLayout( packageLayout );
     }
+
+    QObject::connect( m_backend, SIGNAL( installationCompleted() ), this, SLOT( showCompletionStatus() ) );
 
     buttonLayout->addSpacing( 400 );
     buttonLayout->addWidget( m_cancel );
@@ -85,4 +91,17 @@ void InstallScreen::callBackend()
 {
     m_backend->setFileName( *m_tmpFileName );
     m_backend->callBackendHelper();
+}
+
+void InstallScreen::showCompletionStatus()
+{
+    foreach( QProgressBar *progress, m_progressBars ) {
+        progress->hide();
+    }
+
+    foreach( QHBoxLayout *l, m_packageLayouts ) {
+        QLabel *completed = new QLabel( "Installed" );
+        completed->setStyleSheet( "background-color : white" );
+        l->addWidget( completed );
+    }
 }

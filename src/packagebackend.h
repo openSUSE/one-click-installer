@@ -3,9 +3,11 @@
 
 #include <QList>
 #include <QUrl>
+#include <QObject>
 
-class PackageBackend
+class PackageBackend : public QObject
 {
+    Q_OBJECT
     public:
     /**
      	Adds the repository required to install the selected packages. This will be added to the system as installation and update repository
@@ -57,6 +59,10 @@ private:
     QList< QUrl > m_repositories;
 
     QString m_tmpFileName;
+
+signals:
+    void installationStarted();
+    void installationCompleted();
 };
 
 #endif

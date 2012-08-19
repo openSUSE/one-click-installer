@@ -12,6 +12,7 @@
 #include <QDebug>
 #include <QTimer>
 #include <iostream>
+#include <QHash>
 #include "packagebackend.h"
 #include "fakebackend.h"
 
@@ -19,11 +20,30 @@ class InstallScreen : public QWidget
 {
     Q_OBJECT
 public:
+
+    /**
+     *  Default Constructor
+     */
     InstallScreen( PackageBackend *backend, QString *tmpFileName,  QObject *parent = 0 );
 protected:
+
+    /**
+     *  Default Show Event. To start the timer
+     */
     void showEvent( QShowEvent *s );
+
 private slots:
+
+    /**
+     * Invoke Backend Helper
+     */
     void callBackend();
+
+    /**
+        Hide Progressbars and show status for each package
+    */
+    void showCompletionStatus();
+
 private:
     QLabel *m_installStatus;
     QLabel *m_sources;
@@ -32,6 +52,12 @@ private:
     PackageBackend *m_backend;
 
     QString *m_tmpFileName;
+
+    QHash< int, QHBoxLayout* > m_packageLayouts;
+    QHash< int, QProgressBar* > m_progressBars;
+
+signals:
+    void installationCompleted();
 };
 
 #endif

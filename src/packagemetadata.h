@@ -10,9 +10,25 @@ class PackageMetadata : public QObject
 {
     Q_OBJECT
 public:
+
+    /**
+     * Construct the Object using the name of the package
+     */
     PackageMetadata( QString name );
+
+    /**
+     * Return the size of the package
+     */
     QString size();
+
+    /**
+     * Return the version of the package
+     */
     QString version();
+
+    /**
+     * Start the subprocess to retrieve the data
+     */
     void getData();
 private:
     QString m_size;
@@ -23,8 +39,17 @@ private:
 
     QProcess *m_process;
 private slots:
+
+    /**
+     * Check if the subprocess started
+     */
     void isStarted();
+
+    /**
+     * Process output when subprocess finishes
+     */
     void isFinished( int );
+
 signals:
     void finished( QString version, QString size );
 };

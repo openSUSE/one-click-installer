@@ -12,10 +12,34 @@ class MainHeader : public QWidget
 {
     Q_OBJECT
 public:
+
+    /**
+     *  Default Constructor for Header
+     */
     MainHeader( QWidget *parent = 0 );
+
+    /**
+     *  Update the size of the packages
+     */
     void updateDetails( QString size );
+
 public slots:
+
+    /**
+     *  Recieve the Repository and Package Counts, and set them in the respective labels
+     */
     void changeStatusLabel( int repoCount, int packageCount );
+
+    /**
+     * Show installation status in header
+     */
+    void installationStarted();
+
+    /**
+     * Show success/failure message in header
+     */
+    void installationCompleted();
+
 private:
     QLabel *m_statusLabel;
     QLabel *m_icon;
