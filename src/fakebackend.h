@@ -28,6 +28,11 @@ class FakeBackend : public PackageBackend
      */
     void callBackendHelper();
 
+    /**
+        Fake Implementation of Exists function
+     */
+    bool exists( QString url );
+
     private:
     QWidget *m_main;
 };

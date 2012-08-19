@@ -48,11 +48,15 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
     int i = 0;
     QVBoxLayout *repoDetails;
 
+    m_untrustedSources = 0;
+
     foreach( OCI::Repository *iter, m_repos) {
         m_backend->addRepository( QUrl( iter->url() ) );
         RepositoryWidget *repositoryDetails = new RepositoryWidget( m_backend, i, m_repos.at( i ) );
         mainLayout->addWidget( repositoryDetails );
 
+        if( !m_backend->exists( iter->url() ) )
+            m_untrustedSources++;
         static int j = 0;
         foreach( OCI::Package *iter, m_packages ) {
             m_backend->addPackage( iter->name() );
@@ -80,4 +84,9 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
 void FirstScreen::showEvent( QShowEvent *s )
 {
     emit countChanged( m_repos.count(), m_packages.count() );
+    qDebug() << "number of untrusted sources is " << m_untrustedSources;
+    if( m_untrustedSources > 0 ) {
+        qDebug() << "more than one untrusted source";
+        emit untrustedSources();
+    }
 }

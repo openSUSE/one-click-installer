@@ -34,6 +34,8 @@ private:
     MainHeader *m_header;
     QStackedLayout *m_screenStack;
 
+    QHBoxLayout *m_warningLayout;
+
     QLabel *m_warning;
 
     QPushButton *m_showSettings;
@@ -70,6 +72,11 @@ private slots:
      * Update the size of packages
      */
     void updateSize(QString size );
+
+    /**
+     * Show the Warning Widget
+     */
+    void showWarning();
 
 signals:
     void countChanged( int repoCount, int packageCount );
