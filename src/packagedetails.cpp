@@ -37,25 +37,15 @@ PackageDetails::PackageDetails(OCI::Package *package,int count, int packagecount
 
     QObject::connect( meta, SIGNAL( finished( QString,QString ) ), this, SLOT( dataChanged( QString,QString ) ) );
 
-    m_packageName = new QCheckBox( package->name() );
-    m_packageName->setChecked( true );
     m_showDescription = new QLabel( QString( "<a href = %1>Show Details</a>" ).arg( count ) );
     m_showDescription->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
     m_description = new QLabel( QString( "%1" ).arg( package->description() ) );
     m_description->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
 
-    m_singlePackage = new QLabel( package->name() );
-    m_singlePackage->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147);" );
-    m_singlePackage->setContentsMargins( 10, 10, 10, 10 );
-    m_singlePackage->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
-
     m_descriptionVisible = false;
 
     QObject::connect( m_showDescription, SIGNAL( linkActivated( QString ) ), this, SLOT( showPackageDescription( QString ) ) );
 
-    m_packageName->setContentsMargins( 10, 10, 10, 10 );
-    m_packageName->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Expanding );
-    m_packageName->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147); padding-left : 3px;" );
     m_size->setStyleSheet( "background-color : white;  padding-left : 3px;" );
     m_size->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
     m_version->setStyleSheet( "background-color : white; padding-left : 3px;" );
@@ -69,11 +59,18 @@ PackageDetails::PackageDetails(OCI::Package *package,int count, int packagecount
     m_description->setWordWrap( true );
 
     if( packagecount == 1 ) {
+        m_singlePackage = new QLabel( package->name() );
+        m_singlePackage->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147);" );
+        m_singlePackage->setContentsMargins( 10, 10, 10, 10 );
+        m_singlePackage->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
         packageLayout->addWidget( m_singlePackage );
-        delete m_packageName;
     } else {
+        m_packageName = new QCheckBox( package->name() );
+        m_packageName->setChecked( true );
+        m_packageName->setContentsMargins( 10, 10, 10, 10 );
+        m_packageName->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Expanding );
+        m_packageName->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147); padding-left : 3px;" );
         packageLayout->addWidget( m_packageName );
-        delete m_singlePackage;
     }
     packageLayout->addWidget( m_version );
     packageLayout->addWidget( m_size );
