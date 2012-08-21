@@ -54,6 +54,11 @@ class PackageBackend : public QObject
      */
     virtual QString getFileName();
 
+    /**
+        Return true if repository exists
+     */
+    virtual bool exists( QString url ) = 0;
+
 private:
     QList< QString > m_packages;
     QList< QUrl > m_repositories;

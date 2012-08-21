@@ -54,7 +54,7 @@ void Backend::addRepositories()
         repoInfo.setAlias( url );
         repoInfo.setGpgCheck( true );
 
-        if( !exists( url ) ) {
+        if( !exists( QString::fromStdString( url ) ) ) {
             try {
                 m_manager->addRepository( repoInfo );
             } catch( zypp::repo::RepoMetadataException e ) {
@@ -71,17 +71,20 @@ void Backend::addRepositories()
     }
 }
 
-bool Backend::exists( std::string repo )
+bool Backend::exists(QString repo )
 {
-    std::cout << "Parameter is " << repo << std::endl;
+    qDebug() << "Parameter is " << repo;
     std::list< zypp::RepoInfo > repoList = std::list< zypp::RepoInfo >( m_manager->repoBegin(), m_manager->repoEnd() );
 
     for( std::list< zypp::RepoInfo >::iterator it = repoList.begin(); it != repoList.end(); it++ ){
         //std::cout <<std::endl<<"Repo URL is " << it->url().asString();
-        if( repo.compare( it->url().asString() ) == 0 )
-                return true;
+        if( repo.toStdString().compare( it->url().asString() ) == 0 ) {
+            qDebug() << "returning true";
+            return true;
+        }
     }
 
+    qDebug() << "returning false";
     return false;
 }
 

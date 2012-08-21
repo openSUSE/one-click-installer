@@ -49,3 +49,8 @@ void FakeBackend::callBackendHelper()
 {
     install();
 }
+
+bool FakeBackend::exists( QString url )
+{
+    return false;
+}
