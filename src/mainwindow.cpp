@@ -62,13 +62,6 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     Summary *installSummary = new Summary( m_backend, m_tmpFileName );
     InstallScreen *installer = new InstallScreen( m_backend, m_tmpFileName );
 
-    m_warning = new	QLabel( "<b>Be careful!</b> Some Sources are not currently known. Installing<br />software requires trusting these sources" );
-    m_warning->setStyleSheet( "border : 1px solid rgb(196,181,147); background-color: rgb(253, 227, 187); border-radius : 10px" );
-    m_warning->setContentsMargins( 10,10,10,10 );
-    m_warning->setHidden( true );
-
-    m_warningLayout->addWidget( m_warning );
-
     QScrollArea *scroll = new QScrollArea;
     scroll->setFrameShape( QFrame::NoFrame );
     scroll->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
@@ -100,7 +93,6 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     QObject::connect( m_backend, SIGNAL( installationStarted() ), m_header, SLOT( installationStarted() ) );
     QObject::connect( m_backend, SIGNAL( installationCompleted() ), m_header, SLOT( installationCompleted() ) );
     QObject::connect( installer, SIGNAL( installationCompleted() ), m_header, SLOT( installationCompleted() ) );
-    QObject::connect( m_firstScreen, SIGNAL( untrustedSources() ), this, SLOT( showWarning() ) );
 
     show();
 }
@@ -130,7 +122,6 @@ void MainWindow::performInstallation()
     }
     m_install->hide();
     m_showSettings->hide();
-    m_warning->hide();
     m_cancel->hide();
 }
 
@@ -138,9 +129,4 @@ void MainWindow::updateSize( QString size )
 {
     if( m_screenStack->currentIndex() == 0 )
         m_header->updateDetails( size );
-}
-
-void MainWindow::showWarning()
-{
-    m_warning->setHidden( false );
 }

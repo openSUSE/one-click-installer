@@ -52,5 +52,5 @@ void FakeBackend::callBackendHelper()
 
 bool FakeBackend::exists( QString url )
 {
-    return true;
+    return false;
 }

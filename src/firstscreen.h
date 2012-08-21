@@ -49,14 +49,14 @@ private:
 
     QString *m_tmpFileName;
 
+    QLabel *m_warning;
+
     int m_untrustedSources;
 
 signals:
     void showNextScreen( int );
     void countChanged( int, int );
     void sizeUpdated( QString size );
-    void untrustedSources();
-
 };
 
 #endif

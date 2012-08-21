@@ -70,6 +70,14 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
         mainLayout->addSpacing( -10 );
     }
 
+    if( m_untrustedSources > 0 ) {
+        m_warning = new	QLabel( "<b>Be careful!</b> Some Sources are not currently known. Installing<br />software requires trusting these sources" );
+        m_warning->setStyleSheet( "border : 1px solid rgb(196,181,147); background-color: rgb(253, 227, 187); border-radius : 10px" );
+        m_warning->setContentsMargins( 10,10,10,10 );
+        mainLayout->addSpacing( 20 );
+        mainLayout->addWidget( m_warning );
+    }
+
     foreach( QUrl iter, m_backend->repositories()) {
         outData << "R " << iter.toString() << "\n";
     }
@@ -85,8 +93,4 @@ void FirstScreen::showEvent( QShowEvent *s )
 {
     emit countChanged( m_repos.count(), m_packages.count() );
     qDebug() << "number of untrusted sources is " << m_untrustedSources;
-    if( m_untrustedSources > 0 ) {
-        qDebug() << "more than one untrusted source";
-        emit untrustedSources();
-    }
 }

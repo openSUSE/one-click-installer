@@ -36,8 +36,6 @@ private:
 
     QHBoxLayout *m_warningLayout;
 
-    QLabel *m_warning;
-
     QPushButton *m_showSettings;
     QPushButton *m_cancel;
     QPushButton *m_install;
@@ -72,11 +70,6 @@ private slots:
      * Update the size of packages
      */
     void updateSize(QString size );
-
-    /**
-     * Show the Warning Widget
-     */
-    void showWarning();
 
 signals:
     void countChanged( int repoCount, int packageCount );
