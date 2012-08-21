@@ -61,13 +61,13 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
         foreach( OCI::Package *iter, m_packages ) {
             m_backend->addPackage( iter->name() );
             mainLayout->addSpacing( -10 );
-            PackageDetails *packDetails = new PackageDetails( iter, j );
+            PackageDetails *packDetails = new PackageDetails( iter, j, m_packages.count() );
             QObject::connect( packDetails, SIGNAL( sizeUpdated( QString ) ), this, SIGNAL( sizeUpdated( QString ) ) );
             mainLayout->addWidget( packDetails );
             j++;
         }
         i++;
-        mainLayout->addSpacing( -10 );
+        mainLayout->addSpacing( -8 );
     }
 
     if( m_untrustedSources > 0 ) {
