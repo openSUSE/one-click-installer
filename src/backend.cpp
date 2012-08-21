@@ -73,7 +73,7 @@ void Backend::addRepositories()
 
 bool Backend::exists(QString repo )
 {
-    std::cout << "Parameter is " << repo.toStdString() << std::endl;
+    qDebug() << "Parameter is " << repo;
     std::list< zypp::RepoInfo > repoList = std::list< zypp::RepoInfo >( m_manager->repoBegin(), m_manager->repoEnd() );
 
     for( std::list< zypp::RepoInfo >::iterator it = repoList.begin(); it != repoList.end(); it++ ){
