@@ -37,7 +37,6 @@ private:
     QLabel *m_fingerprint;
     QLabel *m_created;
     QLabel *m_expires;
-    QLabel *m_summary;
     QSettings m_settings;
 
     OCI::Repository *m_repo;
