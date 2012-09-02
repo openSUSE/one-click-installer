@@ -21,17 +21,10 @@
 #include "mainwindow.h"
 MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeRequested, QObject *parent )
 {
-//    m_settings.remove( "" );
     setStyleSheet( "background-color : rgb(251,248,241)" );
     setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
     setMinimumSize( 600, 400 );
-
-//    if( m_settings.allKeys().count() == 0 ) {
-//        m_settings.setValue( "proposal", 0 );
-//        m_settings.setValue( "showdetails", 0 );
-//        m_settings.sync();
-//    }
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     QHBoxLayout *m_warningLayout = new QHBoxLayout;
