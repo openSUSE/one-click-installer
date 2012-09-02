@@ -61,11 +61,11 @@ RepositoryWidget::RepositoryWidget(PackageBackend *backend, int index, OCI::Repo
 
     setLayout( mainLayout );
 
-    if( m_settings.value( "showdetails", 1 ).toInt() == 1 ) {
+    m_visible = false;
+
+    if( m_settings.value( "showdetails" ).toInt() == 1 ) {
         showDetails( QString( "%1" ).arg( index ) );
     }
-
-    m_visible = false;
 }
 
 void RepositoryWidget::showDetails( QString link )
@@ -110,6 +110,7 @@ void RepositoryWidget::showDetails( QString link )
         m_fingerprint->show();
         m_created->show();
         m_expires->show();
+        m_id->show();
 
         m_detailsVisible = true;
 
