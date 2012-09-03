@@ -56,6 +56,8 @@ private:
     QHash< int, QHBoxLayout* > m_packageLayouts;
     QHash< int, QProgressBar* > m_progressBars;
 
+    int m_installerRunning;
+
 signals:
     void installationCompleted();
 };
