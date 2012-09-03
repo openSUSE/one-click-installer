@@ -54,6 +54,8 @@ void Backend::addRepositories()
         repoInfo.setAlias( url );
         repoInfo.setGpgCheck( true );
 
+        zypp::KeyRing::setDefaultAccept( zypp::KeyRing::TRUST_AND_IMPORT_KEY );
+
         if( !exists( url ) ) {
             try {
                 m_manager->addRepository( repoInfo );
