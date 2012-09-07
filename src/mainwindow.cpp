@@ -124,6 +124,8 @@ void MainWindow::performInstallation()
         m_screenStack->setCurrentIndex( 1 );
     } else {
         m_screenStack->setCurrentIndex( 2 );
+        m_backend->setFileName( *m_tmpFileName );
+        m_backend->callBackendHelper();
     }
     m_install->hide();
     m_showSettings->hide();

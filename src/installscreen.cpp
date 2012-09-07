@@ -70,8 +70,6 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
         installLayout->addLayout( packageLayout );
     }
 
-    QObject::connect( m_backend, SIGNAL( installationCompleted() ), this, SLOT( showCompletionStatus() ) );
-
     buttonLayout->addSpacing( 400 );
     buttonLayout->addWidget( m_cancel );
     mainLayout->setSpacing( 0 );
@@ -84,20 +82,6 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
     setLayout( mainLayout );
 }
 
-void InstallScreen::showEvent( QShowEvent *s )
-{
-    m_installerRunning++;
-
-    if( m_installerRunning == 1 ) {
-        QTimer::singleShot( 0, this, SLOT( callBackend() ) );
-    }
-}
-
-void InstallScreen::callBackend()
-{
-    m_backend->setFileName( *m_tmpFileName );
-    m_backend->callBackendHelper();
-}
 
 void InstallScreen::showCompletionStatus()
 {
