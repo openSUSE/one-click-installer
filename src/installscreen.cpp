@@ -26,8 +26,6 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
     m_backend = backend;
     m_tmpFileName = tmpFileName;
 
-    m_installerRunning = 0;
-
     QWidget *packageWidget = new QWidget;
     packageWidget->setObjectName( "packageWidget" );
     packageWidget->setStyleSheet( "QWidget#packageWidget{ background-color : white; border-bottom : 1px solid rgb(196,181,147); border-left : 1px solid rgb(196,181,147); border-top : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147); }" );
