@@ -115,7 +115,7 @@ void MainWindow::showSettings()
 
 void MainWindow::performInstallation()
 {
-    if( m_settings.value( "proposal", 1 ).toInt() == 1 ) {
+    if( m_settings.value( "proposal" ).toInt() == 1 ) {
         m_screenStack->setCurrentIndex( 1 );
     } else {
         m_screenStack->setCurrentIndex( 2 );
