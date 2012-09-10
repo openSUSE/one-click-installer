@@ -55,7 +55,7 @@ protected:
     /**
         Check if repo exists in the Repository database or not
      */
-    bool exists( std::string repo );
+    bool exists( QString repo );
 
 
 

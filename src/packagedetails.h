@@ -18,11 +18,12 @@ public:
     /**
      * Constructor for Package Widget. Parameter is the index and Package Object
      */
-    PackageDetails( OCI::Package *package, int count, QObject *parent = 0 );
+    PackageDetails(OCI::Package *package, int packagecount, int count, QObject *parent = 0 );
 private:
     bool m_descriptionVisible;
 
     QLabel *m_summary;
+    QLabel *m_singlePackage;
     QLabel *m_version;
     QLabel *m_size;
     QLabel *m_description;

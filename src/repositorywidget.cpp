@@ -53,11 +53,8 @@ RepositoryWidget::RepositoryWidget(PackageBackend *backend, int index, OCI::Repo
     QObject::connect( m_showDetails, SIGNAL( linkActivated( QString ) ), this, SLOT( showDetails(QString ) ) );
 
     m_url = new QLabel( QString( "<b>URL :</b> %1" ).arg( repo->url() ) );
-    m_summary = new QLabel( QString( "<b>Summary :</b> %1" ).arg( repo->summary() ) );
 
     m_url->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px; border-right : 1px solid rgb(196,181,147); border-left : 1px solid rgb(196,181,147);" );
-
-    m_summary->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px; border-right : 1px solid rgb(196,181,147); border-left : 1px solid rgb(196,181,147);" );
 
     setLayout( mainLayout );
 
@@ -89,7 +86,6 @@ void RepositoryWidget::showDetails( QString link )
     if( m_detailsVisible ) {
         m_url->hide();
         m_fingerprint->hide();
-        m_summary->hide();
         m_created->hide();
         m_expires->hide();
         m_id->hide();
@@ -98,14 +94,12 @@ void RepositoryWidget::showDetails( QString link )
 
         m_showDetails->setText( QString( "<a href = %1>Show Details</a>" ).arg( linkNo ) );
     } else {
-        this->layout()->addWidget( m_summary );
         this->layout()->addWidget( m_url );
         this->layout()->addWidget( m_id );
         this->layout()->addWidget( m_fingerprint );
         this->layout()->addWidget( m_created );
         this->layout()->addWidget( m_expires );
 
-        m_summary->show();
         m_url->show();
         m_fingerprint->show();
         m_created->show();

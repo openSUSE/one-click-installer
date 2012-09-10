@@ -48,22 +48,34 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
     int i = 0;
     QVBoxLayout *repoDetails;
 
+    m_untrustedSources = 0;
+
     foreach( OCI::Repository *iter, m_repos) {
         m_backend->addRepository( QUrl( iter->url() ) );
         RepositoryWidget *repositoryDetails = new RepositoryWidget( m_backend, i, m_repos.at( i ) );
         mainLayout->addWidget( repositoryDetails );
 
+        if( !m_backend->exists( iter->url() ) )
+            m_untrustedSources++;
         static int j = 0;
         foreach( OCI::Package *iter, m_packages ) {
             m_backend->addPackage( iter->name() );
             mainLayout->addSpacing( -10 );
-            PackageDetails *packDetails = new PackageDetails( iter, j );
+            PackageDetails *packDetails = new PackageDetails( iter, j, m_packages.count() );
             QObject::connect( packDetails, SIGNAL( sizeUpdated( QString ) ), this, SIGNAL( sizeUpdated( QString ) ) );
             mainLayout->addWidget( packDetails );
             j++;
         }
         i++;
-        mainLayout->addSpacing( -10 );
+        mainLayout->addSpacing( -8 );
+    }
+
+    if( m_untrustedSources > 0 ) {
+        m_warning = new	QLabel( "<b>Be careful!</b> Some Sources are not currently known. Installing<br />software requires trusting these sources" );
+        m_warning->setStyleSheet( "border : 1px solid rgb(196,181,147); background-color: rgb(253, 227, 187); border-radius : 10px" );
+        m_warning->setContentsMargins( 10,10,10,10 );
+        mainLayout->addSpacing( 20 );
+        mainLayout->addWidget( m_warning );
     }
 
     foreach( QUrl iter, m_backend->repositories()) {
@@ -80,4 +92,5 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
 void FirstScreen::showEvent( QShowEvent *s )
 {
     emit countChanged( m_repos.count(), m_packages.count() );
+    qDebug() << "number of untrusted sources is " << m_untrustedSources;
 }
