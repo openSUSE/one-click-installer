@@ -56,7 +56,7 @@ void Backend::addRepositories()
 
         zypp::KeyRing::setDefaultAccept( zypp::KeyRing::TRUST_AND_IMPORT_KEY );
 
-        if( !exists( url ) ) {
+        if( !exists( QString::fromStdString( url ) ) ) {
             try {
                 m_manager->addRepository( repoInfo );
             } catch( zypp::repo::RepoMetadataException e ) {
