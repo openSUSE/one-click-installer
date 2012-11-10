@@ -26,6 +26,11 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
     m_backend = backend;
     m_tmpFileName = tmpFileName;
 
+    m_watcher = new QFileSystemWatcher;
+    m_watcher->addPath( QString::fromLocal8Bit( "/var/log/oneclick.log" ) );
+
+    QObject::connect( m_watcher, SIGNAL( fileChanged( QString ) ), this, SLOT( logFileChanged( QString ) ) );
+
     QWidget *packageWidget = new QWidget;
     packageWidget->setObjectName( "packageWidget" );
     packageWidget->setStyleSheet( "QWidget#packageWidget{ background-color : white; border-bottom : 1px solid rgb(196,181,147); border-left : 1px solid rgb(196,181,147); border-top : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147); }" );
@@ -60,8 +65,8 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
         m_progressBars.insert( i, progressBar );
         progressBar->setFixedHeight( 20 );
         progressBar->setMinimum( 0 );
-        progressBar->setMaximum( 0 );
-        progressBar->setRange( 0, 0 );
+        progressBar->setMaximum( 100 );
+        progressBar->setRange( 0, 100 );
         packageLayout->addWidget( package );
         packageLayout->setSpacing( 200 );
         packageLayout->addWidget( progressBar );
@@ -91,5 +96,32 @@ void InstallScreen::showCompletionStatus()
         QLabel *completed = new QLabel( "Installed" );
         completed->setStyleSheet( "background-color : white" );
         l->addWidget( completed );
+    }
+}
+
+void InstallScreen::logFileChanged( QString path )
+{
+    qDebug() << "changed";
+    QFile file( path );
+    if( file.open( QIODevice::ReadOnly ) ) {
+        QString str( file.readAll() );
+
+        if( str == "" || str.isNull() )
+            return;
+        QStringList line = str.split(QRegExp("[\r\n]"),QString::SkipEmptyParts);
+
+        QString final = line.last();
+        qDebug() << final;
+        QString num = final.split( "=" ).at( 1 );
+        num.remove( 0, 1 );
+        num.remove( num.length() - 1, 1 );
+        int val = num.toInt();
+
+        qDebug() << val;
+
+        foreach( QProgressBar *progress, m_progressBars ) {
+        if( val > 0 )
+               progress->setValue( val );
+        }
     }
 }

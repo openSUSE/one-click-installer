@@ -25,12 +25,12 @@ void Backend::install()
 
     system( "zypper refresh" );
 
-    QString zypper_command = "zypper -n in";
+    QString zypper_command = "2>&1 zypper -x -n in";
     foreach( QString package, packages() ) {
         zypper_command.append( QString( " %1" ).arg( package ) );
     }
 
-    zypper_command.append( " >> /var/log/oneclick.log" );
+    zypper_command.append( " | grep -o --line-buffered \"percent=\\\"[0-9]*\\\"\" | tee /var/log/oneclick.log" );
 
     system( zypper_command.toStdString().c_str() );
 }
