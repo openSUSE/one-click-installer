@@ -30,7 +30,8 @@ void Backend::install()
         zypper_command.append( QString( " %1" ).arg( package ) );
     }
 
-    zypper_command.append( " | grep -o --line-buffered \"percent=\\\"[0-9]*\\\"\" | tee /var/log/oneclick.log" );
+    zypper_command.append( " | grep -o --line-buffered \"percent=\\\"[0-9]*\\\"\" | " );
+    zypper_command.append( "while read line; do echo \"$line\" > /var/log/oneclick.log; echo \"$line\" > /var/log/oneclick.log; done" );
 
     system( zypper_command.toStdString().c_str() );
 }
