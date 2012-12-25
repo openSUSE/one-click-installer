@@ -46,7 +46,7 @@ private:
     QString *m_tmpFileName;
 
     QHash< int, QHBoxLayout* > m_packageLayouts;
-    QHash< int, QProgressBar* > m_progressBars;
+    QProgressBar *m_progressBar;
 
     QFileSystemWatcher *m_watcher;
 
