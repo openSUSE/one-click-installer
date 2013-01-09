@@ -26,6 +26,11 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
     m_backend = backend;
     m_tmpFileName = tmpFileName;
 
+    m_watcher = new QFileSystemWatcher;
+    m_watcher->addPath( QString::fromLocal8Bit( "/var/log/oneclick.log" ) );
+
+    QObject::connect( m_watcher, SIGNAL( fileChanged( QString ) ), this, SLOT( logFileChanged( QString ) ) );
+
     QWidget *packageWidget = new QWidget;
     packageWidget->setObjectName( "packageWidget" );
     packageWidget->setStyleSheet( "QWidget#packageWidget{ background-color : white; border-bottom : 1px solid rgb(196,181,147); border-left : 1px solid rgb(196,181,147); border-top : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147); }" );
@@ -38,6 +43,15 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
 
     m_installStatus = new QLabel( "Downloading and Installing Packages" );
     m_cancel = new QPushButton( "Cancel Installation" );
+
+    m_progressBar = new QProgressBar;
+    m_progressBar->setFixedHeight( 20 );
+    m_progressBar->setMinimum( 0 );
+    m_progressBar->setMaximum( 100 );
+    m_progressBar->setRange( 0, 100 );
+
+    installLayout->addWidget( m_progressBar );
+    installLayout->setSpacing( 20 );
 
     foreach( QUrl iter, m_backend->repositories() ) {
         QLabel *sourceLabel = new QLabel( QString( "Added Source: %1" ).arg( iter.toString() ) );
@@ -56,15 +70,8 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
         QLabel *package = new QLabel( QString( "<b>Installing: </b> %1" ).arg( iter ) );
         package->setFixedHeight( 40 );
         package->setStyleSheet( "background-color : white" );
-        QProgressBar * progressBar = new QProgressBar;
-        m_progressBars.insert( i, progressBar );
-        progressBar->setFixedHeight( 20 );
-        progressBar->setMinimum( 0 );
-        progressBar->setMaximum( 0 );
-        progressBar->setRange( 0, 0 );
         packageLayout->addWidget( package );
         packageLayout->setSpacing( 200 );
-        packageLayout->addWidget( progressBar );
         installLayout->addLayout( packageLayout );
     }
 
@@ -83,13 +90,36 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
 
 void InstallScreen::showCompletionStatus()
 {
-    foreach( QProgressBar *progress, m_progressBars ) {
-        progress->hide();
-    }
+    m_progressBar->hide();
 
     foreach( QHBoxLayout *l, m_packageLayouts ) {
         QLabel *completed = new QLabel( "Installed" );
         completed->setStyleSheet( "background-color : white" );
         l->addWidget( completed );
+    }
+}
+
+void InstallScreen::logFileChanged( QString path )
+{
+    qDebug() << "changed";
+    QFile file( path );
+    if( file.open( QIODevice::ReadOnly ) ) {
+        QString str( file.readAll() );
+
+        if( str == "" || str.isNull() )
+            return;
+        QStringList line = str.split(QRegExp("[\r\n]"),QString::SkipEmptyParts);
+
+        QString final = line.last();
+        qDebug() << final;
+        QString num = final.split( "=" ).at( 1 );
+        num.remove( 0, 1 );
+        num.remove( num.length() - 1, 1 );
+        int val = num.toInt();
+
+        qDebug() << val;
+
+        m_progressBar->setValue( val );
+
     }
 }

@@ -93,6 +93,7 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     QObject::connect( m_backend, SIGNAL( installationStarted() ), m_header, SLOT( installationStarted() ) );
     QObject::connect( m_backend, SIGNAL( installationCompleted() ), m_header, SLOT( installationCompleted() ) );
     QObject::connect( installer, SIGNAL( installationCompleted() ), m_header, SLOT( installationCompleted() ) );
+    QObject::connect( m_backend, SIGNAL( installationCompleted() ), installer, SLOT( showCompletionStatus() ) );
 
     show();
 }

@@ -40,6 +40,7 @@ int main( int argc, char *argv[] )
         fakeRequested = true;
     }
     QString fileName( "/tmp/" );
+
     fileName.append( QFileInfo( argv[1] ).fileName().split( "." ).at( 0 ) ).append( "-" );
     fileName.append( QUuid::createUuid().toString().split( "-" ).at( 1 ) );
     qDebug() << fileName;
