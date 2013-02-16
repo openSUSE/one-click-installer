@@ -63,12 +63,15 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
             mainLayout->addSpacing( -10 );
             PackageDetails *packDetails = new PackageDetails( iter, j, m_packages.count() );
             QObject::connect( packDetails, SIGNAL( sizeUpdated( QString ) ), this, SIGNAL( sizeUpdated( QString ) ) );
+            QObject::connect( packDetails, SIGNAL( checkboxChanged( bool ) ), this, SLOT( countCheckedPackages( bool ) ) );
             mainLayout->addWidget( packDetails );
             j++;
         }
         i++;
         mainLayout->addSpacing( -8 );
     }
+
+    m_packagesSelected = m_backend->packages().count();
 
     if( m_untrustedSources > 0 ) {
         m_warning = new	QLabel( "<b>Be careful!</b> Some Sources are not currently known. Installing<br />software requires trusting these sources" );
@@ -93,4 +96,18 @@ void FirstScreen::showEvent( QShowEvent *s )
 {
     emit countChanged( m_repos.count(), m_packages.count() );
     qDebug() << "number of untrusted sources is " << m_untrustedSources;
+}
+
+void FirstScreen::countCheckedPackages( bool checked )
+{
+    if( checked == false ) {
+        m_packagesSelected--;
+    } else {
+        m_packagesSelected++;
+    }
+
+    if( m_packagesSelected == 0 )
+        emit packagesSelected( false );
+    else
+        emit packagesSelected( true );
 }

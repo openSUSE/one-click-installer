@@ -34,12 +34,19 @@ public:
         Default constructor taking the backend, and the filename as argument
    */
     FirstScreen( PackageBackend *backend, QString *tmpFileName, const QString& filename, QObject *parent = 0 );
+
 private slots:
 
     /**
         Show Event
      */
     void showEvent( QShowEvent * s);
+
+
+    /**
+     * Count checked packages
+     */
+    void countCheckedPackages(bool checked);
 
 private:
     PackageBackend *m_backend;
@@ -53,10 +60,13 @@ private:
 
     int m_untrustedSources;
 
+    int m_packagesSelected;
+
 signals:
     void showNextScreen( int );
     void countChanged( int, int );
     void sizeUpdated( QString size );
+    void packagesSelected( bool );
 };
 
 #endif

@@ -19,6 +19,11 @@ public:
      * Constructor for Package Widget. Parameter is the index and Package Object
      */
     PackageDetails(OCI::Package *package, int packagecount, int count, QObject *parent = 0 );
+
+    /**
+     * If More than one package, Return if Checkbox is checked
+     */
+    bool packageChecked();
 private:
     bool m_descriptionVisible;
 
@@ -46,6 +51,7 @@ private slots:
 
 signals:
     void sizeUpdated( QString size );
+    void checkboxChanged( bool checked );
 };
 
 #endif
