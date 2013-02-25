@@ -44,6 +44,8 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
     m_installStatus = new QLabel( "Downloading and Installing Packages" );
     m_cancel = new QPushButton( "Cancel Installation" );
 
+    QObject::connect( m_cancel, SIGNAL( clicked() ), this, SLOT( cancelInstallation() ) );
+
     m_progressBar = new QProgressBar;
     m_progressBar->setFixedHeight( 20 );
     m_progressBar->setMinimum( 0 );
@@ -122,4 +124,13 @@ void InstallScreen::logFileChanged( QString path )
         m_progressBar->setValue( val );
 
     }
+}
+
+void InstallScreen::cancelInstallation()
+{
+    qDebug() << "cancelling installation";
+
+    ClientDBus *client = new ClientDBus( "org.opensuse.oneclickinstaller", "/", QDBusConnection::sessionBus(), 0 );
+    client->KillBackend();
+    qApp->quit();
 }

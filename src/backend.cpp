@@ -30,10 +30,15 @@ void Backend::install()
         zypper_command.append( QString( " %1" ).arg( package ) );
     }
 
+    m_adaptor = new DBusAdaptor( this );
+    QDBusConnection connection = QDBusConnection::sessionBus();
+    connection.registerService( "org.opensuse.oneclickinstaller" );
+    connection.registerObject( "/", this );
+
     zypper_command.append( " | grep -o --line-buffered \"percent=\\\"[0-9]*\\\"\" | " );
     zypper_command.append( "while read line; do echo \"$line\" > /var/log/oneclick.log; echo \"$line\" > /var/log/oneclick.log; done" );
 
-    system( zypper_command.toStdString().c_str() );
+    QProcess::execute( zypper_command.toStdString().c_str() );
 }
 
 Backend::Backend()
@@ -125,4 +130,9 @@ void Backend::finished( int v )
         qDebug() << "helper finished successfully";
         emit installationCompleted();
     }
+}
+
+void Backend::KillBackend()
+{
+    system( "kill $(pgrep zypper)" );
 }
