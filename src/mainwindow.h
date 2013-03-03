@@ -71,6 +71,11 @@ private slots:
      */
     void updateSize(QString size );
 
+    /**
+     * Disable Install Button
+     */
+    void disableInstallButton( bool value );
+
 signals:
     void countChanged( int repoCount, int packageCount );
 };

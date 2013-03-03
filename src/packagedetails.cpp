@@ -70,6 +70,7 @@ PackageDetails::PackageDetails(OCI::Package *package,int count, int packagecount
         m_packageName->setContentsMargins( 10, 10, 10, 10 );
         m_packageName->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Expanding );
         m_packageName->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147); padding-left : 3px;" );
+        QObject::connect( m_packageName, SIGNAL( toggled( bool ) ), this, SIGNAL( checkboxToggled( bool ) ) );
         packageLayout->addWidget( m_packageName );
     }
     packageLayout->addWidget( m_version );
@@ -105,4 +106,12 @@ void PackageDetails::dataChanged( QString version, QString size )
     m_size->setText( size );
 
     emit sizeUpdated( size );
+}
+
+QCheckBox* PackageDetails::checkbox()
+{
+    if( !m_packageName )
+        return NULL;
+    else
+        return m_packageName;
 }

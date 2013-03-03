@@ -94,6 +94,7 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     QObject::connect( m_backend, SIGNAL( installationCompleted() ), m_header, SLOT( installationCompleted() ) );
     QObject::connect( installer, SIGNAL( installationCompleted() ), m_header, SLOT( installationCompleted() ) );
     QObject::connect( m_backend, SIGNAL( installationCompleted() ), installer, SLOT( showCompletionStatus() ) );
+    QObject::connect( m_firstScreen, SIGNAL( disableInstallButton( bool ) ), this, SLOT( disableInstallButton( bool ) ) );
 
     show();
 }
@@ -132,4 +133,9 @@ void MainWindow::updateSize( QString size )
 {
     if( m_screenStack->currentIndex() == 0 )
         m_header->updateDetails( size );
+}
+
+void MainWindow::disableInstallButton( bool value )
+{
+    m_install->setEnabled( value );
 }

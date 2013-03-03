@@ -41,6 +41,11 @@ private slots:
      */
     void showEvent( QShowEvent * s);
 
+    /**
+     * Count packages selected
+     */
+    void countCheckedPackages( bool );
+
 private:
     PackageBackend *m_backend;
 
@@ -53,10 +58,13 @@ private:
 
     int m_untrustedSources;
 
+    QList< QCheckBox* > m_checkboxes;
+
 signals:
     void showNextScreen( int );
     void countChanged( int, int );
     void sizeUpdated( QString size );
+    void disableInstallButton( bool value );
 };
 
 #endif
