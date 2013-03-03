@@ -25,11 +25,14 @@
 #include <QStringList>
 #include <QUuid>
 #include <QFileInfo>
+#include <QTranslator>
+#include <QLibraryInfo>
 #include "mainwindow.h"
 
 int main( int argc, char *argv[] )
 {
     QApplication app( argc, argv );
+
     bool fakeRequested = false;
     if( argc == 1) {
         qDebug() << "No Valid File Passed";
@@ -46,5 +49,10 @@ int main( int argc, char *argv[] )
     qDebug() << fileName;
     MainWindow *win = new MainWindow( QString( argv[1] ), fileName, fakeRequested );
     win->show();
+
+    QTranslator translator;
+    translator.load( "qt_" + QLocale::system().name(), QLibraryInfo::location( QLibraryInfo::TranslationsPath ) );
+    app.installTranslator( &translator );
+
     return app.exec();
 }

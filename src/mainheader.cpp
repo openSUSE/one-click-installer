@@ -47,17 +47,18 @@ void MainHeader::changeStatusLabel( int repoCount, int packageCount )
     m_packageCount = packageCount;
     m_repoCount = repoCount;
 
-    QString statusText = QString( "This installer will download and install %1" ).arg( m_packageCount );
+    QString statusText = QString( tr( "This installer will download and install %n package(s) ", "", m_packageCount ) );
+    statusText.append( QString( tr( "from %n source(s)", "", m_repoCount ) ) );
 
-    if( m_packageCount > 1 )
-        statusText.append( " packages" );
-    else
-        statusText.append( " package" );
+//    if( m_packageCount > 1 )
+//        statusText.append( " packages" );
+//    else
+//        statusText.append( " package" );
 
-    if( m_repoCount > 1 )
-        statusText.append( QString( " from %1 sources" ).append( m_repoCount ) );
-    else
-        statusText.append( " from 1 source");
+//    if( m_repoCount > 1 )
+//        statusText.append( QString( " from %1 sources" ).append( m_repoCount ) );
+//    else
+//        statusText.append( " from 1 source");
     m_statusLabel->setText( statusText );
 }
 
