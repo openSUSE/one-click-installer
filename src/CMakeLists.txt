@@ -3,13 +3,15 @@ cmake_minimum_required(VERSION 2.8)
 find_package(Qt4 REQUIRED)
 
 include(${QT_USE_FILE})
+include_directories(${QT_QTDBUS_INCLUDE_DIR})
+set(QT_USE_DBUS, true)
 add_definitions(${QT_DEFINITIONS})
 
-set(oneclickinstaller_SOURCES main.cpp mainwindow.cpp firstscreen.cpp settings.cpp fakebackend.cpp repository.cpp package.cpp ympparser.cpp packagebackend.cpp installscreen.cpp repositorywidget.cpp summary.cpp backend.cpp keyringcallbacks.cpp mainheader.cpp packagedetails.cpp repositorymetadata.cpp repositorydata.cpp packagemetadata.cpp)
-set(oneclickinstaller_HEADERS mainwindow.h firstscreen.h settings.h installscreen.h repositorywidget.h summary.h mainheader.h packagedetails.h packagemetadata.h backend.h packagebackend.h)
+set(oneclickinstaller_SOURCES main.cpp mainwindow.cpp firstscreen.cpp settings.cpp fakebackend.cpp repository.cpp package.cpp ympparser.cpp packagebackend.cpp installscreen.cpp repositorywidget.cpp summary.cpp backend.cpp keyringcallbacks.cpp mainheader.cpp packagedetails.cpp repositorymetadata.cpp repositorydata.cpp packagemetadata.cpp clientdbus.cpp dbusadaptor.cpp)
+set(oneclickinstaller_HEADERS mainwindow.h firstscreen.h settings.h installscreen.h repositorywidget.h summary.h mainheader.h packagedetails.h packagemetadata.h backend.h packagebackend.h dbusadaptor.h clientdbus.h)
 
-set(oneclickhelper_SOURCES interfacemain.cpp backend.cpp keyringcallbacks.cpp packagebackend.cpp)
-set(oneclickhelper_HEADERS backend.h packagebackend.h keyringcallbacks.h)
+set(oneclickhelper_SOURCES interfacemain.cpp backend.cpp keyringcallbacks.cpp packagebackend.cpp dbusadaptor.cpp)
+set(oneclickhelper_HEADERS backend.h packagebackend.h keyringcallbacks.h dbusadaptor.h)
 
 QT4_WRAP_CPP(oneclickhelper_HEADERS_MOC ${oneclickhelper_HEADERS})
 QT4_WRAP_CPP(oneclickinstaller_HEADERS_MOC ${oneclickinstaller_HEADERS})
@@ -17,8 +19,8 @@ QT4_WRAP_CPP(oneclickinstaller_HEADERS_MOC ${oneclickinstaller_HEADERS})
 add_executable(oneclickhelper ${QT_LIBRARIES} ${oneclickhelper_SOURCES} ${oneclickhelper_HEADERS} ${oneclickhelper_HEADERS_MOC})
 add_executable(oneclickinstaller ${QT_LIBRARIES} ${oneclickinstaller_SOURCES} ${oneclickinstaller_HEADERS} ${oneclickinstaller_HEADERS_MOC})
 
-target_link_libraries(oneclickhelper ${QT_LIBRARIES} zypp)
-target_link_libraries(oneclickinstaller ${QT_LIBRARIES} zypp)
+target_link_libraries(oneclickhelper ${QT_LIBRARIES} zypp ${QT_QTDBUS_LIBRARY})
+target_link_libraries(oneclickinstaller ${QT_LIBRARIES} zypp ${QT_QTDBUS_LIBRARY})
 
 INSTALL(TARGETS oneclickhelper DESTINATION /usr/sbin)
 INSTALL(TARGETS oneclickinstaller DESTINATION /usr/bin)

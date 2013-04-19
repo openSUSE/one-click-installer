@@ -1,6 +1,7 @@
 #ifndef INSTALLSCREEN_H
 #define INSTALLSCREEN_H
 
+#include <QApplication>
 #include <QWidget>
 #include <QLabel>
 #include <QVBoxLayout>
@@ -17,6 +18,7 @@
 #include <QFile>
 #include "packagebackend.h"
 #include "fakebackend.h"
+#include "clientdbus.h"
 
 class InstallScreen : public QWidget
 {
@@ -35,6 +37,8 @@ private slots:
     void showCompletionStatus();
 
     void logFileChanged( QString path );
+
+    void cancelInstallation();
 
 private:
     QLabel *m_installStatus;

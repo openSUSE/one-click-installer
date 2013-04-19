@@ -18,6 +18,8 @@
 #include <zypp/sat/WhatProvides.h>
 #include <zypp/ZYppFactory.h>
 #include <zypp/misc/DefaultLoadSystem.h>
+#include "dbusadaptor.h"
+#include <QtDBus/QDBusConnection>
 #include <list>
 #include "keyringcallbacks.h"
 #include "packagebackend.h"
@@ -69,7 +71,12 @@ private:
     zypp::KeyRingCallbacks *m_keyRingManager;
     int m_errorCode;
 
+    DBusAdaptor *m_adaptor;
+
     QProcess *m_process;
+
+public Q_SLOTS:
+    void KillBackend();
 };
 
 #endif
