@@ -42,9 +42,9 @@ private slots:
     void showEvent( QShowEvent * s);
 
     /**
-     * Count packages selected
+     * Check Selected Packages
      */
-    void countCheckedPackages( bool );
+    void checkPackageState();
 
 private:
     PackageBackend *m_backend;
@@ -64,7 +64,7 @@ signals:
     void showNextScreen( int );
     void countChanged( int, int );
     void sizeUpdated( QString size );
-    void disableInstallButton( bool value );
+    void setPackageState( bool value );
 };
 
 #endif

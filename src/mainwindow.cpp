@@ -94,7 +94,7 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     QObject::connect( m_backend, SIGNAL( installationCompleted() ), m_header, SLOT( installationCompleted() ) );
     QObject::connect( installer, SIGNAL( installationCompleted() ), m_header, SLOT( installationCompleted() ) );
     QObject::connect( m_backend, SIGNAL( installationCompleted() ), installer, SLOT( showCompletionStatus() ) );
-    QObject::connect( m_firstScreen, SIGNAL( disableInstallButton( bool ) ), this, SLOT( disableInstallButton( bool ) ) );
+    QObject::connect( m_firstScreen, SIGNAL( setPackageState( bool ) ), this, SLOT( disableInstallButton( bool ) ) );
 
     show();
 }

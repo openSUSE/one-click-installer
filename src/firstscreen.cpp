@@ -67,7 +67,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
             if( checkbox )
                 m_checkboxes.append( checkbox );
 
-            QObject::connect( packDetails, SIGNAL( checkboxToggled( bool ) ), this, SLOT( countCheckedPackages( bool ) ) );
+            QObject::connect( packDetails, SIGNAL( checkboxToggled( bool ) ), this, SLOT( checkPackageState() ) );
 
             mainLayout->addWidget( packDetails );
             j++;
@@ -101,7 +101,7 @@ void FirstScreen::showEvent( QShowEvent *s )
     qDebug() << "number of untrusted sources is " << m_untrustedSources;
 }
 
-void FirstScreen::countCheckedPackages( bool )
+void FirstScreen::checkPackageState()
 {
     int checkCount = 0;
     foreach( QCheckBox *check, m_checkboxes ) {
@@ -109,10 +109,10 @@ void FirstScreen::countCheckedPackages( bool )
             checkCount++;
     }
 
-    if( checkCount == 0 ) {
-        emit disableInstallButton( false );
+    if( checkCount != 0 ) {
+        emit setPackageState( true );
     } else {
-        emit disableInstallButton( true );
+        emit setPackageState( false );
     }
 
 }
