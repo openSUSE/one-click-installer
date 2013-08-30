@@ -47,36 +47,13 @@ void MainHeader::changeStatusLabel( int repoCount, int packageCount )
     m_packageCount = packageCount;
     m_repoCount = repoCount;
 
-    QString statusText = QString( tr( "This installer will download and install %n package(s) ", "", m_packageCount ) );
-    statusText.append( QString( tr( "from %n source(s)", "", m_repoCount ) ) );
-
-//    if( m_packageCount > 1 )
-//        statusText.append( " packages" );
-//    else
-//        statusText.append( " package" );
-
-//    if( m_repoCount > 1 )
-//        statusText.append( QString( " from %1 sources" ).append( m_repoCount ) );
-//    else
-//        statusText.append( " from 1 source");
+    QString statusText = QString( tr( "This installer will install %n package(s) %1", 0, m_packageCount ).arg( tr( "from %n source(s)", 0, m_repoCount ) ) );
     m_statusLabel->setText( statusText );
 }
 
 void MainHeader::updateDetails( QString size )
 {
-    QString statusText = QString( "This installer will download and install %1" ).arg( m_packageCount );
-
-    if( m_packageCount > 1 )
-        statusText.append( " packages" );
-    else
-        statusText.append( " package" );
-
-    if( m_repoCount > 1 )
-        statusText.append( QString( " from %1 sources" ).append( m_repoCount ) );
-    else
-        statusText.append( " from 1 source");
-    statusText.append( QString( " totalling %1" ).arg( size ) );
-
+    QString statusText = QString( tr( "This installer will install %n package(s) %1", 0, m_packageCount ).arg( tr( "from %n source(s) totalling %1", 0, m_repoCount ).arg( size ) ) );
     m_statusLabel->setText( statusText );
 }
 
