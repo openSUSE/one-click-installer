@@ -7,6 +7,7 @@
 #include <QHash>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QMovie>
 #include "package.h"
 #include "packagemetadata.h"
 
@@ -29,6 +30,7 @@ private:
     QLabel *m_description;
     QLabel *m_showDescription;
     QCheckBox *m_packageName;
+    QMovie m_fetchingAnimation;
 
     PackageMetadata *meta;
 
