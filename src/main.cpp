@@ -31,20 +31,25 @@ int main( int argc, char *argv[] )
 {
     QApplication app( argc, argv );
     bool fakeRequested = false;
-    if( argc == 1) {
+    
+    QStringList args = app.arguments();
+    if (args.contains("--fake")) {
+        qDebug()<< "FakeBackend being used";
+        fakeRequested = true;
+        args.removeAll("--fake");
+    }
+    
+    if( args.isEmpty() || !QFile::exists(args[0])) {
         qDebug() << "No Valid File Passed";
         return 0;
     }
-    if( !QString( "--fake" ).compare( argv[ 2 ] ) ) {
-        qDebug()<< "FakeBackend being used";
-        fakeRequested = true;
-    }
-    QString fileName( "/tmp/" );
+    
+    QString fileName = args[0];
+    QString tmpFileName = QString( "/tmp/%1-%2" ).arg( QFileInfo( fileName ).fileName().split( "." ).at( 0 ) )
+                                                 .arg( QUuid::createUuid().toString().split( "-" ).at( 1 ) );
 
-    fileName.append( QFileInfo( argv[1] ).fileName().split( "." ).at( 0 ) ).append( "-" );
-    fileName.append( QUuid::createUuid().toString().split( "-" ).at( 1 ) );
-    qDebug() << fileName;
-    MainWindow *win = new MainWindow( QString( argv[1] ), fileName, fakeRequested );
+    qDebug() << tmpFileName;
+    MainWindow *win = new MainWindow( fileName, tmpFileName, fakeRequested );
     win->show();
     return app.exec();
 }
