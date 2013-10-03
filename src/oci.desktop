@@ -8,3 +8,5 @@ TryExec=/usr/local/bin/oneclickinstaller
 Exec=/usr/local/bin/oneclickinstaller &
 Categories=System;Settings;Utilities;
 Icon=/usr/share/icons/hicolor/32x32/apps/oneclickinstall.png
+MimeType=text/x-suse-ymp;
+
