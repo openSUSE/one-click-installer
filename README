@@ -2,7 +2,7 @@ A One Click Installer  for the YMP Specification
 
 Dependencies:
 
-1.) Qt
+1.) Qt 5
 2.) libzypp
 
 AUTHORS--
