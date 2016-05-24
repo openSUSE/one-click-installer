@@ -28,7 +28,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setSpacing( 0 );
 
-    QFile dataFile( m_tmpFileName->toAscii() );
+    QFile dataFile( m_tmpFileName->toLocal8Bit() );
     if( !dataFile.open( QIODevice::Truncate | QIODevice::WriteOnly ) ) {
         qDebug() << "Could not open Data File";
     }
