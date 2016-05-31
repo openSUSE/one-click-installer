@@ -32,8 +32,14 @@ PackageDetails::PackageDetails(OCI::Package *package,int count, int packagecount
     meta->getData();
 
     m_summary = new QLabel( QString( "<b>Summary:</b> %1" ).arg( package->summary() ) );
+    m_fetchingAnimation.setFileName("/usr/share/one-click-installer/res/ticks-endless.gif");
     m_version = new QLabel( "Fetching..." );
     m_size = new QLabel( "Fetching..." );
+    if (m_fetchingAnimation.isValid()) {
+       m_version->setMovie(&m_fetchingAnimation);
+       m_size->setMovie(&m_fetchingAnimation);
+       m_fetchingAnimation.start();
+    };
 
     QObject::connect( meta, SIGNAL( finished( QString,QString ) ), this, SLOT( dataChanged( QString,QString ) ) );
 

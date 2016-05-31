@@ -48,6 +48,7 @@ INSTALL(TARGETS oneclickinstaller DESTINATION /usr/bin)
 
 INSTALL(FILES oci.desktop DESTINATION /usr/share/applications)
 INSTALL(FILES res/oneclickinstall.png DESTINATION /usr/share/icons/hicolor/32x32/apps/)
+INSTALL(FILES res/ticks-endless.gif DESTINATION /usr/share/one-click-installer/res/)
 
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
