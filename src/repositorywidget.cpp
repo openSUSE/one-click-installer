@@ -79,6 +79,13 @@ void RepositoryWidget::showDetails( QString link )
         m_created->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px; border-right : 1px solid rgb(196,181,147); border-left : 1px solid rgb(196,181,147);" );
         m_expires->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px; border-right : 1px solid rgb(196,181,147); border-left : 1px solid rgb(196,181,147);" );
         m_visible = true;
+
+        //Set Tooltips
+        m_id->setToolTip( "Shows the Repository ID" );
+        m_fingerprint->setToolTip( "Shows the Unique Repository Fingerprint" );
+        m_created->setToolTip( "Shows when the Repository Fingerprint was created" );
+        m_expires->setToolTip( "Shows when the Repository Fingerprint expires" );
+
         delete m_meta;
     }
 
