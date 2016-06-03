@@ -44,7 +44,7 @@ int main( int argc, char *argv[] )
         return 0;
     }
     
-    QString fileName = args[0];
+    QString fileName = args[1];
     QString tmpFileName = QString( "/tmp/%1-%2" ).arg( QFileInfo( fileName ).fileName().split( "." ).at( 0 ) )
                                                  .arg( QUuid::createUuid().toString().split( "-" ).at( 1 ) );
 

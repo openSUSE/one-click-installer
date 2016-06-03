@@ -34,29 +34,32 @@ public:
         Default constructor taking the backend, and the filename as argument
    */
     FirstScreen( PackageBackend *backend, QString *tmpFileName, const QString& filename, QObject *parent = 0 );
+    
 private slots:
 
     /**
         Show Event
      */
     void showEvent( QShowEvent * s);
+    /**
+     *  Count selected packages 
+     */
+    void checkPackagesInstallableState();
 
 private:
     PackageBackend *m_backend;
 
     QList< OCI::Package* > m_packages;
     QList< OCI::Repository* > m_repos;
-
     QString *m_tmpFileName;
-
     QLabel *m_warning;
-
     int m_untrustedSources;
 
 signals:
     void showNextScreen( int );
     void countChanged( int, int );
     void sizeUpdated( QString size );
+    void packageListInstallableStateToggled( bool );
 };
 
 #endif

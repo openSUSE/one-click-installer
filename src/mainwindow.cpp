@@ -67,7 +67,8 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     scroll->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     scroll->setWidget( m_firstScreen );
     scroll->setWidgetResizable( true );
-
+    
+    
     m_screenStack->addWidget( scroll );
     m_screenStack->addWidget( installSummary );
     m_screenStack->addWidget( installer );
@@ -94,6 +95,7 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     QObject::connect( m_backend, SIGNAL( installationCompleted() ), m_header, SLOT( installationCompleted() ) );
     QObject::connect( installer, SIGNAL( installationCompleted() ), m_header, SLOT( installationCompleted() ) );
     QObject::connect( m_backend, SIGNAL( installationCompleted() ), installer, SLOT( showCompletionStatus() ) );
+    QObject::connect( m_firstScreen, SIGNAL( packageListInstallableStateToggled( bool ) ), m_install, SLOT( setEnabled( bool ) ) );
 
     show();
 }

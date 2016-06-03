@@ -17,7 +17,6 @@
 //      
 //      
 
-
 #include "firstscreen.h"
 
 FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const QString& filename, QObject *parent )
@@ -27,15 +26,13 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setSpacing( 0 );
+    setLayout( mainLayout );
 
     QFile dataFile( m_tmpFileName->toLocal8Bit() );
     if( !dataFile.open( QIODevice::Truncate | QIODevice::WriteOnly ) ) {
         qDebug() << "Could not open Data File";
     }
-
     QTextStream outData( &dataFile );
-
-    setLayout( mainLayout );
 
     //Parse YMP File
     m_backend = backend;
@@ -47,14 +44,11 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
     //Add Repository
     int i = 0;
     QVBoxLayout *repoDetails;
-
     m_untrustedSources = 0;
-
     foreach( OCI::Repository *iter, m_repos) {
         m_backend->addRepository( QUrl( iter->url() ) );
         RepositoryWidget *repositoryDetails = new RepositoryWidget( m_backend, i, m_repos.at( i ) );
         mainLayout->addWidget( repositoryDetails );
-
         if( !m_backend->exists( iter->url() ) )
             m_untrustedSources++;
         static int j = 0;
@@ -63,6 +57,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
             mainLayout->addSpacing( -10 );
             PackageDetails *packDetails = new PackageDetails( iter, j, m_packages.count() );
             QObject::connect( packDetails, SIGNAL( sizeUpdated( QString ) ), this, SIGNAL( sizeUpdated( QString ) ) );
+            QObject::connect( packDetails, SIGNAL( installableStateToggled( bool ) ), this, SLOT( checkPackagesInstallableState() ) );
             mainLayout->addWidget( packDetails );
             j++;
         }
@@ -85,7 +80,6 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
     foreach( QString iter, m_backend->packages() ) {
         outData << "P " << iter << "\n";
     }
-
     dataFile.close();
 }
 
@@ -93,4 +87,19 @@ void FirstScreen::showEvent( QShowEvent *s )
 {
     emit countChanged( m_repos.count(), m_packages.count() );
     qDebug() << "number of untrusted sources is " << m_untrustedSources;
+}
+
+void FirstScreen::checkPackagesInstallableState()
+{
+    QLayout *layout = QWidget::layout();
+    for (int i = 0; i < layout->count(); ++i) {
+        PackageDetails *package = qobject_cast<PackageDetails *>(layout->itemAt(i)->widget());
+        if (!package)    continue;
+        if (package->shouldBeInstalled()) {
+            emit packageListInstallableStateToggled( true );
+            return;
+        }
+    }
+    //for no packages
+    emit packageListInstallableStateToggled( false );
 }
