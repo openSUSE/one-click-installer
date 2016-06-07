@@ -10,6 +10,7 @@
 #include <QScrollArea>
 #include <QSettings>
 #include <QSpacerItem>
+#include <klocalizedstring.h>
 #include "mainheader.h"
 #include "firstscreen.h"
 #include "summary.h"

@@ -29,9 +29,9 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     QHBoxLayout *m_warningLayout = new QHBoxLayout;
 
-    m_showSettings = new QPushButton( "Settings" );
-    m_cancel = new QPushButton( "Cancel" );
-    m_install = new QPushButton( "Install" );
+    m_showSettings = new QPushButton( i18n("Settings") );
+    m_cancel = new QPushButton( i18n("Cancel") );
+    m_install = new QPushButton( i18n("Install") );
 
     buttonLayout->addWidget( m_showSettings );
     buttonLayout->addSpacing( 100 );
@@ -83,7 +83,7 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     mainLayout->addLayout( buttonLayout );
 
     setLayout( mainLayout );
-    setWindowTitle( "One Click Install" );
+    setWindowTitle( i18n("One Click Install") );
     setWindowIcon( QIcon("/usr/share/icons/hicolor/32x32/apps/oneclickinstall.png") );
 
     QObject::connect( m_firstScreen, SIGNAL( showNextScreen( int ) ), this, SLOT( showNextScreen( int ) ) );
