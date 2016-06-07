@@ -30,10 +30,10 @@ PackageDetails::PackageDetails(OCI::Package *package,int count, int packagecount
     meta = new PackageMetadata( package->name() );
     meta->getData();
 
-    m_summary = new QLabel( QString( "<b>Summary:</b> %1" ).arg( package->summary() ) );
+    m_summary = new QLabel( i18n("<b>Summary:</b> %1", package->summary()) );
     m_fetchingAnimation.setFileName("/usr/share/one-click-installer/res/ticks-endless.gif");
-    m_version = new QLabel( "Fetching..." );
-    m_size = new QLabel( "Fetching..." );
+    m_version = new QLabel( i18n("Fetching...") );
+    m_size = new QLabel( i18n("Fetching...") );
     if (m_fetchingAnimation.isValid()) {
        m_version->setMovie(&m_fetchingAnimation);
        m_size->setMovie(&m_fetchingAnimation);
@@ -42,7 +42,7 @@ PackageDetails::PackageDetails(OCI::Package *package,int count, int packagecount
 
     QObject::connect( meta, SIGNAL( finished( QString,QString ) ), this, SLOT( dataChanged( QString,QString ) ) );
 
-    m_showDescription = new QLabel( QString( "<a href = %1>Show Details</a>" ).arg( count ) );
+     m_showDescription = new QLabel( i18n("<a href = %1 style=\"text-decoration:none;\">Show Details</a>", count) );
     m_showDescription->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
     m_description = new QLabel( QString( "%1" ).arg( package->description() ) );
     m_description->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
@@ -93,12 +93,12 @@ void PackageDetails::showPackageDescription( QString link )
     qDebug() << linkNo;
 
     if( m_descriptionVisible ) {
-        m_showDescription->setText( QString( "<a href = %1>Show Details</a>" ).arg( linkNo ) );
+        m_showDescription->setText( i18n("<a href = %1 style=\"text-decoration:none;\">Show Details</a>", linkNo) );
         m_description->hide();
         m_descriptionVisible = false;
         m_summary->setStyleSheet( "background-color : white; border-left : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147); padding-left : 3px; border-bottom : 1px solid rgb(196,181,147);" );
     } else {
-        m_showDescription->setText( QString( "<a href = %1>Hide Details</a>" ).arg( linkNo ) );
+        m_showDescription->setText( i18n("<a href = %1 style=\"text-decoration:none;\">Hide Details</a>", linkNo) );
         this->layout()->addWidget( m_description );
         m_description->show();
         m_descriptionVisible = true;
