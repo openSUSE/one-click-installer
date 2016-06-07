@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include "packagebackend.h"
 #include "installscreen.h"
+#include <klocalizedstring.h>
 
 class Summary : public QWidget
 {
