@@ -47,17 +47,17 @@ void MainHeader::changeStatusLabel( int repoCount, int packageCount )
     m_packageCount = packageCount;
     m_repoCount = repoCount;
 
-    m_statusLabel->setText( i18n("This installer will download and install %1 packages from %2 sources", packageCount, repoCount) );
+    m_statusLabel->setText( i18np("This installer will download and install %1 package from %2 source", "This installer will download and install %1 packages from %2 sources", packageCount, repoCount) );
 }
 
 void MainHeader::updateDetails( QString size )
 {
-    m_statusLabel->setText( i18n("This installer will download and install %1 packages from %2 sources totalling %3", m_packageCount, m_repoCount, size) );
+    m_statusLabel->setText( i18np("This installer will download and install %1 package from %2 source totalling %3", "This installer will download and install %1 packages from %2 sources totalling %3", m_packageCount, m_repoCount, size) );
 }
 
 void MainHeader::installationStarted()
 {
-    m_statusLabel->setText( i18n("Downloading and Installing Packages...") );
+    m_statusLabel->setText( i18np("Downloading and Installing Package...", "Downloading and Installing Packages...", m_packageCount) );
 }
 
 void MainHeader::installationCompleted()
