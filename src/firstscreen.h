@@ -13,6 +13,7 @@
 #include <QTextStream>
 #include <QUuid>
 #include <QSettings>
+#include <klocalizedstring.h>
 #include "packagedetails.h"
 #include "fakebackend.h"
 #include "packagebackend.h"

@@ -66,7 +66,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
     }
 
     if( m_untrustedSources > 0 ) {
-        m_warning = new	QLabel( "<b>Be careful!</b> Some Sources are not currently known. Installing<br />software requires trusting these sources" );
+        m_warning = new	QLabel( i18n("<b>Be careful!</b> Some Sources are not currently known. Installing<br />software requires trusting these sources") );
         m_warning->setStyleSheet( "border : 1px solid rgb(196,181,147); background-color: rgb(253, 227, 187); border-radius : 10px" );
         m_warning->setContentsMargins( 10,10,10,10 );
         mainLayout->addSpacing( 20 );
