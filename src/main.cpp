@@ -25,12 +25,16 @@
 #include <QStringList>
 #include <QUuid>
 #include <QFileInfo>
+#include <klocalizedstring.h>
 #include "mainwindow.h"
 
 int main( int argc, char *argv[] )
 {
     QApplication app( argc, argv );
     bool fakeRequested = false;
+    
+    //Connecting to Catalogs
+    KLocalizedString::setApplicationDomain("oneclickinstaller");
     
     QStringList args = app.arguments();
     if (args.contains("--fake")) {
