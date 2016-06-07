@@ -24,7 +24,7 @@ MainHeader::MainHeader( QWidget *parent )
 {
     setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
     setStyleSheet( "background-color : rgb(251,248,241)" );
-    m_statusLabel = new QLabel( "This installer will install and download packages" );
+    m_statusLabel = new QLabel( i18n("This installer will install and download packages") );
 
     m_statusLabel->setWordWrap( true );
     m_statusLabel->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
@@ -47,20 +47,20 @@ void MainHeader::changeStatusLabel( int repoCount, int packageCount )
     m_packageCount = packageCount;
     m_repoCount = repoCount;
 
-    m_statusLabel->setText( QString( "This installer will download and install %1 packages from %2 sources" ).arg( packageCount ).arg( repoCount ) );
+    m_statusLabel->setText( i18n("This installer will download and install %1 packages from %2 sources", packageCount, repoCount) );
 }
 
 void MainHeader::updateDetails( QString size )
 {
-    m_statusLabel->setText( QString( "This installer will download and install %1 packages from %2 sources totalling %3" ).arg( m_packageCount ).arg( m_repoCount ).arg( size ) );
+    m_statusLabel->setText( i18n("This installer will download and install %1 packages from %2 sources totalling %3", m_packageCount, m_repoCount, size) );
 }
 
 void MainHeader::installationStarted()
 {
-    m_statusLabel->setText( "Downloading and Installing Packages..." );
+    m_statusLabel->setText( i18n("Downloading and Installing Packages...") );
 }
 
 void MainHeader::installationCompleted()
 {
-    m_statusLabel->setText( "Success!!!" );
+    m_statusLabel->setText( i18n("Success!!!") );
 }

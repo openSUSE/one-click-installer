@@ -7,6 +7,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <QDebug>
+#include <klocalizedstring.h>
 
 class MainHeader : public QWidget
 {
