@@ -32,10 +32,10 @@ Settings::Settings( QSettings* settings, QObject *parent )
     QHBoxLayout *closeLayout = new QHBoxLayout;
 
     //Create Interface Elements
-    m_repos = new QLabel( "<b>Repository Sources</b>" );
-    m_showDetails = new QCheckBox( "Show repository details by default", this );
-    m_proposal = new QCheckBox( "Always display an installation proposal", this );
-    m_close = new QPushButton( "Close" );
+    m_repos = new QLabel( i18n("<b>Repository Sources</b>") );
+    m_showDetails = new QCheckBox( i18n("Show repository details by default"), this );
+    m_proposal = new QCheckBox( i18n("Always display an installation proposal"), this );
+    m_close = new QPushButton( i18n("Close") );
 
     if( m_settings->childKeys().count() != 0 ) {
         if( m_settings->value( "proposal", 1 ).toInt() == 1 ) {
@@ -59,7 +59,7 @@ Settings::Settings( QSettings* settings, QObject *parent )
     closeLayout->addWidget( m_close );
     mainLayout->addLayout( closeLayout );
     setLayout( mainLayout );
-    setWindowTitle( "One Click Install Settings" );
+    setWindowTitle( i18n("One Click Install Settings") );
 
     QObject::connect( m_close, SIGNAL(clicked()), this, SLOT( saveSettingsAndClose()) );
     show();

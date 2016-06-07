@@ -7,6 +7,7 @@
 #include <QCheckBox>
 #include <QVBoxLayout>
 #include <QSettings>
+#include <klocalizedstring.h>
 
 class Settings : public QDialog
 {
