@@ -41,15 +41,11 @@ Steps to Build OCI
 	
 4) Run and configure process with cmake:
 
-	$ cmake ..
+	$ cmake -DCMAKE_INSTALL_PREFIX=/usr ..
 	
-5) Compile One Click Installer:
+5) Compile, and Install One Click Installer:
 
-	$ make
-
-6) Finally install One Click Installer:
-
-	$ [sudo] make install
+	$ make && [sudo] make install
 
 Contributors
 ============
