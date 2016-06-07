@@ -16,6 +16,7 @@
 #include <QHash>
 #include <QFileSystemWatcher>
 #include <QFile>
+#include <klocalizedstring.h>
 #include "packagebackend.h"
 #include "fakebackend.h"
 #include "clientdbus.h"
