@@ -35,8 +35,8 @@ RepositoryWidget::RepositoryWidget(PackageBackend *backend, int index, OCI::Repo
     QHBoxLayout *sourceLayout = new QHBoxLayout;
     mainLayout->setSpacing( 0 );
 
-    m_name = new QLabel( i18n("Source: <b>%1</b>", repo->name()) );
-    m_showDetails = new QLabel( i18n("<a href = %1 style=\"text-decoration:none;\">Show Details</a>", index) );
+    m_name = new QLabel( i18n("Source: <b>%1</b>").arg(repo->name()) );
+    m_showDetails = new QLabel( QString( "<a href = \"%1\">%2</a>" ).arg( index ).arg( i18n("Show Details") ) );
 
     m_name->setContentsMargins( 10, 10, 10, 10 );
     m_showDetails->setContentsMargins( 10, 10, 10, 10 );
@@ -53,7 +53,7 @@ RepositoryWidget::RepositoryWidget(PackageBackend *backend, int index, OCI::Repo
 
     QObject::connect( m_showDetails, SIGNAL( linkActivated( QString ) ), this, SLOT( showDetails(QString ) ) );
 
-    m_url = new QLabel( i18n("<b>URL :</b> %1", repo->url()) );
+    m_url = new QLabel( i18n("<b>URL :</b> %1").arg(repo->url()) );
 
     m_url->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px; border-right : 1px solid rgb(196,181,147); border-left : 1px solid rgb(196,181,147);" );
 
@@ -71,10 +71,10 @@ void RepositoryWidget::showDetails( QString link )
     if( !m_visible ) {
         m_meta = new RepositoryMetadata( m_repo );
         m_meta->refresh();
-        m_id = new QLabel( i18n("<b>ID: </b> %1", m_meta->id()) );
-        m_fingerprint = new QLabel( i18n("<b>Fingerprint: </b> %1", m_meta->fingerprint()) );
-        m_created = new QLabel( i18n("<b>Created: </b> %1", m_meta->created()) );
-        m_expires = new QLabel( i18n("<b>Expires :</b> %1", m_meta->expires()) );
+        m_id = new QLabel( i18n("<b>ID: </b> %1").arg(m_meta->id()) );
+        m_fingerprint = new QLabel( i18n("<b>Fingerprint: </b> %1").arg(m_meta->fingerprint()) );
+        m_created = new QLabel( i18n("<b>Created: </b> %1").arg(m_meta->created()) );
+        m_expires = new QLabel( i18n("<b>Expires :</b> %1").arg(m_meta->expires()) );
         m_id->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px; border-right : 1px solid rgb(196,181,147); border-left : 1px solid rgb(196,181,147);" );
         m_fingerprint->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px; border-right : 1px solid rgb(196,181,147); border-left : 1px solid rgb(196,181,147);" );
         m_created->setStyleSheet( "background-color: rgb(254, 250, 210); padding-left : 10px; padding-top : 10px; padding-bottom : 10px; border-right : 1px solid rgb(196,181,147); border-left : 1px solid rgb(196,181,147);" );
@@ -100,7 +100,7 @@ void RepositoryWidget::showDetails( QString link )
 
         m_detailsVisible = false;
 
-        m_showDetails->setText( i18n("<a href = %1 style=\"text-decoration:none;\">Show Details</a>", linkNo) );
+        m_showDetails->setText( QString( "<a href = \"%1\">%2</a>" ).arg( linkNo ).arg( i18n("Show Details") ) );
     } else {
         this->layout()->addWidget( m_url );
         this->layout()->addWidget( m_id );
@@ -116,6 +116,6 @@ void RepositoryWidget::showDetails( QString link )
 
         m_detailsVisible = true;
 
-        m_showDetails->setText( i18n("<a href = %1 style=\"text-decoration:none;\">Hide Details</a>", linkNo) );
+        m_showDetails->setText( QString( "<a href = \"%1\">%2</a>" ).arg( linkNo ).arg( i18n("Hide Details") ) );
     }
 }

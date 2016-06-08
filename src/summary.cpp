@@ -43,11 +43,11 @@ Summary::Summary(PackageBackend *backend, QString *tmpFileName, QObject *parent 
     setLayout( mainLayout );
 
     foreach( QUrl repos, m_backend->repositories() ) {
-        m_installationSummary->append( i18n( "Add Source <b>%1</b>", repos.toString()) );
+        m_installationSummary->append( i18n("Add Source <b>%1</b>").arg(repos.toString()) );
     }
 
     foreach( const QString package, m_backend->packages() ) {
-        m_installationSummary->append( i18n("Install <b>%1</b>", package) );
+        m_installationSummary->append( i18n("Install <b>%1</b>").arg(package) );
     }
 
     QObject::connect( m_continue, SIGNAL( clicked() ), this, SLOT( continueInstallation() ) );

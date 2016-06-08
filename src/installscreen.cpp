@@ -57,7 +57,7 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
     installLayout->setSpacing( 20 );
 
     foreach( QUrl iter, m_backend->repositories() ) {
-        QLabel *sourceLabel = new QLabel( i18n("Added Source: %1", iter.toString()) );
+        QLabel *sourceLabel = new QLabel( i18n("Added Source: %1").arg(iter.toString()) );
         sourceLabel->setStyleSheet( "background-color: rgb(254, 250, 210); border-bottom : 1px solid rgb(252,233,79); border-left : 1px solid rgb(196,181,147); border-top : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147);" );
         sourceLayout->addWidget( sourceLabel );
         sourceLayout->setSpacing( 0 );
@@ -70,7 +70,7 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
     foreach( QString iter, m_backend->packages() ) {
         QHBoxLayout *packageLayout = new QHBoxLayout;
         m_packageLayouts.insert( i, packageLayout );
-        QLabel *package = new QLabel( i18n("<b>Installing: </b> %1", iter) );
+        QLabel *package = new QLabel( i18n("<b>Installing: </b> %1").arg(iter) );
         package->setFixedHeight( 40 );
         package->setStyleSheet( "background-color : white" );
         packageLayout->addWidget( package );
