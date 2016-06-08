@@ -28,8 +28,8 @@ Summary::Summary(PackageBackend *backend, QString *tmpFileName, QObject *parent 
     m_tmpFileName = tmpFileName;
     m_installationSummary = new QTextBrowser;
     m_installationSummary->addScrollBarWidget( new QScrollBar, Qt::AlignRight );
-    m_continue = new QPushButton( i18n("Continue Installation ") );
-    m_cancel = new QPushButton( i18n("Cancel ") );
+    m_continue = new QPushButton( i18n("Continue Installation") );
+    m_cancel = new QPushButton( i18n("Cancel") );
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     QHBoxLayout *buttonsLayout = new QHBoxLayout;

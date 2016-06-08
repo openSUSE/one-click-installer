@@ -57,7 +57,7 @@ void MainHeader::updateDetails( QString size )
 
 void MainHeader::installationStarted()
 {
-    m_statusLabel->setText( i18ncp("Decides which sentence to use based on m_packageCount","Downloading and Installing Package...", "Downloading and Installing Packages...", m_packageCount) );
+    m_statusLabel->setText( i18ncp("Decides which sentence to use based on number of packages","Downloading and Installing Package...", "Downloading and Installing Packages...", m_packageCount) );
 }
 
 void MainHeader::installationCompleted()

@@ -84,7 +84,7 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     mainLayout->addLayout( buttonLayout );
 
     setLayout( mainLayout );
-    setWindowTitle( i18n("One Click Install") );
+    setWindowTitle("One Click Installer");
     setWindowIcon( QIcon("/usr/share/icons/hicolor/32x32/apps/oneclickinstall.png") );
 
     QObject::connect( m_firstScreen, SIGNAL( showNextScreen( int ) ), this, SLOT( showNextScreen( int ) ) );

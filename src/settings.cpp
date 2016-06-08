@@ -60,7 +60,7 @@ Settings::Settings( QSettings* settings, QObject *parent )
     closeLayout->addWidget( m_close );
     mainLayout->addLayout( closeLayout );
     setLayout( mainLayout );
-    setWindowTitle( i18n("One Click Install Settings") );
+    setWindowTitle( i18nc("Please don't translate the application name. Use any of the following templates- [________ One Click Installer]; [One Click Installer ____________]", "One Click Installer Settings") );
 
     QObject::connect( m_close, SIGNAL(clicked()), this, SLOT( saveSettingsAndClose()) );
     show();
