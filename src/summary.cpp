@@ -18,8 +18,9 @@
 //      
 
 
-#include "summary.h"
 #include <unistd.h>
+#include <klocalizedstring.h>
+#include "summary.h"
 
 Summary::Summary(PackageBackend *backend, QString *tmpFileName, QObject *parent )
 {

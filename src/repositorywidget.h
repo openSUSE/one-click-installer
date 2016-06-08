@@ -5,7 +5,6 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QSettings>
-#include <klocalizedstring.h>
 #include "repository.h"
 #include "package.h"
 #include "packagebackend.h"

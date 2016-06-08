@@ -18,6 +18,7 @@
 //      
 
 
+#include <klocalizedstring.h>
 #include "installscreen.h"
 
 InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObject *parent )

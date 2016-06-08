@@ -17,7 +17,7 @@
 //      
 //      
 
-
+#include <klocalizedstring.h>
 #include "mainheader.h"
 
 MainHeader::MainHeader( QWidget *parent )

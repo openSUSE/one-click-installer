@@ -18,6 +18,7 @@
 //      
 
 
+#include <klocalizedstring.h>
 #include "repositorywidget.h"
 
 RepositoryWidget::RepositoryWidget(PackageBackend *backend, int index, OCI::Repository *repo, QObject *parent )

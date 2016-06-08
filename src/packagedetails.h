@@ -8,7 +8,6 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QMovie>
-#include <klocalizedstring.h>
 #include "package.h"
 #include "packagemetadata.h"
 

@@ -17,6 +17,8 @@
 //      
 //      
 
+
+#include <klocalizedstring.h>
 #include "packagedetails.h"
 
 PackageDetails::PackageDetails(OCI::Package *package,int count, int packagecount, QObject *parent )

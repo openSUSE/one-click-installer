@@ -17,6 +17,7 @@
 //      
 //      
 
+#include <klocalizedstring.h>
 #include "firstscreen.h"
 
 FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const QString& filename, QObject *parent )

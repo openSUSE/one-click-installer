@@ -18,6 +18,7 @@
 //      
 
 
+#include <klocalizedstring.h>
 #include "settings.h"
 
 Settings::Settings( QSettings* settings, QObject *parent )
