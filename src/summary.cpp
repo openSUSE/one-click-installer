@@ -18,8 +18,9 @@
 //      
 
 
-#include "summary.h"
 #include <unistd.h>
+#include <klocalizedstring.h>
+#include "summary.h"
 
 Summary::Summary(PackageBackend *backend, QString *tmpFileName, QObject *parent )
 {
@@ -27,8 +28,8 @@ Summary::Summary(PackageBackend *backend, QString *tmpFileName, QObject *parent 
     m_tmpFileName = tmpFileName;
     m_installationSummary = new QTextBrowser;
     m_installationSummary->addScrollBarWidget( new QScrollBar, Qt::AlignRight );
-    m_continue = new QPushButton( "Continue Installation ");
-    m_cancel = new QPushButton( "Cancel ");
+    m_continue = new QPushButton( i18n("Continue Installation") );
+    m_cancel = new QPushButton( i18n("Cancel") );
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
@@ -42,11 +43,11 @@ Summary::Summary(PackageBackend *backend, QString *tmpFileName, QObject *parent 
     setLayout( mainLayout );
 
     foreach( QUrl repos, m_backend->repositories() ) {
-        m_installationSummary->append( QString( "Add Source <b>%1</b>" ).arg( repos.toString() ) );
+        m_installationSummary->append( i18n("Add Source <b>%1</b>").arg(repos.toString()) );
     }
 
     foreach( const QString package, m_backend->packages() ) {
-        m_installationSummary->append( QString( "Install <b>%1</b>" ).arg( package ) );
+        m_installationSummary->append( i18n("Install <b>%1</b>").arg(package) );
     }
 
     QObject::connect( m_continue, SIGNAL( clicked() ), this, SLOT( continueInstallation() ) );

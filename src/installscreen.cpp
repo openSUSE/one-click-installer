@@ -18,6 +18,7 @@
 //      
 
 
+#include <klocalizedstring.h>
 #include "installscreen.h"
 
 InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObject *parent )
@@ -41,8 +42,8 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
     QVBoxLayout *sourceLayout = new QVBoxLayout;
     QHBoxLayout *buttonLayout = new QHBoxLayout;
 
-    m_installStatus = new QLabel( "Downloading and Installing Packages" );
-    m_cancel = new QPushButton( "Cancel Installation" );
+    m_installStatus = new QLabel( i18n("Downloading and Installing Packages") );
+    m_cancel = new QPushButton( i18n("Cancel Installation") );
 
     QObject::connect( m_cancel, SIGNAL( clicked() ), this, SLOT( cancelInstallation() ) );
 
@@ -56,7 +57,7 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
     installLayout->setSpacing( 20 );
 
     foreach( QUrl iter, m_backend->repositories() ) {
-        QLabel *sourceLabel = new QLabel( QString( "Added Source: %1" ).arg( iter.toString() ) );
+        QLabel *sourceLabel = new QLabel( i18n("Added Source: %1").arg(iter.toString()) );
         sourceLabel->setStyleSheet( "background-color: rgb(254, 250, 210); border-bottom : 1px solid rgb(252,233,79); border-left : 1px solid rgb(196,181,147); border-top : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147);" );
         sourceLayout->addWidget( sourceLabel );
         sourceLayout->setSpacing( 0 );
@@ -69,7 +70,7 @@ InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObj
     foreach( QString iter, m_backend->packages() ) {
         QHBoxLayout *packageLayout = new QHBoxLayout;
         m_packageLayouts.insert( i, packageLayout );
-        QLabel *package = new QLabel( QString( "<b>Installing: </b> %1" ).arg( iter ) );
+        QLabel *package = new QLabel( i18n("<b>Installing: </b> %1").arg(iter) );
         package->setFixedHeight( 40 );
         package->setStyleSheet( "background-color : white" );
         packageLayout->addWidget( package );
@@ -95,7 +96,7 @@ void InstallScreen::showCompletionStatus()
     m_progressBar->hide();
 
     foreach( QHBoxLayout *l, m_packageLayouts ) {
-        QLabel *completed = new QLabel( "Installed" );
+        QLabel *completed = new QLabel( i18n("Installed") );
         completed->setStyleSheet( "background-color : white" );
         l->addWidget( completed );
     }

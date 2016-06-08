@@ -17,14 +17,14 @@
 //      
 //      
 
-
+#include <klocalizedstring.h>
 #include "mainheader.h"
 
 MainHeader::MainHeader( QWidget *parent )
 {
     setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
     setStyleSheet( "background-color : rgb(251,248,241)" );
-    m_statusLabel = new QLabel( "This installer will install and download packages" );
+    m_statusLabel = new QLabel( i18n("This installer will install and download packages") );
 
     m_statusLabel->setWordWrap( true );
     m_statusLabel->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
@@ -47,20 +47,20 @@ void MainHeader::changeStatusLabel( int repoCount, int packageCount )
     m_packageCount = packageCount;
     m_repoCount = repoCount;
 
-    m_statusLabel->setText( QString( "This installer will download and install %1 packages from %2 sources" ).arg( packageCount ).arg( repoCount ) );
+    m_statusLabel->setText( i18np("This installer will download and install %1 package from %2 source", "This installer will download and install %1 packages from %2 sources", packageCount, repoCount) );
 }
 
 void MainHeader::updateDetails( QString size )
 {
-    m_statusLabel->setText( QString( "This installer will download and install %1 packages from %2 sources totalling %3" ).arg( m_packageCount ).arg( m_repoCount ).arg( size ) );
+    m_statusLabel->setText( i18ncp( "Third argument is the total size of all packages", "This installer will download and install %1 package from %2 source totalling %3", "This installer will download and install %1 packages from %2 sources totalling %3", m_packageCount, m_repoCount, size) );
 }
 
 void MainHeader::installationStarted()
 {
-    m_statusLabel->setText( "Downloading and Installing Packages..." );
+    m_statusLabel->setText( i18ncp("Decides which sentence to use based on number of packages","Downloading and Installing Package...", "Downloading and Installing Packages...", m_packageCount) );
 }
 
 void MainHeader::installationCompleted()
 {
-    m_statusLabel->setText( "Success!!!" );
+    m_statusLabel->setText( i18n("Success!!!") );
 }
