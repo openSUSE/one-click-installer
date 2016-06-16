@@ -45,8 +45,3 @@ QString RepositoryMetadata::id()
 {
     return QString::fromStdString( m_repoData->keyring().id() );
 }
-
-void RepositoryMetadata::refresh()
-{
-    m_repoData->refreshMetadata();
-}

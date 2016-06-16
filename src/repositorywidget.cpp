@@ -70,7 +70,6 @@ void RepositoryWidget::showDetails( QString link )
 {
     if( !m_visible ) {
         m_meta = new RepositoryMetadata( m_repo );
-        m_meta->refresh();
         m_id = new QLabel( i18n("<b>ID: </b> %1").arg(m_meta->id()) );
         m_fingerprint = new QLabel( i18n("<b>Fingerprint: </b> %1").arg(m_meta->fingerprint()) );
         m_created = new QLabel( i18n("<b>Created: </b> %1").arg(m_meta->created()) );

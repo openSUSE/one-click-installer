@@ -1,5 +1,5 @@
 #ifndef KEYRING_H
-#define KDERING_H
+#define KEYRING_H
 
 #include <stdlib.h>
 #include <iostream>
@@ -10,7 +10,7 @@
 #include <zypp/Pathname.h>
 #include <zypp/base/Logger.h>
 
-namespace zypp{
+using namespace zypp;
 struct KeyRingReceive : public zypp::callback::ReceiveReport<zypp::KeyRingReport>
 {
     bool m_keyRingExists;
@@ -44,6 +44,5 @@ struct KeyRingReceive : public zypp::callback::ReceiveReport<zypp::KeyRingReport
         return KeyRingReport::KEY_TRUST_AND_IMPORT;
     }
 };
-}
 
 #endif

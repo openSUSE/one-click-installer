@@ -19,38 +19,40 @@
 
 
 #include "keyringcallbacks.h"
+#include "utils.h"
 
 zypp::KeyRingCallbacks::KeyRingCallbacks()
 {
-	_keyRingReport.connect();
+    temp = ZypperUtils::keyReport();
+    temp.connect();
 }
 
 zypp::KeyRingCallbacks::~KeyRingCallbacks()
 {
-	_keyRingReport.disconnect();
+    temp.disconnect();
 }
 
 bool zypp::KeyRingCallbacks::exists()
 {
-    return _keyRingReport.m_keyRingExists;
+    return temp.m_keyRingExists;
 }
 
 std::string zypp::KeyRingCallbacks::name(){
-    return _keyRingReport.m_name;
+    return temp.m_name;
 }
 
 std::string zypp::KeyRingCallbacks::id(){
-    return _keyRingReport.m_id;
+    return temp.m_id;
 }
 
 std::string zypp::KeyRingCallbacks::fingerprint(){
-    return _keyRingReport.m_fingerprint;
+    return temp.m_fingerprint;
 }
 
 std::string zypp::KeyRingCallbacks::created(){
-    return _keyRingReport.m_created;
+    return temp.m_created;
 }
 
 std::string zypp::KeyRingCallbacks::expires(){
-    return _keyRingReport.m_expires;
+    return temp.m_expires;
 }

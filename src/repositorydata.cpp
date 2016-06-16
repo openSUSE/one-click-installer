@@ -33,25 +33,6 @@ void RepositoryData::setBaseUrl( std::string url )
     m_baseUrl = url;
 }
 
-void RepositoryData::refreshMetadata()
-{
-    m_options = new zypp::RepoManagerOptions( "/tmp" );
-    m_repoManager = new zypp::RepoManager( *m_options );
-    m_repo.addBaseUrl( zypp::Url( m_baseUrl ) );
-    m_repo.setGpgCheck( true );
-    m_repo.setAlias( m_alias );
-    m_repo.setEnabled( true );
-    m_repo.setAutorefresh( true );
-    try{
-        m_repoManager->cleanCache( m_repo );
-        m_repoManager->refreshMetadata( m_repo );
-    } catch( zypp::repo::RepoException s) {
-        std::cout << s;
-    }
-    m_repoManager->cleanMetadata( m_repo );
-    delete m_options;
-    delete m_repoManager;
-}
 
 zypp::KeyRingCallbacks RepositoryData::keyring()
 {

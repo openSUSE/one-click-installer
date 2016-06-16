@@ -35,12 +35,6 @@ public:
      * Return the id
      */
     QString id();
-
-    /**
-     * Refresh Metadata
-     */
-    void refresh();
-
 private:
     RepositoryData *m_repoData;
 };
