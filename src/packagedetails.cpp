@@ -30,7 +30,7 @@ PackageDetails::PackageDetails(OCI::Package *package,int count, int packagecount
     QHBoxLayout *packageLayout = new QHBoxLayout;
 
     meta = new PackageMetadata( package->name() );
-    meta->getData();
+    
 
     m_summary = new QLabel( i18n("<b>Summary:</b> %1").arg(package->summary()) );
     m_fetchingAnimation.setFileName("/usr/share/one-click-installer/res/ticks-endless.gif");

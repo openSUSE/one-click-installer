@@ -19,6 +19,7 @@
 
 #include <klocalizedstring.h>
 #include "firstscreen.h"
+#include "utils.h"
 
 FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const QString& filename, QObject *parent )
 {
@@ -46,17 +47,22 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
     int i = 0;
     QVBoxLayout *repoDetails;
     m_untrustedSources = 0;
-    foreach( OCI::Repository *iter, m_repos) {
-        m_backend->addRepository( QUrl( iter->url() ) );
+    foreach( OCI::Repository *repo, m_repos) {
+        // Only proceed if it is the recommended repository
+        if(repo->recommended() == "false")
+            continue;
+        ZypperUtils::initRepository(repo->url().toStdString());
+        m_backend->addRepository( QUrl( repo->url() ) );
         RepositoryWidget *repositoryDetails = new RepositoryWidget( m_backend, i, m_repos.at( i ) );
         mainLayout->addWidget( repositoryDetails );
-        if( !m_backend->exists( iter->url() ) )
+        if( !m_backend->exists( repo->url() ) )
             m_untrustedSources++;
         static int j = 0;
-        foreach( OCI::Package *iter, m_packages ) {
-            m_backend->addPackage( iter->name() );
+	
+        foreach( OCI::Package *package, m_packages ) {
+	        m_backend->addPackage( package->name() );
             mainLayout->addSpacing( -10 );
-            PackageDetails *packDetails = new PackageDetails( iter, j, m_packages.count() );
+            PackageDetails *packDetails = new PackageDetails( package, j, m_packages.count() );
             QObject::connect( packDetails, SIGNAL( sizeUpdated( QString ) ), this, SIGNAL( sizeUpdated( QString ) ) );
             QObject::connect( packDetails, SIGNAL( installableStateToggled( bool ) ), this, SLOT( checkPackagesInstallableState() ) );
             mainLayout->addWidget( packDetails );

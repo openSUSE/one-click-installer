@@ -2,9 +2,10 @@
 #define PACKAGEMETADATA_H
 
 #include <QDebug>
-#include <QProcess>
 #include <QObject>
-#include <QStringList>
+#include "repository.h"
+
+using namespace std;
 
 class PackageMetadata : public QObject
 {
@@ -14,7 +15,7 @@ public:
     /**
      * Construct the Object using the name of the package
      */
-    PackageMetadata( QString name );
+    PackageMetadata( const QString& packageName );
 
     /**
      * Return the size of the package
@@ -25,30 +26,17 @@ public:
      * Return the version of the package
      */
     QString version();
-
-    /**
-     * Start the subprocess to retrieve the data
-     */
-    void getData();
+    
 private:
+      
     QString m_size;
     QString m_version;
-    QString m_stdout;
-
-    QString m_package;
-
-    QProcess *m_process;
 private slots:
-
-    /**
-     * Check if the subprocess started
-     */
-    void isStarted();
 
     /**
      * Process output when subprocess finishes
      */
-    void isFinished( int );
+    void isFinished();
 
 signals:
     void finished( QString version, QString size );
