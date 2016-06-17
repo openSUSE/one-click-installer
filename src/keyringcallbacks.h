@@ -2,7 +2,7 @@
 #define KEYRINGCALLBACKS_H
 
 #include <QDebug>
-#include <keyring.h>
+#include "keyring.h"
 
 namespace zypp {
 class KeyRingCallbacks

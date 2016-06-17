@@ -34,7 +34,6 @@
 // Define static variables here
 RepoManagerOptions* ZypperUtils::s_repoManagerOpts = new RepoManagerOptions("/tmp");
 RepoManager* ZypperUtils::s_repoManager = new RepoManager(*s_repoManagerOpts);
-PoolItem ZypperUtils::mainObject;
 KeyRingReceive ZypperUtils::s_keyReceiveReport;
 
 //Methods
@@ -92,18 +91,17 @@ PoolItem ZypperUtils::queryMetadataForPackage( const string& packageName )
   
 PoolItem ZypperUtils::packageObject(const PoolQuery& q )
 {
+    PoolItem item;
     for( PoolQuery::Selectable_iterator it = q.selectableBegin(); it != q.selectableEnd(); ++it ) {
 	const ui::Selectable& s =  *(*it);   
-	PoolItem installedObject( s.installedObj() );
 	// An update candidate object is better than any installed object
 	PoolItem updateObject( s.updateCandidateObj() );
-	PoolItem mainObjectTemp( updateObject );
-	if ( !mainObjectTemp )
-	    mainObject = installedObject;
+	if ( updateObject )
+	    item = updateObject;
 	else
-	    mainObject = mainObjectTemp;
+	    item = s.installedObj();
     }
-    return mainObject;
+    return item;
 }
 
 KeyRingReceive ZypperUtils::keyReport()
