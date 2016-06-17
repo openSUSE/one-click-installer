@@ -29,7 +29,8 @@ PackageDetails::PackageDetails(OCI::Package *package,int count, int packagecount
     mainLayout->setSpacing( 0 );
     QHBoxLayout *packageLayout = new QHBoxLayout;
 
-    m_packageMetadata = new PackageMetadata( package->name() );
+    m_packageMetadata = new PackageMetadata();
+    m_packageMetadata->getData( package->name() );
     
 
     m_summary = new QLabel( i18n("<b>Summary:</b> %1").arg(package->summary()) );

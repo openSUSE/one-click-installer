@@ -27,7 +27,11 @@
 #include "packagemetadata.h"
 #include "utils.h"
 
-PackageMetadata::PackageMetadata( const QString& packageName )
+PackageMetadata::PackageMetadata()
+{   
+}
+
+void PackageMetadata::getData( const QString& packageName )
 {
     PoolItem packageObj = ZypperUtils::queryMetadataForPackage(packageName.toStdString());
     if (!packageObj) {
@@ -40,7 +44,6 @@ PackageMetadata::PackageMetadata( const QString& packageName )
     
     //invoke isFinished() slot manually
     QMetaObject::invokeMethod(this, "isFinished", Qt::QueuedConnection);
-   
 }
 
 QString PackageMetadata::size()

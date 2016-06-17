@@ -13,9 +13,9 @@ class PackageMetadata : public QObject
 public:
 
     /**
-     * Construct the Object using the name of the package
+     * Default ctor
      */
-    PackageMetadata( const QString& packageName );
+    PackageMetadata();
 
     /**
      * Return the size of the package
@@ -27,14 +27,19 @@ public:
      */
     QString version();
     
+    /**
+     * Query Metadata Information
+     */
+    void getData( const QString& packageName );
 private:
       
     QString m_size;
     QString m_version;
+    
 private slots:
-
+  
     /**
-     * Process output when subprocess finishes
+     * Emit finished signal
      */
     void isFinished();
 
