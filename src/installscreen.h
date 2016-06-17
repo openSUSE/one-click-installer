@@ -28,7 +28,7 @@ public:
     /**
      *  Default Constructor
      */
-    InstallScreen( PackageBackend *backend, QString *tmpFileName,  QObject *parent = 0 );
+    InstallScreen( PackageBackend *backend, const QString& tmpFileName,  QObject *parent = 0 );
 
 private slots:
     /**
@@ -36,7 +36,7 @@ private slots:
     */
     void showCompletionStatus();
 
-    void logFileChanged( QString path );
+    void logFileChanged( const QString& path );
 
     void cancelInstallation();
 
@@ -47,7 +47,7 @@ private:
     QPushButton *m_cancel;
     PackageBackend *m_backend;
 
-    QString *m_tmpFileName;
+    QString m_tmpFileName;
 
     QHash< int, QHBoxLayout* > m_packageLayouts;
     QProgressBar *m_progressBar;

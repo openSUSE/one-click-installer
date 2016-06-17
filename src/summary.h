@@ -21,7 +21,7 @@ public:
     /**
      * Construct the object with the filename and backend object
      */
-    Summary( PackageBackend *backend, QString *tmpFileName, QObject *parent = 0 );
+    Summary( PackageBackend *backend, const QString& tmpFileName, QObject *parent = 0 );
 
 private:
     QTextBrowser *m_installationSummary;
@@ -30,7 +30,7 @@ private:
     PackageBackend *m_backend;
     QProcess backendProcess;
 
-    QString *m_tmpFileName;
+    QString m_tmpFileName;
 
 private slots:
 

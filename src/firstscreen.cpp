@@ -21,7 +21,7 @@
 #include "firstscreen.h"
 #include "utils.h"
 
-FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const QString& filename, QObject *parent )
+FirstScreen::FirstScreen( PackageBackend *backend, const QString& tmpFileName, const QString& filename, QObject *parent )
 {
     m_tmpFileName = tmpFileName;
     setStyleSheet( "background-color : white;" );
@@ -30,7 +30,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
     mainLayout->setSpacing( 0 );
     setLayout( mainLayout );
 
-    QFile dataFile( m_tmpFileName->toLocal8Bit() );
+    QFile dataFile( m_tmpFileName.toLocal8Bit() );
     if( !dataFile.open( QIODevice::Truncate | QIODevice::WriteOnly ) ) {
         qDebug() << "Could not open Data File";
     }

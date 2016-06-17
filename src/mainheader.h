@@ -21,7 +21,7 @@ public:
     /**
      *  Update the size of the packages
      */
-    void updateDetails( QString size );
+    void updateDetails( const QString& size );
 
 public slots:
 

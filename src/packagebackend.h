@@ -47,7 +47,7 @@ class PackageBackend : public QObject
     /**
         Set the Temporary Filename
      */
-    virtual void setFileName( QString fileName );
+    virtual void setFileName( const QString& fileName );
 
     /**
         Get the Temporary Filename
@@ -57,7 +57,7 @@ class PackageBackend : public QObject
     /**
         Return true if repository exists
      */
-    virtual bool exists( QString url ) = 0;
+    virtual bool exists( const QString& url ) = 0;
 
 private:
     QList< QString > m_packages;

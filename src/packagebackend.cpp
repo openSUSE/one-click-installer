@@ -49,7 +49,7 @@ QString PackageBackend::getFileName()
     return m_tmpFileName;
 }
 
-void PackageBackend::setFileName( QString fileName )
+void PackageBackend::setFileName( const QString& fileName )
 {
     m_tmpFileName = fileName;
 }
