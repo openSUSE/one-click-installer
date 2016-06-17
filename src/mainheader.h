@@ -43,7 +43,7 @@ public slots:
 private:
     QLabel *m_statusLabel;
     QLabel *m_icon;
-
+    float m_totalSize;
     int m_repoCount;
     int m_packageCount;
 };

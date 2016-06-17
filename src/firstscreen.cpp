@@ -45,6 +45,8 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& tmpFileName, c
 
     //Add Repository
     int i = 0;
+    m_numOfRepositories = 0;
+    m_numOfPackages = 0;
     QVBoxLayout *repoDetails;
     m_untrustedSources = 0;
     foreach( OCI::Repository *repo, m_repos) {
@@ -52,6 +54,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& tmpFileName, c
         if(repo->recommended() == "false")
             continue;
         ZypperUtils::initRepository(repo->url().toStdString());
+        ++m_numOfRepositories;
         m_backend->addRepository( QUrl( repo->url() ) );
         RepositoryWidget *repositoryDetails = new RepositoryWidget( m_backend, i, m_repos.at( i ) );
         mainLayout->addWidget( repositoryDetails );
@@ -60,7 +63,8 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& tmpFileName, c
         static int j = 0;
 	
         foreach( OCI::Package *package, m_packages ) {
-	        m_backend->addPackage( package->name() );
+            ++m_numOfPackages;
+            m_backend->addPackage( package->name() );
             mainLayout->addSpacing( -10 );
             PackageDetails *packDetails = new PackageDetails( package, j, m_packages.count() );
             QObject::connect( packDetails, SIGNAL( sizeUpdated( QString ) ), this, SIGNAL( sizeUpdated( QString ) ) );
@@ -92,7 +96,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& tmpFileName, c
 
 void FirstScreen::showEvent( QShowEvent *s )
 {
-    emit countChanged( m_repos.count(), m_packages.count() );
+    emit countChanged( m_numOfRepositories, m_numOfPackages );
     qDebug() << "number of untrusted sources is " << m_untrustedSources;
 }
 

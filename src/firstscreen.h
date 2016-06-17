@@ -53,7 +53,9 @@ private:
     QList< OCI::Repository* > m_repos;
     QString m_tmpFileName;
     QLabel *m_warning;
-    int m_untrustedSources;
+    unsigned int m_numOfRepositories;
+    unsigned int m_numOfPackages;
+    unsigned int m_untrustedSources;
 
 signals:
     void showNextScreen( int );
