@@ -32,20 +32,20 @@
 
 /************************************* ZypperUtils Class **************************************/
 // Define static variables here
-RepoManagerOptions* ZypperUtils::rOpts = new RepoManagerOptions("/tmp");
-RepoManager* ZypperUtils::repoManager = new RepoManager(*rOpts);
+RepoManagerOptions* ZypperUtils::s_repoManagerOpts = new RepoManagerOptions("/tmp");
+RepoManager* ZypperUtils::s_repoManager = new RepoManager(*s_repoManagerOpts);
 PoolItem ZypperUtils::mainObject;
-KeyRingReceive ZypperUtils::_keyReport;
+KeyRingReceive ZypperUtils::s_keyReceiveReport;
 
 //Methods
 
 void ZypperUtils::initRepository( const string& repoUrl )
 {
     //KeyRing - Handling of gpg keys
-    _keyReport.connect();
+    s_keyReceiveReport.connect();
     refreshRepoManager( initRepoInfo( repoUrl ) );
-    _keyReport.disconnect();
-    RepoInfo info = repoManager->getRepo( repoUrl );
+    s_keyReceiveReport.disconnect();
+    RepoInfo info = s_repoManager->getRepo( repoUrl );
     cout << "===================================================" << endl;
     cout << "Alias: " << info.alias() << endl;
     cout << "Url: " << info.url() << endl;
@@ -65,8 +65,8 @@ RepoInfo ZypperUtils::initRepoInfo( const string& url )
     KeyRing::setDefaultAccept( KeyRing::TRUST_KEY_TEMPORARILY );
     cout << "TRUST_KEY_TEMPORARILY accepted" << endl;
     // Add it to the repoManager if not already present
-    if ( !repoManager->hasRepo( url ) ) {
-	repoManager->addRepository(repoInfo);
+    if ( !s_repoManager->hasRepo( url ) ) {
+	s_repoManager->addRepository(repoInfo);
 	cout << "added repo" << endl;
     }
     // Return repoInfo to refresh the repo (cache)
@@ -75,9 +75,9 @@ RepoInfo ZypperUtils::initRepoInfo( const string& url )
  
 void ZypperUtils::refreshRepoManager( const RepoInfo& temp ) 
 {
-    repoManager->refreshMetadata( temp, RepoManager::RefreshForced );
-    repoManager->buildCache( temp );
-    repoManager->loadFromCache( temp ); 
+    s_repoManager->refreshMetadata( temp, RepoManager::RefreshForced );
+    s_repoManager->buildCache( temp );
+    s_repoManager->loadFromCache( temp ); 
 }
 
 PoolItem ZypperUtils::queryMetadataForPackage( const string& packageName )
@@ -108,6 +108,6 @@ PoolItem ZypperUtils::packageObject(const PoolQuery& q )
 
 KeyRingReceive ZypperUtils::keyReport()
 {
-    return _keyReport;
+    return s_keyReceiveReport;
 }
 

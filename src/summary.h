@@ -7,7 +7,6 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QList>
-#include <QProcess>
 #include <QScrollBar>
 #include <cstdlib>
 #include "packagebackend.h"
@@ -28,7 +27,6 @@ private:
     QPushButton *m_continue;
     QPushButton *m_cancel;
     PackageBackend *m_backend;
-    QProcess backendProcess;
 
     QString m_tmpFileName;
 

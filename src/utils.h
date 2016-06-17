@@ -18,9 +18,9 @@ class ZypperUtils
 private:
   /******************************* Member Declarations *******************************/
   static PoolItem mainObject;
-  static RepoManager *repoManager;
-  static RepoManagerOptions *rOpts;
-  static KeyRingReceive _keyReport;
+  static RepoManager *s_repoManager;
+  static RepoManagerOptions *s_repoManagerOpts;
+  static KeyRingReceive s_keyReceiveReport;
   
 public:
   /******************************* Method Declarations *******************************/

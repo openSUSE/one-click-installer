@@ -48,7 +48,7 @@ public:
      */
      std::string expires();
 private:
-    KeyRingReceive temp;
+    KeyRingReceive m_keyReport;
  
 };
 }
