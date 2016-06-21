@@ -41,7 +41,7 @@ private slots:
     /**
      * Emit finished signal
      */
-    void isFinished();
+    void sizeAndVersionObtained();
 
 signals:
     void finished( QString version, QString size );

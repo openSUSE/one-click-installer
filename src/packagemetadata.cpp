@@ -42,8 +42,10 @@ void PackageMetadata::getData( const QString& packageName )
     m_version = QString::fromStdString(packageObj.edition().asString());
     m_size = QString::fromStdString(packageObj.installSize().asString());
     
-    //invoke isFinished() slot manually
-    QMetaObject::invokeMethod(this, "isFinished", Qt::QueuedConnection);
+    // We use QMetaObject::invokeMethod to queue the call until the finished() signal is connected
+    // by the parent object later on in the code. Please, don't replace it with a direct call to
+    // sizeAndVersionObtained unless you really know what you're doing.
+    QMetaObject::invokeMethod(this, "sizeAndVersionObtained", Qt::QueuedConnection);
 }
 
 QString PackageMetadata::size()
@@ -56,7 +58,7 @@ QString PackageMetadata::version()
     return m_version;
 }
 
-void PackageMetadata::isFinished()
+void PackageMetadata::sizeAndVersionObtained()
 {
     qDebug() << m_size;
     qDebug() << m_version;

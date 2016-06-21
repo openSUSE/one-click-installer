@@ -47,8 +47,9 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& tmpFileName, c
     int i = 0;
     m_numOfRepositories = 0;
     m_numOfPackages = 0;
-    QVBoxLayout *repoDetails;
     m_untrustedSources = 0;
+    unsigned int packageID = 0;
+    QVBoxLayout *repoDetails;
     foreach( OCI::Repository *repo, m_repos) {
         // Only proceed if it is the recommended repository
         if(repo->recommended() == "false")
@@ -60,17 +61,15 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& tmpFileName, c
         mainLayout->addWidget( repositoryDetails );
         if( !m_backend->exists( repo->url() ) )
             m_untrustedSources++;
-        static int j = 0;
-	
+        
         foreach( OCI::Package *package, m_packages ) {
             ++m_numOfPackages;
             m_backend->addPackage( package->name() );
             mainLayout->addSpacing( -10 );
-            PackageDetails *packDetails = new PackageDetails( package, j, m_packages.count() );
+            PackageDetails *packDetails = new PackageDetails( package, packageID++, m_packages.count() );
             QObject::connect( packDetails, SIGNAL( sizeUpdated( QString ) ), this, SIGNAL( sizeUpdated( QString ) ) );
             QObject::connect( packDetails, SIGNAL( installableStateToggled( bool ) ), this, SLOT( checkPackagesInstallableState() ) );
             mainLayout->addWidget( packDetails );
-            j++;
         }
         i++;
         mainLayout->addSpacing( -8 );
