@@ -1,38 +1,51 @@
-//      Copyright 2012 Saurabh Sood <saurabh@saurabh.geeko>
-//
-//      This program is free software; you can redistribute it and/or modify
-//      it under the terms of the GNU General Public License as published by
-//      the Free Software Foundation; either version 2 of the License, or
-//      (at your option) any later version.
-//
-//      This program is distributed in the hope that it will be useful,
-//      but WITHOUT ANY WARRANTY; without even the implied warranty of
-//      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//      GNU General Public License for more details.
-//
-//      You should have received a copy of the GNU General Public License
-//      along with this program; if not, write to the Free Software
-//      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-//      MA 02110-1301, USA.
-//
-//
+/***********************************************************************************
+ *  One Click Installer makes it easy for users to install software, no matter
+ *  where that software is located.
+ *
+ *  Copyright (C) 2016  Shalom <shalomray7@gmail.com>
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ************************************************************************************
+ *  This program's developed as part of GSoC - 2016
+ *  Project: One Click Installer
+ *  Mentors: Antonio Larrosa, and Cornelius Schumacher
+ *  Organization: OpenSUSE
+ *  Previous Contributor: Saurabh Sood
+ ***********************************************************************************/
 
 #include "packagemetadata.h"
+#include "utils.h"
 
-PackageMetadata::PackageMetadata( QString name )
-{
-    m_package = name;
+PackageMetadata::PackageMetadata()
+{   
 }
 
-void PackageMetadata::getData()
+void PackageMetadata::getData( const QString& packageName )
 {
-    QString processName = "zypper info " + m_package;
-    qDebug() << processName;
-    m_process = new QProcess;
-    m_process->setProcessChannelMode( QProcess::MergedChannels );
-    QObject::connect( m_process, SIGNAL( finished( int ) ), this, SLOT( isFinished( int ) ) );
-    QObject::connect( m_process, SIGNAL( started() ), this, SLOT( isStarted() ) );
-    m_process->start( processName );
+    PoolItem packageObj = ZypperUtils::queryMetadataForPackage(packageName.toStdString());
+    if (!packageObj) {
+      qDebug() << "Package Not found";
+      // Will think of a way how to make user known about this
+      return;
+    }
+    m_version = QString::fromStdString(packageObj.edition().asString());
+    m_size = QString::fromStdString(packageObj.installSize().asString());
+    
+    // We use QMetaObject::invokeMethod to queue the call until the finished() signal is connected
+    // by the parent object later on in the code. Please, don't replace it with a direct call to
+    // sizeAndVersionObtained unless you really know what you're doing.
+    QMetaObject::invokeMethod(this, "sizeAndVersionObtained", Qt::QueuedConnection);
 }
 
 QString PackageMetadata::size()
@@ -45,26 +58,8 @@ QString PackageMetadata::version()
     return m_version;
 }
 
-void PackageMetadata::isStarted()
+void PackageMetadata::sizeAndVersionObtained()
 {
-    qDebug() << "zypper called";
-}
-
-void PackageMetadata::isFinished( int v )
-{
-    m_stdout = m_process->readAllStandardOutput();
-    qDebug() << "finished process";
-    QStringList details = m_stdout.split( "\n" );
-
-    foreach( QString line, details ) {
-        if( line.contains("Version") ) {
-            m_version = line.split( " " ).at( 1 );
-        } else if( line.contains( "Installed Size" ) ) {
-            QStringList size = line.split( " " );
-            m_size = size.at( 2 ) + " " + size.at( 3 );
-        }
-    }
-
     qDebug() << m_size;
     qDebug() << m_version;
 

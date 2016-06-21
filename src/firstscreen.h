@@ -33,7 +33,7 @@ public:
    /**
         Default constructor taking the backend, and the filename as argument
    */
-    FirstScreen( PackageBackend *backend, QString *tmpFileName, const QString& filename, QObject *parent = 0 );
+    FirstScreen( PackageBackend *backend, const QString& tmpFileName, const QString& filename, QObject *parent = 0 );
     
 private slots:
 
@@ -51,9 +51,11 @@ private:
 
     QList< OCI::Package* > m_packages;
     QList< OCI::Repository* > m_repos;
-    QString *m_tmpFileName;
+    QString m_tmpFileName;
     QLabel *m_warning;
-    int m_untrustedSources;
+    unsigned int m_numOfRepositories;
+    unsigned int m_numOfPackages;
+    unsigned int m_untrustedSources;
 
 signals:
     void showNextScreen( int );

@@ -22,7 +22,7 @@
 #include <klocalizedstring.h>
 #include "summary.h"
 
-Summary::Summary(PackageBackend *backend, QString *tmpFileName, QObject *parent )
+Summary::Summary(PackageBackend *backend, const QString& tmpFileName, QObject *parent )
 {
     m_backend = backend;
     m_tmpFileName = tmpFileName;
@@ -57,7 +57,7 @@ Summary::Summary(PackageBackend *backend, QString *tmpFileName, QObject *parent 
 void Summary::continueInstallation()
 {
     emit showNextScreen( 2 );
-    m_backend->setFileName( *m_tmpFileName );
+    m_backend->setFileName( m_tmpFileName );
     m_backend->callBackendHelper();
 }
 

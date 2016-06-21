@@ -21,7 +21,7 @@ public:
     /**
      *  Update the size of the packages
      */
-    void updateDetails( QString size );
+    void updateDetails( const QString& size );
 
 public slots:
 
@@ -43,7 +43,7 @@ public slots:
 private:
     QLabel *m_statusLabel;
     QLabel *m_icon;
-
+    float m_totalSize;
     int m_repoCount;
     int m_packageCount;
 };

@@ -50,7 +50,7 @@ void FakeBackend::callBackendHelper()
     install();
 }
 
-bool FakeBackend::exists( QString url )
+bool FakeBackend::exists( const QString& url )
 {
     return false;
 }

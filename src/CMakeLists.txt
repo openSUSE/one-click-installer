@@ -22,11 +22,11 @@ find_package(KF5I18n NO_MODULE)
 add_definitions(${Qt5Widgets_DEFINITIONS})
 add_definitions(${Qt5DBus_DEFINITIONS})
 
-set(oneclickinstaller_SOURCES main.cpp mainwindow.cpp firstscreen.cpp settings.cpp fakebackend.cpp repository.cpp package.cpp ympparser.cpp packagebackend.cpp installscreen.cpp repositorywidget.cpp summary.cpp backend.cpp keyringcallbacks.cpp mainheader.cpp packagedetails.cpp repositorymetadata.cpp repositorydata.cpp packagemetadata.cpp clientdbus.cpp dbusadaptor.cpp)
-set(oneclickinstaller_HEADERS mainwindow.h firstscreen.h settings.h installscreen.h repositorywidget.h summary.h mainheader.h packagedetails.h packagemetadata.h backend.h packagebackend.h dbusadaptor.h clientdbus.h)
+set(oneclickinstaller_SOURCES main.cpp utils.cpp mainwindow.cpp firstscreen.cpp settings.cpp fakebackend.cpp repository.cpp package.cpp ympparser.cpp packagebackend.cpp installscreen.cpp repositorywidget.cpp summary.cpp backend.cpp keyringcallbacks.cpp mainheader.cpp packagedetails.cpp repositorymetadata.cpp repositorydata.cpp packagemetadata.cpp clientdbus.cpp dbusadaptor.cpp)
+set(oneclickinstaller_HEADERS utils.h mainwindow.h firstscreen.h settings.h installscreen.h repositorywidget.h summary.h mainheader.h packagedetails.h packagemetadata.h backend.h packagebackend.h dbusadaptor.h clientdbus.h)
 
-set(oneclickhelper_SOURCES interfacemain.cpp backend.cpp keyringcallbacks.cpp packagebackend.cpp dbusadaptor.cpp)
-set(oneclickhelper_HEADERS backend.h packagebackend.h keyringcallbacks.h dbusadaptor.h)
+set(oneclickhelper_SOURCES interfacemain.cpp backend.cpp keyringcallbacks.cpp utils.cpp packagebackend.cpp dbusadaptor.cpp)
+set(oneclickhelper_HEADERS backend.h packagebackend.h keyringcallbacks.h utils.h dbusadaptor.h)
 
 QT5_WRAP_CPP(oneclickhelper_HEADERS_MOC ${oneclickhelper_HEADERS})
 QT5_WRAP_CPP(oneclickinstaller_HEADERS_MOC ${oneclickinstaller_HEADERS})

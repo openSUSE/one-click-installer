@@ -24,22 +24,22 @@
 
 OCI::YmpParser::YmpParser( const QString& ympfile )
 {
-    fileName = ympfile;
+    m_fileName = ympfile;
 }
 
 QList< OCI::Package* > OCI::YmpParser::packages() const
 {
-    return packageList;
+    return m_packageList;
 }
 
 QList< OCI::Repository* > OCI::YmpParser::repositories() const
 {
-    return repositoryList;
+    return m_repositoryList;
 }
 
 void OCI::YmpParser::parse()
 {
-    QFile file( fileName );
+    QFile file( m_fileName );
     if( !file.open( QIODevice::ReadOnly ) ) {
         qDebug()<<"Could not open File";
         return;
@@ -84,7 +84,7 @@ void OCI::YmpParser::parse()
             }
 
             //Add Repository to the List or Repositories
-            repositoryList.append( repo );
+            m_repositoryList.append( repo );
         }
     }
 
@@ -105,14 +105,14 @@ void OCI::YmpParser::parse()
             //Read Description
             if( xml.name() == "description" )
                 pkg->setDescription( xml.readElementText() );
-            packageList.append( pkg );
+            m_packageList.append( pkg );
         }
     }
 }
 
 void OCI::YmpParser::printRepoList()
 {
-    foreach( OCI::Repository* repo, repositoryList ) {
+    foreach( OCI::Repository* repo, m_repositoryList ) {
         qDebug() << repo->name();
         qDebug() << repo->description();
         qDebug() << repo->url();
@@ -123,7 +123,7 @@ void OCI::YmpParser::printRepoList()
 
 void OCI::YmpParser::printPackageList()
 {
-    foreach( OCI::Package* pack, packageList ) {
+    foreach( OCI::Package* pack, m_packageList ) {
         qDebug() << pack->name();
         qDebug() << pack->description();
         qDebug() << pack->summary();

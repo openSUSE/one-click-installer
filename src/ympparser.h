@@ -34,9 +34,9 @@ public:
     void printRepoList();
     void printPackageList();
 private:
-    QList< OCI::Package* > packageList;
-    QList< OCI::Repository* > repositoryList;
-    QString fileName;
+    QList< OCI::Package* > m_packageList;
+    QList< OCI::Repository* > m_repositoryList;
+    QString m_fileName;
 };
 }
 #endif

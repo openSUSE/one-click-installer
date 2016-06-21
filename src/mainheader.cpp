@@ -50,9 +50,11 @@ void MainHeader::changeStatusLabel( int repoCount, int packageCount )
     m_statusLabel->setText( i18np("This installer will download and install %1 package from %2 source", "This installer will download and install %1 packages from %2 sources", packageCount, repoCount) );
 }
 
-void MainHeader::updateDetails( QString size )
+void MainHeader::updateDetails( const QString& size )
 {
-    m_statusLabel->setText( i18ncp( "Third argument is the total size of all packages", "This installer will download and install %1 package from %2 source totalling %3", "This installer will download and install %1 packages from %2 sources totalling %3", m_packageCount, m_repoCount, size) );
+    m_totalSize += size.split(" ").at(0).toFloat();
+    QString sizeString = (QString::number(m_totalSize)).append(size.split(" ").at(1));
+    m_statusLabel->setText( i18ncp( "Third argument is the total size of all packages", "This installer will download and install %1 package from %2 source totalling %3", "This installer will download and install %1 packages from %2 source(s) totalling %3", m_packageCount, m_repoCount, sizeString) );
 }
 
 void MainHeader::installationStarted()

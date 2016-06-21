@@ -21,7 +21,7 @@
 #include <klocalizedstring.h>
 #include "installscreen.h"
 
-InstallScreen::InstallScreen(PackageBackend *backend, QString *tmpFileName, QObject *parent )
+InstallScreen::InstallScreen(PackageBackend *backend, const QString& tmpFileName, QObject *parent )
 {
     setStyleSheet( "" );
     m_backend = backend;
@@ -102,7 +102,7 @@ void InstallScreen::showCompletionStatus()
     }
 }
 
-void InstallScreen::logFileChanged( QString path )
+void InstallScreen::logFileChanged( const QString& path )
 {
     qDebug() << "changed";
     QFile file( path );

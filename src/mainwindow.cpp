@@ -20,7 +20,7 @@
 #include <klocalizedstring.h>
 #include "mainwindow.h"
 
-MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeRequested, QObject *parent )
+MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, bool fakeRequested, QObject *parent )
 {
     setStyleSheet( "background-color : rgb(251,248,241)" );
     setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
@@ -44,7 +44,7 @@ MainWindow::MainWindow( const QString& filename, QString tmpFileName, bool fakeR
     QObject::connect( m_install, SIGNAL( clicked() ), this, SLOT( performInstallation() ) );
     QObject::connect( m_cancel, SIGNAL( clicked()), this, SLOT( close() ) );
 
-    m_tmpFileName = new QString( tmpFileName );
+    m_tmpFileName = tmpFileName;
     QVBoxLayout *mainLayout = new QVBoxLayout;
     m_screenStack = new QStackedLayout;
 
@@ -123,7 +123,7 @@ void MainWindow::performInstallation()
         m_screenStack->setCurrentIndex( 1 );
     } else {
         m_screenStack->setCurrentIndex( 2 );
-        m_backend->setFileName( *m_tmpFileName );
+        m_backend->setFileName( m_tmpFileName );
         m_backend->callBackendHelper();
     }
     m_install->hide();
@@ -131,7 +131,7 @@ void MainWindow::performInstallation()
     m_cancel->hide();
 }
 
-void MainWindow::updateSize( QString size )
+void MainWindow::updateSize( const QString& size )
 {
     if( m_screenStack->currentIndex() == 0 )
         m_header->updateDetails( size );

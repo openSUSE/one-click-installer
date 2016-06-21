@@ -34,7 +34,7 @@ private:
     QCheckBox *m_packageName;
     QMovie m_fetchingAnimation;
 
-    PackageMetadata *meta;
+    PackageMetadata *m_packageMetadata;
 
 private slots:
 

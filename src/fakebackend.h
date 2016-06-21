@@ -31,7 +31,7 @@ class FakeBackend : public PackageBackend
     /**
         Fake Implementation of Exists function
      */
-    bool exists( QString url );
+    bool exists( const QString& url );
 
     private:
     QWidget *m_main;

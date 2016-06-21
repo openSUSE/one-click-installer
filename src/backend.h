@@ -57,7 +57,7 @@ protected:
     /**
         Check if repo exists in the Repository database or not
      */
-    bool exists( QString repo );
+    bool exists( const QString& repo );
 
 
 

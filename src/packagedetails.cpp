@@ -29,8 +29,9 @@ PackageDetails::PackageDetails(OCI::Package *package,int count, int packagecount
     mainLayout->setSpacing( 0 );
     QHBoxLayout *packageLayout = new QHBoxLayout;
 
-    meta = new PackageMetadata( package->name() );
-    meta->getData();
+    m_packageMetadata = new PackageMetadata();
+    m_packageMetadata->getData( package->name() );
+    
 
     m_summary = new QLabel( i18n("<b>Summary:</b> %1").arg(package->summary()) );
     m_fetchingAnimation.setFileName("/usr/share/one-click-installer/res/ticks-endless.gif");
@@ -42,7 +43,7 @@ PackageDetails::PackageDetails(OCI::Package *package,int count, int packagecount
        m_fetchingAnimation.start();
     };
 
-    QObject::connect( meta, SIGNAL( finished( QString,QString ) ), this, SLOT( dataChanged( QString,QString ) ) );
+    QObject::connect( m_packageMetadata, SIGNAL( finished( QString,QString ) ), this, SLOT( dataChanged( QString,QString ) ) );
 
      m_showDescription = new QLabel( QString( "<a href = \"%1\">%2</a>" ).arg( count ).arg( i18n("Show Details") ));
     m_showDescription->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );

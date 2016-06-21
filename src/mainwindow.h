@@ -25,12 +25,12 @@ public:
     /**
         Default Constructor taking the YMP file as argument
     */
-    MainWindow( const QString& filename, QString tmpFileName, bool fakeRequested, QObject *parent = 0 );
+    MainWindow( const QString& filename, const QString& tmpFileName, bool fakeRequested, QObject *parent = 0 );
 
 private:
     PackageBackend *m_backend;
     FirstScreen *m_firstScreen;
-    QString *m_tmpFileName;
+    QString m_tmpFileName;
     MainHeader *m_header;
     QStackedLayout *m_screenStack;
 
@@ -69,7 +69,7 @@ private slots:
     /**
      * Update the size of packages
      */
-    void updateSize(QString size );
+    void updateSize(const QString& size );
 
 signals:
     void countChanged( int repoCount, int packageCount );

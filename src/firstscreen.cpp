@@ -19,8 +19,9 @@
 
 #include <klocalizedstring.h>
 #include "firstscreen.h"
+#include "utils.h"
 
-FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const QString& filename, QObject *parent )
+FirstScreen::FirstScreen( PackageBackend *backend, const QString& tmpFileName, const QString& filename, QObject *parent )
 {
     m_tmpFileName = tmpFileName;
     setStyleSheet( "background-color : white;" );
@@ -29,7 +30,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
     mainLayout->setSpacing( 0 );
     setLayout( mainLayout );
 
-    QFile dataFile( m_tmpFileName->toLocal8Bit() );
+    QFile dataFile( m_tmpFileName.toLocal8Bit() );
     if( !dataFile.open( QIODevice::Truncate | QIODevice::WriteOnly ) ) {
         qDebug() << "Could not open Data File";
     }
@@ -44,23 +45,31 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
 
     //Add Repository
     int i = 0;
-    QVBoxLayout *repoDetails;
+    m_numOfRepositories = 0;
+    m_numOfPackages = 0;
     m_untrustedSources = 0;
-    foreach( OCI::Repository *iter, m_repos) {
-        m_backend->addRepository( QUrl( iter->url() ) );
+    unsigned int packageID = 0;
+    QVBoxLayout *repoDetails;
+    foreach( OCI::Repository *repo, m_repos) {
+        // Only proceed if it is the recommended repository
+        if(repo->recommended() == "false")
+            continue;
+        ZypperUtils::initRepository(repo->url().toStdString());
+        ++m_numOfRepositories;
+        m_backend->addRepository( QUrl( repo->url() ) );
         RepositoryWidget *repositoryDetails = new RepositoryWidget( m_backend, i, m_repos.at( i ) );
         mainLayout->addWidget( repositoryDetails );
-        if( !m_backend->exists( iter->url() ) )
+        if( !m_backend->exists( repo->url() ) )
             m_untrustedSources++;
-        static int j = 0;
-        foreach( OCI::Package *iter, m_packages ) {
-            m_backend->addPackage( iter->name() );
+        
+        foreach( OCI::Package *package, m_packages ) {
+            ++m_numOfPackages;
+            m_backend->addPackage( package->name() );
             mainLayout->addSpacing( -10 );
-            PackageDetails *packDetails = new PackageDetails( iter, j, m_packages.count() );
+            PackageDetails *packDetails = new PackageDetails( package, packageID++, m_packages.count() );
             QObject::connect( packDetails, SIGNAL( sizeUpdated( QString ) ), this, SIGNAL( sizeUpdated( QString ) ) );
             QObject::connect( packDetails, SIGNAL( installableStateToggled( bool ) ), this, SLOT( checkPackagesInstallableState() ) );
             mainLayout->addWidget( packDetails );
-            j++;
         }
         i++;
         mainLayout->addSpacing( -8 );
@@ -86,7 +95,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, QString *tmpFileName, const Q
 
 void FirstScreen::showEvent( QShowEvent *s )
 {
-    emit countChanged( m_repos.count(), m_packages.count() );
+    emit countChanged( m_numOfRepositories, m_numOfPackages );
     qDebug() << "number of untrusted sources is " << m_untrustedSources;
 }
 
