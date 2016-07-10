@@ -31,11 +31,11 @@
 #include <zypp/ZYppFactory.h>
 #include <zypp/ResPool.h>
 #include <zypp/PoolItemBest.h>
+#include <zypp/base/Easy.h>
 #include "utils.h"
 
 // Define static variables here
-RepoManagerOptions* ZypperUtils::s_repoManagerOpts = new RepoManagerOptions("/tmp");
-RepoManager* ZypperUtils::s_repoManager = new RepoManager(*s_repoManagerOpts);
+scoped_ptr<RepoManager> ZypperUtils::s_repoManager( new RepoManager( Pathname( "/tmp" ) ) );
 RepoInfo ZypperUtils::s_repoInfo;
 KeyRingReceive ZypperUtils::s_keyReceiveReport;
 ZYpp::Ptr ZypperUtils::s_zypp;
@@ -71,12 +71,11 @@ void ZypperUtils::initRepository( const string& repoUrl )
     cout << "===================================================" << endl;
 }
 
-void ZypperUtils::initRepoInfo( const string& repoUrl, const string& packageName )
+void ZypperUtils::initRepoInfo( const string& repoUrl, const string& repoAlias )
 {
-    string alias = packageName + "-repo";
     s_repoInfo.addBaseUrl( Url( repoUrl ) );
-    s_repoInfo.setName( alias );
-    s_repoInfo.setAlias( alias );
+    s_repoInfo.setName( repoAlias );
+    s_repoInfo.setAlias( repoAlias );
     s_repoInfo.setGpgCheck( true );
     s_repoInfo.setAutorefresh( true );
 }
@@ -88,12 +87,11 @@ void ZypperUtils::refreshRepoManager()
     s_repoManager->buildCache( s_repoInfo );
 }
 
-void ZypperUtils::initRepoManager( const string& repoUrl, const string& packageName )
+void ZypperUtils::initRepoManager( const string& repoUrl, const string& repoAlias )
 {
-    string alias = packageName + "-repo";
-    initRepoInfo( repoUrl, packageName );   
+    initRepoInfo( repoUrl, repoAlias );   
     // Add it to the repoManager if not already present
-    if ( !s_repoManager->hasRepo( alias ) ) {
+    if ( !s_repoManager->hasRepo( repoAlias ) ) {
 	s_repoManager->addRepository( s_repoInfo );
 	cout << "added repo" << endl;
     }
@@ -113,7 +111,7 @@ PoolItem ZypperUtils::queryMetadataForPackage( const string& packageName )
 PoolItem ZypperUtils::packageObject( const PoolQuery& q )
 {
     PoolItem item;
-    for( PoolQuery::Selectable_iterator it = q.selectableBegin(); it != q.selectableEnd(); ++it ) {
+    for_( it, q.selectableBegin(), q.selectableEnd() ) {
 	const ui::Selectable& s =  *(*it);   
 	// An update candidate object is better than any installed object
 	PoolItem updateObject( s.updateCandidateObj() );
@@ -131,32 +129,66 @@ KeyRingReceive ZypperUtils::keyReport()
 }
 
 /************************************* ZYPPER INSTALL ************************************/
+
+void ZypperUtils::initSystemRepos()
+{
+    // Sync the current repo set
+    for ( RepoInfo& repo : s_repoManager->knownRepositories() ) {
+	if ( !repo.enabled() )
+	    continue;
+	
+	// Often volatile media are sipped in automated environments
+	// to avoid media change requests:
+	if ( repo.url().schemeIsVolatile() )
+	    continue;
+	bool refreshNeeded = false;
+	if ( repo.autorefresh() )  { // test whether to autorefresh repo metadata
+	    for (const Url& url : repo.baseUrls() ) {
+		try {
+		    if (s_repoManager->checkIfToRefreshMetadata( repo, url ) == RepoManager::REFRESH_NEEDED ) {
+			cout << "Need to autorefresh repository " << repo.alias() << endl;
+			refreshNeeded = true;
+		    }
+		    break;	// exit after first successful checkIfToRefreshMetadata
+		}
+		catch (const Exception& exp) {} // Url failed, try next one
+	    }	  
+	}
+	
+	// Initial metadata download or cache refresh 
+	if ( !s_repoManager->isCached( repo ) || refreshNeeded ) {
+	    cout << "Refreshing repo... " << repo << endl;
+	    if ( s_repoManager->isCached( repo ) )
+		s_repoManager->cleanCache( repo );
+	    s_repoManager->refreshMetadata( repo );
+	    s_repoManager->buildCache( repo );
+	}
+	
+	// load cache
+	try {
+	    cout << "Loading resolvables from " << repo.alias() << endl;
+	    s_repoManager->loadFromCache( repo );	// load available packages to pool
+	}
+	catch (const Exception& exp ) {
+	    // cachefile has old format (or is corrupted): try to rebuild it
+	    s_repoManager->cleanCache( repo );
+	    s_repoManager->buildCache( repo );
+	    s_repoManager->loadFromCache( repo );
+	}
+    }
+}
+
 void ZypperUtils::markPackagesForInstallation( const string& repoUrl, const string& packageName )
 {
     Pathname sysRoot( "/" );
+    string repoAlias = packageName + "-repo";
     // acquire initial zypp lock
     s_zypp = getZYpp(); 
     
     makeNecessaryChangesToRunAsRoot( sysRoot );
     initTarget( sysRoot );
-    initRepoManager( repoUrl, packageName );
-    
-    //TRUST_AND_IMPORT_KEY - we are adding this to the system repos
-    KeyRing::setDefaultAccept( KeyRing::TRUST_AND_IMPORT_KEY );
-    cout << "TRUST_AND_IMPORT_KEY accepted" << endl;
-    refreshRepoManager();
-    
-    //load cache
-    try {
-	cout << "Loading resolvables from " << s_repoInfo.alias() << endl;
-	s_repoManager->loadFromCache( s_repoInfo );      
-    }
-    catch (const Exception& exp) {
-	// cachefile has old format or is corrupted: try to rebuild it
-	s_repoManager->cleanCache( s_repoInfo );
-	s_repoManager->buildCache( s_repoInfo );
-	s_repoManager->loadFromCache( s_repoInfo );
-    }
+    initRepoManager( repoUrl, repoAlias ); // Add repo listed in .ymp file to the system repos
+    initSystemRepos(); // Load system repos into ResPool to resolve missing dependencies
     
     // select/specify package(s) to install
     PoolQuery q;
@@ -166,7 +198,7 @@ void ZypperUtils::markPackagesForInstallation( const string& repoUrl, const stri
     
     PoolItemBest bestMatches(q.begin(), q.end());    
     if ( !bestMatches.empty() ) {
-	for ( PoolItemBest::iterator it = bestMatches.begin(); it != bestMatches.end(); ++it ) {
+	for_( it, bestMatches.begin(), bestMatches.end() ) {
 	    ui::asSelectable()( *it )->setOnSystem( *it, ResStatus::USER );
 	}
     }
@@ -183,28 +215,31 @@ bool ZypperUtils::resolveConflictsAndDependencies()
      * The following code commented out is needed for GUI elements.
      * For instance, each solution (solPtr->description()) is displayed as a radio button
      * on the ConflictScreen 
-  
+
+    cout << "Solving dependencies... " << endl;
     unsigned int attempt = 0;
     while ( !s_zypp->resolver()->resolvePool() ) {
-	++attempt;
-	cout << "Solving dependencies: " << attempt << ". attempt failed" << endl;
-	const ResolverProblemList& problems( s_zypp->resolver()->problems() );
-	cout << problems.size() << " problems found..." << endl;
-	
-	ProblemSolutionList toTry;
-	unsigned int probNo = 0;
-	for (const auto& probPtr : problems) {
-	    cout << "Problem " << ++probNo << ": " << probPtr->description() << endl;
-	    const ProblemSolutionList & solutions = probPtr->solutions();
-	    unsigned int solNo = 0;
-	    for ( const auto & solPtr : solutions ) {
-		if (solNo == 0) {
-		  solNo++;
-		  continue;
-		}
-		cout << "  Solution " << solNo << ": " << solPtr->description() << endl;
-		//toTry.push_back( solPtr);
-	    }
+      cout << "Solving dependencies: " << ++attempt << ". attemp failed" << endl;
+      const ResolverProblemList& problems( s_zypp->resolver()->problems() );
+      cout << problems.size() << " problems found..." << endl;
+      
+      ProblemSolutionList toTry;
+      unsigned int probNo = 0;
+      for (const auto& probPtr : problems) {
+	  cout << "Problem " << ++probNo << ": " << probPtr->description() << endl;
+	  const ProblemSolutionList & solutions = probPtr->solutions();
+	  unsigned int solNo = 0;
+	  for ( const auto & solPtr : solutions ) {
+	      char choice;
+	      cout << "  Solution " << ++solNo << ": " << solPtr->description() << endl;
+	      cout << "Enter your choice: y/n " << endl;
+	      cin >> choice;
+	      if (choice == 'y' || choice == 'Y') {
+		  toTry.push_back( solPtr );	
+		  break;
+	      }
+	      else continue;
+	    } 
 	}
 	
 	if ( !toTry.empty() )
@@ -214,23 +249,23 @@ bool ZypperUtils::resolveConflictsAndDependencies()
 	    cout << "Solving dependencies..." << endl;
 	    continue;
 	}
-	// otherwise give up
-      throw "Solving dependencies failed: Giving up!";
+	throw "Solving dependencies failed: Giving up!";
     }
-    cout << "Dependencies solved" << endl; */
+    cout << "Dependecies solved" << endl;
     
-    return s_zypp->resolver()->resolvePool();
-}
-
-bool ZypperUtils::commitChanges()
-{
     cout << "Selectable summary (grouped by name):" << endl;
     for ( const ui::Selectable_Ptr & sel : s_zypp->pool().proxy() )
     {
 	if ( sel->toModify() )
 	cout << "  " << sel << endl;
     }
+    */
     
+    return s_zypp->resolver()->resolvePool();
+}
+
+bool ZypperUtils::commitChanges()
+{
     // Commit the changes 
     // Please note that dryRunFlag and zypp::DownloadOnly are for now
     cout << "Committing the changes" << endl;
@@ -264,25 +299,28 @@ void ZypperUtils::initTarget( const Pathname& sysRoot )
 
 void ZypperUtils::makeNecessaryChangesToRunAsRoot( const Pathname& sysRoot )
 {
-    /* Caller: ZypperUtils::install()
-     * Can be absolutely certain that s_repoManagerOpts, and s_repoManager
-     * are already intialized [to display information]
+    /* Need to remove temporary PoolItems (loaded into pool when querying package information (metadata))
+     * from the ResPool to avoid unnecessary conflicts.
+     * 
+     * The following code snippet does the work but needs refinement
+     * if ( s_zypp->pool().empty() ) {
+     * 	   Repository repo = s_zypp->pool().reposFind( "temp" );
+     *     repo.eraseFromPool();
+     * }
+     * 
+     * Reminder To Me (Shalom): Investigate reposEraseAll() [sat/Pool.h]
      */
+    
+    /* Initialize s_repoManager with sysRoot. This step is necessary to add repo
+     * to system repos
+     */
+    s_repoManager.reset();
     try {
-	delete s_repoManagerOpts;
-	delete s_repoManager;
+	s_repoManager.reset( new RepoManager( sysRoot ) );
     }
     catch ( const Exception& exp ) {
-	cout << "Oops! You're trying to delete the non-existent. ;)" << endl;
-    }
-
-    // Initialize s_repoManager with sysRoot. This step is necessary to add repo
-    // to system repos
-    try {
-	s_repoManager = new RepoManager( sysRoot );
-    }
-    catch ( const Exception& exp ) {
-	cout << "Allocating memory to s_repoManager Failed" << endl;
+	cout << "Oops! Failed to init repo manager" << endl;
+	throw;
     }
 }
 

@@ -9,6 +9,7 @@
 #include <zypp/PoolItem.h>
 #include <zypp/PoolQuery.h>
 #include <zypp/ZYpp.h>
+#include <boost/scoped_ptr.hpp>
 #include "keyring.h"
 
 using namespace std;
@@ -18,8 +19,7 @@ class ZypperUtils
 {
 private:
   /******************************* Member Declarations *******************************/
-  static RepoManager *s_repoManager;
-  static RepoManagerOptions *s_repoManagerOpts;
+  static scoped_ptr<RepoManager> s_repoManager;
   static RepoInfo s_repoInfo;
   static KeyRingReceive s_keyReceiveReport;
   
@@ -90,6 +90,9 @@ public:
    */
   static ZYpp::Ptr zyppPtr();
   
+  static void initSystemRepos();
+  
+private:
   static void makeNecessaryChangesToRunAsRoot( const Pathname& sysRoot );
   
 };
