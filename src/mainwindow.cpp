@@ -18,6 +18,8 @@
 //      
 
 #include <klocalizedstring.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include "mainwindow.h"
 #include "checkconflictscreen.h"
 
@@ -54,7 +56,7 @@ MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, boo
         m_backend = new FakeBackend( this );
         m_fakeRequested = true;
     } else {
-        m_backend = new Backend;
+        m_backend = new BackendOCI( m_tmpFileName, (int)getuid() );
         m_fakeRequested = false;
     }
 
@@ -95,15 +97,18 @@ MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, boo
     QObject::connect( m_firstScreen, SIGNAL( countChanged( int, int )), this, SLOT( updateCount( int, int ) ) );
     QObject::connect( this, SIGNAL( countChanged( int, int ) ), m_header, SLOT( changeStatusLabel( int, int) ) );
     QObject::connect( m_firstScreen, SIGNAL( sizeUpdated( QString ) ), this, SLOT( updateSize( QString ) ) );
-    QObject::connect( m_backend, SIGNAL( installationStarted() ), m_header, SLOT( installationStarted() ) );
-    QObject::connect( m_backend, SIGNAL( installationCompleted() ), m_header, SLOT( installationCompleted() ) );
-    QObject::connect( installer, SIGNAL( installationCompleted() ), m_header, SLOT( installationCompleted() ) );
-    QObject::connect( m_backend, SIGNAL( installationCompleted() ), installer, SLOT( showCompletionStatus() ) );
     QObject::connect( m_firstScreen, SIGNAL( packageListInstallableStateToggled( bool ) ), m_install, SLOT( setEnabled( bool ) ) );
 
     // For Conflict Resolution
     QObject::connect( m_backend, SIGNAL( checkForConflicts() ), this, SLOT( showCheckForConflictsProgress() ) );
     QObject::connect( m_backend, SIGNAL( checkForConflicts() ), m_header, SLOT( showCheckForConflictsHeader() ) );
+    
+     /* For Installation 
+     * QObject::connect( , SIGNAL( installationStarted() ), , SLOT( installationStarted() ) );
+     * QObject::connect( , SIGNAL( installationCompleted() ), , SLOT( installationCompleted() ) );
+     * QObject::connect( , SIGNAL( installationCompleted() ), m_header, SLOT( showCompletionStatus() ) );
+     * QObject::connect( , SIGNAL( installationCompleted() ), m_header, SLOT( installationCompleted() ) );
+     */
     show();
 }
 
@@ -137,8 +142,7 @@ void MainWindow::performInstallation()
     if( m_settings.value( "proposal" ).toInt() == 1 ) {
         m_screenStack->setCurrentIndex( 1 );
     } else {
-        m_screenStack->setCurrentIndex( 2 );
-        m_backend->setFileName( m_tmpFileName );
+        //m_screenStack->setCurrentIndex( 2 );
         m_backend->callBackendHelper();
     }
     m_install->hide();

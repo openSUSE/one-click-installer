@@ -46,6 +46,11 @@ public:
    * Intialize RepoManager
    */
   static void initRepoManager( const string& repoUrl, const string& packageName = "temp" );
+  
+   /**
+   * Return true if repository exists
+   */
+  static bool exists( const string& repoUrl );
  
   /*********************************** ZYPPER INFO ***********************************/
   /**

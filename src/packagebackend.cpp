@@ -30,10 +30,6 @@ void PackageBackend::addPackage( const QString& package )
     m_packages << package;
 }
 
-bool PackageBackend::resolveConflicts()
-{
-}
-
 QList< QString > PackageBackend::packages()
 {
     return m_packages;

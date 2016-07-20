@@ -41,23 +41,6 @@ int main( int argc, char *argv[] )
 
     Backend *ptr = new Backend;
 
-    QString line;
-    do {
-        line = inData.readLine();
-        if( !line.isNull() ) {
-            if( line.at( 0 ) == 'R' ) {
-                QString repo = line.split( " " ).at( 1 );
-                qDebug() << repo;
-                ptr->addRepository( repo );
-            } else if( line.at( 0 ) == 'P' ) {
-                QString package = line.split( " " ).at( 1 );
-                qDebug() << package;
-                ptr->addPackage( package );
-            }
-        }
-    } while( !line.isNull() );
 
-    ptr->install();
-
-    return ptr->errorCode();
+    return 0;
 }

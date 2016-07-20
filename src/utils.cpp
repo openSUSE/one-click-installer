@@ -97,6 +97,20 @@ void ZypperUtils::initRepoManager( const string& repoUrl, const string& repoAlia
     }
 }
 
+bool ZypperUtils::exists(const string& repoUrl)
+{
+    RepoManager rM;
+    for ( RepoInfo& nrepo : rM.knownRepositories() ) {
+	if ( !nrepo.enabled() )
+	    continue;
+	if ( nrepo.url().schemeIsVolatile() )
+	    continue;
+	if ( repoUrl == nrepo.url().asString() )
+	    return true;
+    }
+    return false;
+}
+
 /************************************* ZYPPER INFO **************************************/
 PoolItem ZypperUtils::queryMetadataForPackage( const string& packageName )
 {

@@ -21,15 +21,32 @@
  *  Project: One Click Installer
  *  Mentors: Antonio Larrosa, and Cornelius Schumacher
  *  Organization: OpenSUSE
- *  Previous Contributor(s): Saurabh Sood 
+ *  Previous Contributor: None
  ***********************************************************************************/
 
-#include "backend.h"
+#include "backendoci.h"
+#include "utils.h"
 
-Backend::Backend() {}
+BackendOCI::BackendOCI(QString tempFileName, int ociID)
+{
+    m_tempFileName = tempFileName;
+    m_ociID = ociID;
+}
 
-void Backend::install() {}
+bool BackendOCI::exists(const QString& repoUrl)
+{
+    return ZypperUtils::exists( repoUrl.toStdString() );
+}
 
-void Backend::addRepository() {}
-
-void Backend::addPackage() {}
+void BackendOCI::callBackendHelper()
+{
+    m_process = new QProcess;
+    
+    QString command("xdg-su -u root -c \"/usr/sbin/oneclickhelper ");
+    command.append( m_tempFileName );
+    command.append( "\"" );
+    qDebug() << command;
+    
+    m_process->start( command );
+    emit checkForConflicts();	// Gui while OCIhelper checks for conflicts
+}
