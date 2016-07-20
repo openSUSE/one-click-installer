@@ -104,7 +104,7 @@ MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, boo
     // For Conflict Resolution
     QObject::connect( m_backend, SIGNAL( checkForConflicts() ), this, SLOT( showCheckForConflictsProgress() ) );
     QObject::connect( m_backend, SIGNAL( checkForConflicts() ), m_header, SLOT( showCheckForConflictsHeader() ) );
-    //sysBus.connect( QString(), QString(), "org.opensuse.oneclickinstaller", "hasConflicts", QApplication::instance(), SLOT( quit() ) );
+    sysBus.connect( QString(), QString(), "org.opensuse.oneclickinstaller", "hasConflicts", m_header, SLOT( showConflictResolutionHeader() ) );
      /* For Installation 
      * QObject::connect( , SIGNAL( installationStarted() ), , SLOT( installationStarted() ) );
      * QObject::connect( , SIGNAL( installationCompleted() ), , SLOT( installationCompleted() ) );

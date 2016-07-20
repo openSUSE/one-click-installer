@@ -44,6 +44,11 @@ public slots:
      * Show Check Conflict header
      */
     void showCheckForConflictsHeader();
+    
+    /**
+     * Show Conflict Resolution header
+     */
+    void showConflictResolutionHeader();
 
 private:
     QLabel *m_statusLabel;

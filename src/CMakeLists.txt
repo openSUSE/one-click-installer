@@ -58,6 +58,7 @@ INSTALL(FILES oci.desktop DESTINATION /usr/share/applications)
 INSTALL(FILES res/oneclickinstall.png DESTINATION /usr/share/icons/hicolor/32x32/apps/)
 INSTALL(FILES res/ticks-endless.gif DESTINATION /usr/share/one-click-installer/res/)
 INSTALL(FILES res/conflictCheck.gif DESTINATION /usr/share/one-click-installer/res/)
+INSTALL(FILES res/conflictIcon.png DESTINATION /usr/share/icons/hicolor/32x32/apps/)
 
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
