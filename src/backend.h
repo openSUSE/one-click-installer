@@ -2,10 +2,12 @@
 #define BACKEND_H
 
 #include <QObject>
-#include <QtDBus/QDBusConnection>
+#include <QString>
 
 class Backend : public QObject
 {
+    Q_OBJECT
+    Q_CLASSINFO( "D-Bus Interface", "org.opensuse.oneclickinstaller" )
     
 public:
     /**
@@ -27,9 +29,11 @@ public:
      * Add packages
      */
     static void addPackage();
-
-private:
     
+Q_SIGNALS:
+    void hasConflicts();
+    void displayProblem( QString );
+    void displaySolution( QString );
 };
 
 #endif

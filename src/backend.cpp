@@ -24,9 +24,20 @@
  *  Previous Contributor(s): Saurabh Sood 
  ***********************************************************************************/
 
+#include <QDebug>
+#include <QDBusConnection>
 #include "backend.h"
+#include "oneclickinstalleradaptor.h"	//generated during build time
 
-Backend::Backend() {}
+Backend::Backend()
+{	
+    new OneclickinstallerAdaptor( this );
+    QDBusConnection connection = QDBusConnection::systemBus();
+    connection.registerObject( "/", this );
+    connection.registerService( "org.opensuse.onelickinstaller" );
+    
+    //emit hasConflicts();
+}
 
 void Backend::install() {}
 

@@ -44,6 +44,7 @@ void BackendOCI::callBackendHelper()
     
     QString command("xdg-su -u root -c \"/usr/sbin/oneclickhelper ");
     command.append( m_tempFileName );
+    //command.append( QString::number( m_ociID ) ); Not needed :)
     command.append( "\"" );
     qDebug() << command;
     

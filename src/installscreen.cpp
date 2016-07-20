@@ -131,7 +131,8 @@ void InstallScreen::cancelInstallation()
 {
     qDebug() << "cancelling installation";
 
-    ClientDBus *client = new ClientDBus( "org.opensuse.oneclickinstaller", "/", QDBusConnection::sessionBus(), 0 );
-    client->KillBackend();
-    qApp->quit();
+    // The following feature will be added as development progresses on :)
+    //ClientDBus *client = new ClientDBus( "org.opensuse.oneclickinstaller", "/", QDBusConnection::sessionBus(), 0 );
+    //client->KillBackend();
+    //qApp->quit();
 }

@@ -17,6 +17,7 @@
 //      
 //      
 
+#include <QDBusConnection>
 #include <klocalizedstring.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -25,9 +26,10 @@
 
 MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, bool fakeRequested, QObject *parent )
 {
+    QDBusConnection sysBus = QDBusConnection::systemBus();
+    
     setStyleSheet( "background-color : rgb(251,248,241)" );
     setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
-
     setMinimumSize( 600, 400 );
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
@@ -102,7 +104,7 @@ MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, boo
     // For Conflict Resolution
     QObject::connect( m_backend, SIGNAL( checkForConflicts() ), this, SLOT( showCheckForConflictsProgress() ) );
     QObject::connect( m_backend, SIGNAL( checkForConflicts() ), m_header, SLOT( showCheckForConflictsHeader() ) );
-    
+    //sysBus.connect( QString(), QString(), "org.opensuse.oneclickinstaller", "hasConflicts", QApplication::instance(), SLOT( quit() ) );
      /* For Installation 
      * QObject::connect( , SIGNAL( installationStarted() ), , SLOT( installationStarted() ) );
      * QObject::connect( , SIGNAL( installationCompleted() ), , SLOT( installationCompleted() ) );
