@@ -23,7 +23,7 @@ add_definitions(${Qt5Widgets_DEFINITIONS})
 add_definitions(${Qt5DBus_DEFINITIONS})
 
 set(oneclickinstaller_SOURCES main.cpp utils.cpp mainwindow.cpp firstscreen.cpp settings.cpp fakebackend.cpp repository.cpp package.cpp ympparser.cpp packagebackend.cpp installscreen.cpp repositorywidget.cpp summary.cpp backend.cpp keyringcallbacks.cpp mainheader.cpp packagedetails.cpp repositorymetadata.cpp repositorydata.cpp packagemetadata.cpp clientdbus.cpp dbusadaptor.cpp)
-set(oneclickinstaller_HEADERS utils.h mainwindow.h firstscreen.h settings.h installscreen.h repositorywidget.h summary.h mainheader.h packagedetails.h packagemetadata.h backend.h packagebackend.h dbusadaptor.h clientdbus.h)
+set(oneclickinstaller_HEADERS utils.h mainwindow.h checkconflictscreen.h firstscreen.h settings.h installscreen.h repositorywidget.h summary.h mainheader.h packagedetails.h packagemetadata.h backend.h packagebackend.h dbusadaptor.h clientdbus.h)
 
 set(oneclickhelper_SOURCES interfacemain.cpp backend.cpp keyringcallbacks.cpp utils.cpp packagebackend.cpp dbusadaptor.cpp)
 set(oneclickhelper_HEADERS backend.h packagebackend.h keyringcallbacks.h utils.h dbusadaptor.h)
@@ -50,6 +50,7 @@ INSTALL(TARGETS oneclickinstaller DESTINATION /usr/bin)
 INSTALL(FILES oci.desktop DESTINATION /usr/share/applications)
 INSTALL(FILES res/oneclickinstall.png DESTINATION /usr/share/icons/hicolor/32x32/apps/)
 INSTALL(FILES res/ticks-endless.gif DESTINATION /usr/share/one-click-installer/res/)
+INSTALL(FILES res/conflictCheck.gif DESTINATION /usr/share/one-click-installer/res/)
 
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}

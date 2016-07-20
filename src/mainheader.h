@@ -39,6 +39,11 @@ public slots:
      * Show success/failure message in header
      */
     void installationCompleted();
+    
+    /**
+     * Show Check Conflict header
+     */
+    void showCheckForConflictsHeader();
 
 private:
     QLabel *m_statusLabel;

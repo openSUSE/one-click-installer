@@ -1,5 +1,5 @@
 #ifndef MAINWINDOW_H
-#define MAINWINDIW_H
+#define MAINWINDOW_H
 
 #include <QDialog>
 #include <QLabel>
@@ -30,18 +30,18 @@ public:
 private:
     PackageBackend *m_backend;
     FirstScreen *m_firstScreen;
-    QString m_tmpFileName;
     MainHeader *m_header;
+    
     QStackedLayout *m_screenStack;
-
     QHBoxLayout *m_warningLayout;
-
+    QSettings m_settings;
+    
     QPushButton *m_showSettings;
     QPushButton *m_cancel;
     QPushButton *m_install;
 
-    QSettings m_settings;
-
+    
+    QString m_tmpFileName;
     bool m_fakeRequested;
 
 private slots:
@@ -70,7 +70,11 @@ private slots:
      * Update the size of packages
      */
     void updateSize(const QString& size );
-
+    
+    /** 
+     * Show Conflict Resolution Progress (gif)
+     */
+    void showCheckForConflictsProgress();
 signals:
     void countChanged( int repoCount, int packageCount );
 };

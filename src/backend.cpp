@@ -118,7 +118,7 @@ int Backend::errorCode()
 void Backend::started()
 {
     qDebug() << "helper started";
-    emit installationStarted();
+    emit checkForConflicts();
 }
 
 void Backend::finished( int v )

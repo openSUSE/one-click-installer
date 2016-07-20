@@ -19,6 +19,7 @@
 
 #include <klocalizedstring.h>
 #include "mainwindow.h"
+#include "checkconflictscreen.h"
 
 MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, bool fakeRequested, QObject *parent )
 {
@@ -62,7 +63,8 @@ MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, boo
     m_firstScreen = new FirstScreen( m_backend, m_tmpFileName, filename, this );
     Summary *installSummary = new Summary( m_backend, m_tmpFileName );
     InstallScreen *installer = new InstallScreen( m_backend, m_tmpFileName );
-
+    CheckConflictScreen *conflictAnimation = new CheckConflictScreen();
+    
     QScrollArea *scroll = new QScrollArea;
     scroll->setFrameShape( QFrame::NoFrame );
     scroll->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
@@ -73,6 +75,7 @@ MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, boo
     m_screenStack->addWidget( scroll );
     m_screenStack->addWidget( installSummary );
     m_screenStack->addWidget( installer );
+    m_screenStack->addWidget( conflictAnimation );
 
     m_screenStack->setCurrentIndex( 0 );
 
@@ -98,12 +101,24 @@ MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, boo
     QObject::connect( m_backend, SIGNAL( installationCompleted() ), installer, SLOT( showCompletionStatus() ) );
     QObject::connect( m_firstScreen, SIGNAL( packageListInstallableStateToggled( bool ) ), m_install, SLOT( setEnabled( bool ) ) );
 
+    // For Conflict Resolution
+    QObject::connect( m_backend, SIGNAL( checkForConflicts() ), this, SLOT( showCheckForConflictsProgress() ) );
+    QObject::connect( m_backend, SIGNAL( checkForConflicts() ), m_header, SLOT( showCheckForConflictsHeader() ) );
     show();
 }
 
 void MainWindow::showNextScreen( int index )
 {
     m_screenStack->setCurrentIndex( index );
+}
+
+void MainWindow::showCheckForConflictsProgress()
+{
+    m_screenStack->setCurrentIndex( 3 );
+    
+    m_install->hide();
+    m_showSettings->hide();
+    m_cancel->hide();
 }
 
 void MainWindow::updateCount( int repoCount, int packageCount )
