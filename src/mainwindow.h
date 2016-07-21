@@ -39,6 +39,8 @@ private:
     QPushButton *m_showSettings;
     QPushButton *m_cancel;
     QPushButton *m_install;
+    QPushButton *m_conflictCancel;
+    QPushButton *m_conflictContinueInstallation;
 
     
     QString m_tmpFileName;
@@ -72,9 +74,14 @@ private slots:
     void updateSize(const QString& size );
     
     /** 
-     * Show Conflict Resolution Progress (gif)
+     * Show Check for conflicts screen
      */
     void showCheckForConflictsProgress();
+    
+    /** 
+     * Show Conflict resolution screen
+     */
+    void showConflictResolutionScreen();
 signals:
     void countChanged( int repoCount, int packageCount );
 };

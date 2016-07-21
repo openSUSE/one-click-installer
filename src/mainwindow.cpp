@@ -23,12 +23,13 @@
 #include <unistd.h>
 #include "mainwindow.h"
 #include "checkconflictscreen.h"
+#include "conflictresolutionscreen.h"
 
 MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, bool fakeRequested, QObject *parent )
 {
     QDBusConnection sysBus = QDBusConnection::systemBus();
-    
-    setStyleSheet( "background-color : rgb(251,248,241)" );
+  
+    setStyleSheet("background-color : rgb(251,248,241);");
     setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
     setMinimumSize( 600, 400 );
 
@@ -38,16 +39,19 @@ MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, boo
     m_showSettings = new QPushButton( i18n("Settings") );
     m_cancel = new QPushButton( i18n("Cancel") );
     m_install = new QPushButton( i18n("Install") );
-
+    
+    m_conflictCancel = new QPushButton( i18n( "Cancel" ) );
+    m_conflictContinueInstallation = new QPushButton( i18n( "Continue Installation" ) );
+    m_conflictCancel->hide();
+    m_conflictContinueInstallation->hide();
+    
     buttonLayout->addWidget( m_showSettings );
     buttonLayout->addSpacing( 100 );
+    buttonLayout->addWidget( m_conflictCancel );
     buttonLayout->addWidget( m_cancel );
     buttonLayout->addSpacing( 10 );
+    buttonLayout->addWidget( m_conflictContinueInstallation );
     buttonLayout->addWidget( m_install );
-
-    QObject::connect( m_showSettings, SIGNAL( clicked() ), this, SLOT( showSettings() ) );
-    QObject::connect( m_install, SIGNAL( clicked() ), this, SLOT( performInstallation() ) );
-    QObject::connect( m_cancel, SIGNAL( clicked()), this, SLOT( close() ) );
 
     m_tmpFileName = tmpFileName;
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -67,7 +71,8 @@ MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, boo
     m_firstScreen = new FirstScreen( m_backend, m_tmpFileName, filename, this );
     Summary *installSummary = new Summary( m_backend, m_tmpFileName );
     InstallScreen *installer = new InstallScreen( m_backend, m_tmpFileName );
-    CheckConflictScreen *conflictAnimation = new CheckConflictScreen();
+    CheckConflictScreen *checkForConflictsScreen = new CheckConflictScreen();
+    ConflictResolutionScreen *conflictResolutionScreen = new ConflictResolutionScreen();
     
     QScrollArea *scroll = new QScrollArea;
     scroll->setFrameShape( QFrame::NoFrame );
@@ -75,11 +80,18 @@ MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, boo
     scroll->setWidget( m_firstScreen );
     scroll->setWidgetResizable( true );
     
+    QScrollArea *scrollConflictScreen = new QScrollArea;
+    scrollConflictScreen->setFrameShape( QFrame::NoFrame );
+    scrollConflictScreen->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    scrollConflictScreen->setWidget( conflictResolutionScreen );
+    scrollConflictScreen->setWidgetResizable( true );
+    
     
     m_screenStack->addWidget( scroll );
     m_screenStack->addWidget( installSummary );
     m_screenStack->addWidget( installer );
-    m_screenStack->addWidget( conflictAnimation );
+    m_screenStack->addWidget( checkForConflictsScreen );
+    m_screenStack->addWidget( scrollConflictScreen );
 
     m_screenStack->setCurrentIndex( 0 );
 
@@ -94,6 +106,9 @@ MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, boo
     setWindowTitle("One Click Installer");
     setWindowIcon( QIcon("/usr/share/icons/hicolor/32x32/apps/oneclickinstall.png") );
 
+    QObject::connect( m_showSettings, SIGNAL( clicked() ), this, SLOT( showSettings() ) );
+    QObject::connect( m_install, SIGNAL( clicked() ), this, SLOT( performInstallation() ) );
+    QObject::connect( m_cancel, SIGNAL( clicked()), this, SLOT( close() ) );
     QObject::connect( m_firstScreen, SIGNAL( showNextScreen( int ) ), this, SLOT( showNextScreen( int ) ) );
     QObject::connect( installSummary, SIGNAL( showNextScreen( int ) ), this, SLOT( showNextScreen( int ) ) );
     QObject::connect( m_firstScreen, SIGNAL( countChanged( int, int )), this, SLOT( updateCount( int, int ) ) );
@@ -104,7 +119,12 @@ MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, boo
     // For Conflict Resolution
     QObject::connect( m_backend, SIGNAL( checkForConflicts() ), this, SLOT( showCheckForConflictsProgress() ) );
     QObject::connect( m_backend, SIGNAL( checkForConflicts() ), m_header, SLOT( showCheckForConflictsHeader() ) );
-    sysBus.connect( QString(), QString(), "org.opensuse.oneclickinstaller", "hasConflicts", m_header, SLOT( showConflictResolutionHeader() ) );
+    QObject::connect( m_conflictContinueInstallation, SIGNAL( clicked() ), conflictResolutionScreen, SLOT( sendSolutionToOCIHelper() ) );
+    QObject::connect( m_conflictCancel, SIGNAL( clicked() ), conflictResolutionScreen, SLOT( cancelInstallation() ) );
+    
+    sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "hasConflicts", m_header, SLOT( showConflictResolutionHeader() ) );
+    sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "hasConflicts", this, SLOT( showConflictResolutionScreen() ) );
+  
      /* For Installation 
      * QObject::connect( , SIGNAL( installationStarted() ), , SLOT( installationStarted() ) );
      * QObject::connect( , SIGNAL( installationCompleted() ), , SLOT( installationCompleted() ) );
@@ -114,6 +134,17 @@ MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, boo
     show();
 }
 
+void MainWindow::showConflictResolutionScreen()
+{
+    m_screenStack->setCurrentIndex( 4 );
+    
+    m_install->hide();
+    m_showSettings->hide();
+    m_cancel->hide();
+    
+    m_conflictCancel->show();
+    m_conflictContinueInstallation->show();
+}
 void MainWindow::showNextScreen( int index )
 {
     m_screenStack->setCurrentIndex( index );

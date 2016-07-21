@@ -7,7 +7,7 @@
 class Backend : public QObject
 {
     Q_OBJECT
-    Q_CLASSINFO( "D-Bus Interface", "org.opensuse.oneclickinstaller" )
+    Q_CLASSINFO( "D-Bus Interface", "org.opensuse.OCIHelper" )
     
 public:
     /**
@@ -32,8 +32,10 @@ public:
     
 Q_SIGNALS:
     void hasConflicts();
-    void displayProblem( QString );
-    void displaySolution( QString );
+    void displayProblemAndSolutions( QString, QString );
+
+public Q_SLOTS:
+    void killBackend();
 };
 
 #endif

@@ -27,16 +27,17 @@
 #include <QDebug>
 #include <QDBusConnection>
 #include "backend.h"
-#include "oneclickinstalleradaptor.h"	//generated during build time
+#include "ocihelperadaptor.h"	//generated during build time
 
 Backend::Backend()
 {	
-    new OneclickinstallerAdaptor( this );
+    new OCIHelperAdaptor( this );
     QDBusConnection connection = QDBusConnection::systemBus();
     connection.registerObject( "/", this );
-    connection.registerService( "org.opensuse.onelickinstaller" );
+    connection.registerService( "org.opensuse.OCIHelper" );
     
-    //emit hasConflicts();
+    emit hasConflicts();
+    emit displayProblemAndSolutions("Hello", "Solution 1/Solution 2/Solution 3");
 }
 
 void Backend::install() {}
@@ -44,3 +45,8 @@ void Backend::install() {}
 void Backend::addRepository() {}
 
 void Backend::addPackage() {}
+
+void Backend::killBackend()
+{
+    system( "kill $(pgrep oneclickhelper)" );
+}

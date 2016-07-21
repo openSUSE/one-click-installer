@@ -1,13 +1,13 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
-  <interface name="org.opensuse.oneclickinstaller">
+  <interface name="org.opensuse.OCIHelper">
     <signal name="hasConflicts">
     </signal>
-    <signal name="displayProblem">
+    <signal name="displayProblemAndSolutions">
+      <arg type="s" direction="out"/>
       <arg type="s" direction="out"/>
     </signal>
-    <signal name="displaySolution">
-      <arg type="s" direction="out"/>
-    </signal>
+    <method name="killBackend">
+    </method>
   </interface>
 </node>
