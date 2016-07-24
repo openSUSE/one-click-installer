@@ -7,6 +7,9 @@
       <arg type="s" direction="out"/>
       <arg type="s" direction="out"/>
     </signal>
+    <signal name="noConflicts">
+      <arg type="i" direction="out"/>
+    </signal>
     <method name="killBackend">
     </method>
   </interface>

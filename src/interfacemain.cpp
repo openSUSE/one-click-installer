@@ -24,7 +24,7 @@
  *  Previous Contributor(s): Saurabh Sood
  ***********************************************************************************/
 
-#include <QApplication>
+#include <QCoreApplication>
 #include <QFile>
 #include <QDebug>
 #include <QTextStream>
@@ -34,6 +34,7 @@
 
 int main( int argc, char *argv[] )
 {
+    QCoreApplication app ( argc, argv );
     qDebug() << "Helper Started";
     if ( argc < 2 ) {
 	qDebug() << "Usage: ./oneclickhelper <File Path>";
@@ -66,5 +67,5 @@ int main( int argc, char *argv[] )
     
     Backend *ptr = new Backend();
     
-    return 0;
+    return app.exec();
 }

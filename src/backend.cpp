@@ -24,10 +24,13 @@
  *  Previous Contributor(s): Saurabh Sood 
  ***********************************************************************************/
 
+#include <iostream>
 #include <QDebug>
 #include <QDBusConnection>
 #include "backend.h"
 #include "ocihelperadaptor.h"	//generated during build time
+
+using namespace std;
 
 Backend::Backend()
 {	
@@ -36,8 +39,16 @@ Backend::Backend()
     connection.registerObject( "/", this );
     connection.registerService( "org.opensuse.OCIHelper" );
     
+    // Proxy for OCI
+    QDBusConnection sysBus = QDBusConnection::systemBus();
+    m_oci = new org::opensuse::oneclickinstaller("org.opensuse.oneclickinstaller", "/OCI", sysBus, this);
+        
+    // Emit signal displayProblemSolution( QString, QString ) - First string = problem, second string = solutions
+    // Each solution is separated by a "/"
     emit hasConflicts();
-    emit displayProblemAndSolutions("Hello", "Solution 1/Solution 2/Solution 3");
+    emit displayProblemAndSolutions("Hello", "sfifdsjfdsihsdvsjvsihvsdjvsji/fsdlhfsdlifsdlisdfdf/dfshufsdlihsdflhf");
+    
+    //sysBus.connect( QString(), QString(), "org.opensuse.oneclickinstaller", "solutionNumber", this, SLOT() );
 }
 
 void Backend::install() {}
@@ -48,5 +59,5 @@ void Backend::addPackage() {}
 
 void Backend::killBackend()
 {
-    system( "kill $(pgrep oneclickhelper)" );
+    QCoreApplication::quit();
 }

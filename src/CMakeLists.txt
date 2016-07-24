@@ -32,20 +32,24 @@ QT5_WRAP_CPP(oneclickhelper_HEADERS_MOC ${oneclickhelper_HEADERS})
 QT5_WRAP_CPP(oneclickinstaller_HEADERS_MOC ${oneclickinstaller_HEADERS})
 
 # Dbus Adaptor(s) and interface(s)
-set(srcs_DBUS org.opensuse.OCIHelper.xml)
-#qt5_add_dbus_interface()
-qt5_add_dbus_interface(prog_iFace org.opensuse.OCIHelper.xml oci_helper_interface)
-qt5_add_dbus_adaptor(srcs_DBUS org.opensuse.OCIHelper.xml backend.h Backend)
-qt5_generate_moc(backend.h backend.moc)
+set(srcs_DBUS_OCIHelper org.opensuse.OCIHelper.xml)
+set(srcs_DBUS_OCI org.opensuse.oneclickinstaller.xml)
+qt5_add_dbus_interface(prog_iFaceHelper org.opensuse.OCIHelper.xml oci_helper_interface)
+qt5_add_dbus_interface(prog_iFaceOCI org.opensuse.oneclickinstaller.xml oci_interface)
 
+qt5_add_dbus_adaptor(srcs_DBUS_OCIHelper org.opensuse.OCIHelper.xml backend.h Backend)
+qt5_add_dbus_adaptor(srcs_DBUS_OCI org.opensuse.oneclickinstaller.xml conflictresolutionscreen.h ConflictResolutionScreen)
+
+qt5_generate_moc(backend.h backend.moc)
+qt5_generate_moc(conflictresolutionscreen.h conflictresolutionscreen.moc)
 
 #Executables fail to build with Qt5 in the default configuration
 #without -fPIE. We add that here
 set(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-add_executable(oneclickhelper ${QT_LIBRARIES} ${oneclickhelper_SOURCES} ${oneclickhelper_HEADERS} ${srcs_DBUS} ${oneclickhelper_HEADERS_MOC})
-add_executable(oneclickinstaller ${QT_LIBRARIES} ${prog_iFace} ${oneclickinstaller_SOURCES} ${oneclickinstaller_HEADERS} ${oneclickinstaller_HEADERS_MOC})
+add_executable(oneclickhelper ${QT_LIBRARIES} ${oneclickhelper_SOURCES} ${prog_iFaceOCI} ${oneclickhelper_HEADERS} ${srcs_DBUS_OCIHelper} ${oneclickhelper_HEADERS_MOC})
+add_executable(oneclickinstaller ${QT_LIBRARIES} ${prog_iFaceHelper} ${srcs_DBUS_OCI} ${oneclickinstaller_SOURCES} ${oneclickinstaller_HEADERS} ${oneclickinstaller_HEADERS_MOC})
 
 target_link_libraries(oneclickhelper ${QT_QTGUI_LIBRARY} zypp ${QT_QTDBUS_LIBRARY})
 target_link_libraries(oneclickinstaller ${QT_QTGUI_LIBRARY} KF5::I18n zypp ${QT_QTDBUS_LIBRARY} ${PackageKitQt5_LIBRARIES})

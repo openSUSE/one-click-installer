@@ -24,25 +24,55 @@
  *  Previous Contributor: None
  ***********************************************************************************/
 
+#include <QApplication>
 #include <QDBusConnection>
 #include <QRadioButton>
 #include "conflictresolutionscreen.h"
+#include "oneclickinstalleradaptor.h"
 
 ConflictResolutionScreen::ConflictResolutionScreen()
 {
     setStyleSheet( "background-color: white;" );
     
+    new OneclickinstallerAdaptor( this );
+    QDBusConnection connection = QDBusConnection::systemBus();
+    connection.registerObject( "/OCI", this );
+    connection.registerService( "org.opensuse.oneclickinstaller" );
+    
+    // Proxy for OCIHelper
     QDBusConnection sysBus = QDBusConnection::systemBus();
     m_ociHelper = new org::opensuse::OCIHelper("org.opensuse.OCIHelper", "/", sysBus, this);
+    
     m_mainLayout = new QVBoxLayout;
+    m_solutionWidget = new QWidget;
     m_cancelInstallation = new QPushButton( "Cancel" );
     m_continueInstallation = new QPushButton( "Continue Installation" );
     
-    // Emit signal displayProblemSolution( QString, QString ) - First string = problem, second string = solutions
-    // Each solution is separated by a "/"
     sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "displayProblemAndSolutions", this, SLOT( problemSolutionWidget( QString, QString ) ) );
-    
+   
     setLayout ( m_mainLayout );
+}
+
+void ConflictResolutionScreen::sendSolutionToOCIHelper()
+{
+    /*
+     * Access m_solutionWidget children and find out which QRadioButton is checked
+     * emit the signal to OCIHelper with the id (number of checked radio button)
+     * 
+     * This is similar to what we've done to disable Install Button when no packages
+     * are selected.
+     */
+    
+    QList< QRadioButton* > list = m_solutionWidget->findChildren< QRadioButton* >();
+    for ( int i = 0; i < list.size(); i++ ) {
+	QRadioButton *button = list.at( i );
+	if( !button )
+	    continue;
+	qDebug() << i ;
+	if ( button->isChecked() ) {
+	    emit solutionNumber( i );
+	}
+    }
 }
 
 void ConflictResolutionScreen::problemSolutionWidget( QString probDescription, QString solutions )
@@ -66,27 +96,15 @@ void ConflictResolutionScreen::problemSolutionWidget( QString probDescription, Q
 	solutionLayout->setSpacing( 10 );
     }
     
+    m_solutionWidget = solutionWidget;
     m_mainLayout->addWidget( questionLabel );
     m_mainLayout->setSpacing( 0 );
     m_mainLayout->addWidget( solutionWidget );
 }
+
 void ConflictResolutionScreen::cancelInstallation() 
 {
     qDebug() << "cancelling installation";
     m_ociHelper->killBackend();
     qApp->quit();
-}
-
-void ConflictResolutionScreen::sendSolutionToOCIHelper()
-{
-    /*
-     * Get the main layout  QLayout *layout = QWidget::layout();
-     * Access its children (especially solutionWidget)
-     * Check if QRadioButton is checked - by default it'll be the first one 
-     * Figure something out to uniquely identify the solution (like id number may be)
-     * send it to OCIHelper
-     * 
-     * This is similar to what we've done to disable Install Button when no packages
-     * are selected.
-     */
 }
