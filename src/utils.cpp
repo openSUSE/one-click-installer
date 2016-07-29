@@ -224,57 +224,6 @@ bool ZypperUtils::resolveConflictsAndDependencies()
 {
     // Solve Selection
     cout << "Solving dependencies..." << endl;
-    
-    /* 
-     * The following code commented out is needed for GUI elements.
-     * For instance, each solution (solPtr->description()) is displayed as a radio button
-     * on the ConflictScreen 
-
-    cout << "Solving dependencies... " << endl;
-    unsigned int attempt = 0;
-    while ( !s_zypp->resolver()->resolvePool() ) {
-      cout << "Solving dependencies: " << ++attempt << ". attemp failed" << endl;
-      const ResolverProblemList& problems( s_zypp->resolver()->problems() );
-      cout << problems.size() << " problems found..." << endl;
-      
-      ProblemSolutionList toTry;
-      unsigned int probNo = 0;
-      for (const auto& probPtr : problems) {
-	  cout << "Problem " << ++probNo << ": " << probPtr->description() << endl;
-	  const ProblemSolutionList & solutions = probPtr->solutions();
-	  unsigned int solNo = 0;
-	  for ( const auto & solPtr : solutions ) {
-	      char choice;
-	      cout << "  Solution " << ++solNo << ": " << solPtr->description() << endl;
-	      cout << "Enter your choice: y/n " << endl;
-	      cin >> choice;
-	      if (choice == 'y' || choice == 'Y') {
-		  toTry.push_back( solPtr );	
-		  break;
-	      }
-	      else continue;
-	    } 
-	}
-	
-	if ( !toTry.empty() )
-	{
-	    cout << "Apply selected solutions..." << endl;
-	    s_zypp->resolver()->applySolutions( toTry );
-	    cout << "Solving dependencies..." << endl;
-	    continue;
-	}
-	throw "Solving dependencies failed: Giving up!";
-    }
-    cout << "Dependecies solved" << endl;
-    
-    cout << "Selectable summary (grouped by name):" << endl;
-    for ( const ui::Selectable_Ptr & sel : s_zypp->pool().proxy() )
-    {
-	if ( sel->toModify() )
-	cout << "  " << sel << endl;
-    }
-    */
-    
     return s_zypp->resolver()->resolvePool();
 }
 

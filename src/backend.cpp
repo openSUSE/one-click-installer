@@ -23,32 +23,107 @@
  *  Organization: OpenSUSE
  *  Previous Contributor(s): Saurabh Sood 
  ***********************************************************************************/
-
-#include <iostream>
+#include <QCoreApplication>
 #include <QDebug>
 #include <QDBusConnection>
 #include "backend.h"
 #include "ocihelperadaptor.h"	//generated during build time
 
-using namespace std;
-
 Backend::Backend()
 {	
     new OCIHelperAdaptor( this );
     QDBusConnection connection = QDBusConnection::systemBus();
+    if ( !connection.isConnected() ) {
+	qFatal( "Cannot connect to the D-Bus system bus" );
+	exit( 1 );
+    }
     connection.registerObject( "/", this );
-    connection.registerService( "org.opensuse.OCIHelper" );
-    
+    if ( !connection.registerService( "org.opensuse.OCIHelper" ) ) {
+	qDebug() << qPrintable( connection.lastError().message() );
+	exit( 1 );
+    }
+
     // Proxy for OCI
     QDBusConnection sysBus = QDBusConnection::systemBus();
-    m_oci = new org::opensuse::oneclickinstaller("org.opensuse.oneclickinstaller", "/OCI", sysBus, this);
-        
-    // Emit signal displayProblemSolution( QString, QString ) - First string = problem, second string = solutions
-    // Each solution is separated by a "/"
-    emit hasConflicts();
-    emit displayProblemAndSolutions("Hello", "sfifdsjfdsihsdvsjvsihvsdjvsji/fsdlhfsdlifsdlisdfdf/dfshufsdlihsdflhf");
+    if ( !sysBus.isConnected() ) {
+	qFatal( "Cannot connect to the D-Bus system bus" );
+	exit( 1 );
+    }
+    m_oci = new org::opensuse::oneclickinstaller( "org.opensuse.oneclickinstaller", "/OCI", sysBus, this );
+    if ( !m_oci->isValid() ) {
+	qFatal( "Oops! Cannot connect to the service org.opensuse.oneclickinstaller" );
+	exit( 1 );
+    }
     
-    //sysBus.connect( QString(), QString(), "org.opensuse.oneclickinstaller", "solutionNumber", this, SLOT() );
+    /******************************************* INSTALLATION *******************************************/
+    // Step 1. Mark packages for installation
+    ZypperUtils::markPackagesForInstallation( "http://download.videolan.org/SuSE/Tumbleweed/", "vlc" );
+    
+    // Step 2. Resolve package dependencies
+    while ( !ZypperUtils::resolveConflictsAndDependencies() ) {
+	emit hasConflicts();
+	qDebug() << "emitting hasConflicts!";
+	resolve();
+    }
+    // This is the point where there are no conflicts, or all conflicts have been solved
+    emit noConflicts();
+    
+    // Step 3. Commit Changes
+    ZypperUtils::commitChanges();
+    /***************************************************************************************************/
+}
+
+void Backend::resolve( const ResolverProblem& problem, ProblemSolutionList& todo )
+{
+    QString problemStatement( "<b>Problem:</b> " + QString::fromStdString( problem.description() ) );
+    QString solProposals("");
+    
+    const ProblemSolutionList & solutions = problem.solutions();
+    for ( const auto & solPtr : solutions ) {
+	// "$" is the separator
+	solProposals.append( QString::fromStdString( solPtr->description() ) + "$" );
+    }
+    
+    // Emit signal displayProblemSolution( QString, QString ) - First string = problem, second string = solutions
+    // Each solution is separated by a "$"
+    emit displayProblemAndSolutions( problemStatement, solProposals );
+    
+    // get the solutionID here
+    int solId;
+    while ( ( solId = m_oci->solutionID() ) == -1 );
+    
+    ProblemSolutionList::const_iterator solIter = solutions.begin();
+    std::advance( solIter, solId );
+    
+    qDebug() << "Returned solId from OCI - " << solId;
+    qDebug() << "===== Selected solution =====";
+    qDebug() << QString::fromStdString( ( *solIter )->description() );
+    qDebug() << "=============================";
+	    
+    todo.push_back( *solIter );
+}
+
+void Backend::resolve()
+{
+    ZYpp::Ptr zypp = ZypperUtils::zyppPtr();
+    
+    const ResolverProblemList & problems( zypp->resolver()->problems() );
+    ProblemSolutionList toTry;
+    
+    // list all the problems with solutions on the GUI
+    for ( const auto & probPtr : problems ) {
+	resolve( *probPtr, toTry );
+    }
+    
+    //apply solutions...
+    if ( !toTry.empty() ) {
+	qDebug() << "Apply selected solutions...";
+	zypp->resolver()->applySolutions( toTry );
+	qDebug() << "Dependencies solved";
+	return;
+    }
+    else 
+	throw "Solving dependencies failed: Giving up!";
 }
 
 void Backend::install() {}

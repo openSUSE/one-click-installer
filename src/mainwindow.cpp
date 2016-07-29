@@ -29,7 +29,8 @@ MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, boo
 {
     QDBusConnection sysBus = QDBusConnection::systemBus();
   
-    setStyleSheet("background-color : rgb(251,248,241);");
+    setStyleSheet(QString::fromUtf8("background-color : rgb(251,248,241);"));
+    
     setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
     setMinimumSize( 600, 400 );
 
@@ -116,14 +117,15 @@ MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, boo
     QObject::connect( m_firstScreen, SIGNAL( sizeUpdated( QString ) ), this, SLOT( updateSize( QString ) ) );
     QObject::connect( m_firstScreen, SIGNAL( packageListInstallableStateToggled( bool ) ), m_install, SLOT( setEnabled( bool ) ) );
 
-    // For Conflict Resolution
+    // Checking for Conflicts
     QObject::connect( m_backend, SIGNAL( checkForConflicts() ), this, SLOT( showCheckForConflictsProgress() ) );
     QObject::connect( m_backend, SIGNAL( checkForConflicts() ), m_header, SLOT( showCheckForConflictsHeader() ) );
-    QObject::connect( m_conflictContinueInstallation, SIGNAL( clicked() ), conflictResolutionScreen, SLOT( sendSolutionToOCIHelper() ) );
+    // Handling of Conflicts
+    QObject::connect( m_conflictContinueInstallation, SIGNAL( clicked() ), conflictResolutionScreen, SLOT( setSolutionID() ) );
     QObject::connect( m_conflictCancel, SIGNAL( clicked() ), conflictResolutionScreen, SLOT( cancelInstallation() ) );
-    
     sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "hasConflicts", m_header, SLOT( showConflictResolutionHeader() ) );
     sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "hasConflicts", this, SLOT( showConflictResolutionScreen() ) );
+    sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "noConflicts", m_header, SLOT( installationStarted() ) );
   
      /* For Installation 
      * QObject::connect( , SIGNAL( installationStarted() ), , SLOT( installationStarted() ) );

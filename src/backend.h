@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QString>
+#include "utils.h"
 #include "oci_interface.h"
 
 class Backend : public QObject
@@ -34,12 +35,18 @@ public:
 Q_SIGNALS:
     void hasConflicts();
     void displayProblemAndSolutions( QString, QString );
-    void noConflicts( int );
+    void noConflicts();
     
 public Q_SLOTS:
     void killBackend();
-
 private:
+    
+    /**
+     * Resolve package dependencies
+     */
+    void resolve();
+    void resolve( const ResolverProblem& problem, ProblemSolutionList& todo );
+    
     org::opensuse::oneclickinstaller *m_oci;
 };
 
