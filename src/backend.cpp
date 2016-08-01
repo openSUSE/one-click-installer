@@ -70,7 +70,6 @@ void Backend::resolveConflicts()
     if ( !ZypperUtils::resolveConflictsAndDependencies() ) {
 	emit hasConflicts();
 	qDebug() << "emitting hasConflicts!";
-	//emit displayProblemAndSolutions( "<b>Problem</b> fshufslis;jgijsdlihsdlh", {"dhds"} );
 	resolve();
 	return;
     }
@@ -93,7 +92,7 @@ void Backend::resolve( const ResolverProblem& problem )
 	solProposals.append( QString::fromStdString( solPtr->description() ) );
     }
     
-    // Emit signal displayProblemSolution( QString, QString ) - First string = problem, second string = solutions
+    // Emit signal displayProblemSolution( QString, QStringList ) - First string = problem, second stringlist = solutions
     emit displayProblemAndSolutions( problemStatement, solProposals );
 }
 
@@ -123,6 +122,7 @@ void Backend::resolve()
 {
     m_resolverProblemList = QList<ResolverProblem_Ptr>::fromStdList( m_zypp->resolver()->problems() );
     qDebug() << "size=======" << m_resolverProblemList.size();
+    m_solutionsToTry.clear();
     resolve( *m_resolverProblemList.takeFirst() );
 }
 
