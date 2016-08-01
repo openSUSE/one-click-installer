@@ -67,5 +67,5 @@ int main( int argc, char *argv[] )
     
     Backend *ptr = new Backend();
     
-    return 0;
+    return app.exec();
 }

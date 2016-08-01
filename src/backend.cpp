@@ -57,25 +57,34 @@ Backend::Backend()
     
     /******************************************* INSTALLATION *******************************************/
     // Step 1. Mark packages for installation
-    // Fixme: hardcoded installation package
+    //FIXME hardcoded installation
     ZypperUtils::markPackagesForInstallation( "http://download.videolan.org/SuSE/Tumbleweed/", "vlc" );
+    m_zypp = ZypperUtils::zyppPtr();
     
     // Step 2. Resolve package dependencies
-    while ( !ZypperUtils::resolveConflictsAndDependencies() ) {
+    resolveConflicts();
+}
+
+void Backend::resolveConflicts()
+{
+    if ( !ZypperUtils::resolveConflictsAndDependencies() ) {
 	emit hasConflicts();
 	qDebug() << "emitting hasConflicts!";
+	//emit displayProblemAndSolutions( "<b>Problem</b> fshufslis;jgijsdlihsdlh", {"dhds"} );
 	resolve();
+	return;
     }
+    
     // This is the point where there are no conflicts, or all conflicts have been solved
     emit noConflicts();
     
     // Step 3. Commit Changes
     ZypperUtils::commitChanges();
-    /***************************************************************************************************/
 }
 
-void Backend::resolve( const ResolverProblem& problem, ProblemSolutionList& todo )
+void Backend::resolve( const ResolverProblem& problem )
 {
+    m_currentProblem = problem;
     QString problemStatement( "<b>Problem:</b> " + QString::fromStdString( problem.description() ) );
     QStringList solProposals;
     
@@ -84,45 +93,37 @@ void Backend::resolve( const ResolverProblem& problem, ProblemSolutionList& todo
 	solProposals.append( QString::fromStdString( solPtr->description() ) );
     }
     
-    // Emit signal displayProblemSolution( QString, QStringList ) - First string = problem, second stringlist = solutions
+    // Emit signal displayProblemSolution( QString, QString ) - First string = problem, second string = solutions
     emit displayProblemAndSolutions( problemStatement, solProposals );
-    
-    // get the solutionID here
-    int solId;
-    while ( ( solId = m_oci->solutionID() ) == -1 );
-    
+}
+
+void Backend::applySolution( int solId )
+{
+    const ProblemSolutionList & solutions = m_currentProblem.solutions();
     ProblemSolutionList::const_iterator solIter = solutions.begin();
     std::advance( solIter, solId );
+    m_solutionsToTry.append( *solIter );
     
     qDebug() << "Returned solId from OCI - " << solId;
     qDebug() << "===== Selected solution =====";
     qDebug() << QString::fromStdString( ( *solIter )->description() );
     qDebug() << "=============================";
 	    
-    todo.push_back( *solIter );
+    if ( !m_resolverProblemList.isEmpty() )
+	resolve( *m_resolverProblemList.takeFirst() );
+    else {
+	qDebug() << "Apply selected solutions...";
+	m_zypp->resolver()->applySolutions( m_solutionsToTry.toStdList() );
+	qDebug() << "Dependencies solved";
+	resolveConflicts();
+    }
 }
 
 void Backend::resolve()
 {
-    ZYpp::Ptr zypp = ZypperUtils::zyppPtr();
-    
-    const ResolverProblemList & problems( zypp->resolver()->problems() );
-    ProblemSolutionList toTry;
-    
-    // list all the problems with solutions on the GUI
-    for ( const auto & probPtr : problems ) {
-	resolve( *probPtr, toTry );
-    }
-    
-    //apply solutions...
-    if ( !toTry.empty() ) {
-	qDebug() << "Apply selected solutions...";
-	zypp->resolver()->applySolutions( toTry );
-	qDebug() << "Dependencies solved";
-	return;
-    }
-    else 
-	throw "Solving dependencies failed: Giving up!";
+    m_resolverProblemList = QList<ResolverProblem_Ptr>::fromStdList( m_zypp->resolver()->problems() );
+    qDebug() << "size=======" << m_resolverProblemList.size();
+    resolve( *m_resolverProblemList.takeFirst() );
 }
 
 void Backend::install() {}

@@ -11,5 +11,8 @@
     </signal>
     <method name="killBackend">
     </method>
+    <method name="applySolution">
+      <arg type="i" direction="in"/>
+    </method>
   </interface>
 </node>

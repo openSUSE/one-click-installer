@@ -48,6 +48,7 @@ ConflictResolutionScreen::ConflictResolutionScreen()
    
     m_mainLayout = new QVBoxLayout;
     
+    //QObject::connect( m_ociHelper, SIGNAL( displayProblemAndSolutions( QString, QString ) ), this, SLOT( problemSolutionWidget( QString, QString ) ) );
     QDBusConnection sysBus = QDBusConnection::systemBus();
     if ( !sysBus.isConnected() ) {
 	qFatal( "Cannot connect to the D-Bus system bus" );
@@ -98,11 +99,6 @@ void ConflictResolutionScreen::cancelInstallation()
 {
     qDebug() << "cancelling installation";
     
-    m_ociHelper = new org::opensuse::OCIHelper("org.opensuse.OCIHelper", "/", QDBusConnection::systemBus(), this);
-    if ( !m_ociHelper->isValid() ) {
-	qFatal( "Oops! Cannot connect to the service org.opensuse.OCIHelper" );
-	exit( 1 );
-    }
     m_ociHelper->killBackend();
     qApp->quit();
 }
@@ -111,6 +107,13 @@ void ConflictResolutionScreen::setSolutionID()
 {
     m_solId = m_buttonGroup.checkedId();
     qDebug() << m_solId;
+    m_ociHelper = new org::opensuse::OCIHelper("org.opensuse.OCIHelper", "/", QDBusConnection::systemBus(), this);
+    if ( !m_ociHelper->isValid() ) {
+	qFatal( "Oops! Cannot connect to the service org.opensuse.OCIHelper" );
+	exit( 1 );
+    }
+    m_ociHelper->applySolution( m_solId );
+    
 }
 
 int ConflictResolutionScreen::solutionID()

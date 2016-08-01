@@ -23,7 +23,6 @@ private:
     QWidget *m_solutionWidget;
     QLabel *m_questionLabel;
     QButtonGroup m_buttonGroup;
-    
     int m_solId;
     org::opensuse::OCIHelper *m_ociHelper;
     

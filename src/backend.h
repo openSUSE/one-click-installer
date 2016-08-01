@@ -39,14 +39,20 @@ Q_SIGNALS:
     
 public Q_SLOTS:
     void killBackend();
+    void applySolution( int );
 private:
     
     /**
      * Resolve package dependencies
      */
     void resolve();
-    void resolve( const ResolverProblem& problem, ProblemSolutionList& todo );
+    void resolveConflicts();
+    void resolve( const ResolverProblem& problem );
     
+    ZYpp::Ptr m_zypp;
+    ResolverProblem m_currentProblem;
+    QList<ResolverProblem_Ptr> m_resolverProblemList;
+    QList<ProblemSolution_Ptr> m_solutionsToTry;
     org::opensuse::oneclickinstaller *m_oci;
 };
 
