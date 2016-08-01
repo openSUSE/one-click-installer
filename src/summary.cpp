@@ -57,7 +57,6 @@ Summary::Summary(PackageBackend *backend, const QString& tmpFileName, QObject *p
 void Summary::continueInstallation()
 {
     emit showNextScreen( 2 );
-    m_backend->setFileName( m_tmpFileName );
     m_backend->callBackendHelper();
 }
 

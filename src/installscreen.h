@@ -18,7 +18,6 @@
 #include <QFile>
 #include "packagebackend.h"
 #include "fakebackend.h"
-#include "clientdbus.h"
 
 class InstallScreen : public QWidget
 {

@@ -21,51 +21,26 @@
  *  Project: One Click Installer
  *  Mentors: Antonio Larrosa, and Cornelius Schumacher
  *  Organization: OpenSUSE
- *  Previous Contributor(s): Saurabh Sood
+ *  Previous Contributor: None
  ***********************************************************************************/
 
-#include <QCoreApplication>
-#include <QFile>
-#include <QDebug>
-#include <QTextStream>
-#include <QUrl>
-#include <QStringList>
-#include "backend.h"
+#include "backendoci.h"
+#include "utils.h"
 
-int main( int argc, char *argv[] )
+bool BackendOCI::exists(const QString& repoUrl)
 {
-    QCoreApplication app ( argc, argv );
-    qDebug() << "Helper Started";
-    if ( argc < 2 ) {
-	qDebug() << "Usage: ./oneclickhelper <File Path>";
-	return 1;
-    }
-    
-    QFile dataFile( argv[ 1 ] );
-    if( !dataFile.open( QIODevice::ReadOnly ) ) {
-        qDebug() << "Failed to open Data File";
-        return 1;
-    }
-    QTextStream inData( &dataFile );
+    return ZypperUtils::exists( repoUrl.toStdString() );
+}
 
-    /* Process the file and store repos and packages */ 
-    QString line;
-    do {
-        line = inData.readLine();
-        if( !line.isNull() ) {
-            if( line.at( 0 ) == 'R' ) {
-                QString repo = line.split( " " ).at( 1 );
-                qDebug() << repo;
-		//Backend::addRepository( repo ); -- just to get an idea. Don't take it literally :)
-            } else if( line.at( 0 ) == 'P' ) {
-                QString package = line.split( " " ).at( 1 );
-                qDebug() << package;
-                //Backend::addPackage( package );
-            }
-        }
-    } while( !line.isNull() );
+void BackendOCI::callBackendHelper()
+{
+    m_process = new QProcess;
     
-    Backend *ptr = new Backend();
+    QString command("xdg-su -u root -c \"/usr/sbin/oneclickhelper ");
+    command.append( m_tempFileName );
+    command.append( "\"" );
+    qDebug() << command;
     
-    return app.exec();
+    m_process->start( command );
+    emit checkForConflicts();	// Gui while OCIhelper checks for conflicts
 }

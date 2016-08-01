@@ -10,19 +10,14 @@ class PackageBackend : public QObject
     Q_OBJECT
     public:
     /**
-     	Adds the repository required to install the selected packages. This will be added to the system as installation and update repository
+     	Adds the repository required to install the selected packages.
      */
-    virtual void addRepository( const QUrl& url  );
+    virtual void addRepository( const QUrl& url );
 
     /**
     	Add the package to be installed
      */
     virtual void addPackage( const QString& package);
-
-    /**
-    	Resolve Conflicts that may arise out of selecting packages
-     */
-    virtual bool resolveConflicts();
 
     /**
      	Return the list of packages selected for installation
@@ -33,11 +28,6 @@ class PackageBackend : public QObject
     	Return the list of repositories to be added
      */
     virtual QList< QUrl > repositories(); 
-
-    /**
-    	Carry out the installation and adding of repositories
-     */
-    virtual void install() = 0;
 
     /**
         Call the Backend Helper
@@ -64,7 +54,6 @@ private:
     QList< QUrl > m_repositories;
 
     QString m_tmpFileName;
-
 signals:
     void installationStarted();
     void installationCompleted();

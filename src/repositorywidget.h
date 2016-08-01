@@ -18,7 +18,7 @@ public:
     /**
      * Construct widget with index, Repository Object and Backend object
      */
-    RepositoryWidget(PackageBackend *backend, int index, OCI::Repository *repo, QObject *parent = 0 );
+    RepositoryWidget( PackageBackend *backend, int index, OCI::Repository *repo, QObject *parent = 0 );
 
 private slots:
 
@@ -28,8 +28,7 @@ private slots:
     void showDetails( QString link );
 
 private:
-    PackageBackend *m_backend;
-
+   
     QLabel *m_name;
     QLabel *m_showDetails;
     QLabel *m_url;
@@ -40,11 +39,10 @@ private:
     QSettings m_settings;
 
     OCI::Repository *m_repo;
-
+    PackageBackend *m_backend;
     RepositoryMetadata *m_meta;
 
     bool m_visible;
-
     bool m_detailsVisible;
 };
 

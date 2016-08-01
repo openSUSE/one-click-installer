@@ -1,138 +1,138 @@
-//      Copyright 2012 Saurabh Sood <saurabh@saurabh.geeko>
-//      
-//      This program is free software; you can redistribute it and/or modify
-//      it under the terms of the GNU General Public License as published by
-//      the Free Software Foundation; either version 2 of the License, or
-//      (at your option) any later version.
-//      
-//      This program is distributed in the hope that it will be useful,
-//      but WITHOUT ANY WARRANTY; without even the implied warranty of
-//      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//      GNU General Public License for more details.
-//      
-//      You should have received a copy of the GNU General Public License
-//      along with this program; if not, write to the Free Software
-//      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-//      MA 02110-1301, USA.
-//      
-//     
- 
+/***********************************************************************************
+ *  One Click Installer makes it easy for users to install software, no matter
+ *  where that software is located.
+ *
+ *  Copyright (C) 2016  Shalom <shalomray7@gmail.com>
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ************************************************************************************
+ *  This program's developed as part of GSoC - 2016
+ *  Project: One Click Installer
+ *  Mentors: Antonio Larrosa, and Cornelius Schumacher
+ *  Organization: OpenSUSE
+ *  Previous Contributor(s): Saurabh Sood 
+ ***********************************************************************************/
+#include <QCoreApplication>
+#include <QDebug>
+#include <QDBusConnection>
 #include "backend.h"
-
-void Backend::install()
-{
-    addRepositories();
-
-    system( "zypper refresh" );
-
-    QString zypper_command = "2>&1 zypper -x -n in";
-    foreach( QString package, packages() ) {
-        zypper_command.append( QString( " %1" ).arg( package ) );
-    }
-
-    m_adaptor = new DBusAdaptor( this );
-    QDBusConnection connection = QDBusConnection::sessionBus();
-    connection.registerService( "org.opensuse.oneclickinstaller" );
-    connection.registerObject( "/", this );
-
-    zypper_command.append( " | grep -o --line-buffered \"percent=\\\"[0-9]*\\\"\" | " );
-    zypper_command.append( "while read line; do echo \"$line\" > /var/log/oneclick.log; echo \"$line\" > /var/log/oneclick.log; done" );
-
-    QProcess::execute( zypper_command.toStdString().c_str() );
-}
+#include "ocihelperadaptor.h"	//generated during build time
 
 Backend::Backend()
-{
-    m_manager = new zypp::RepoManager;
-    m_ptr = new zypp::ZYpp::Ptr;
-    m_keyRingManager = new zypp::KeyRingCallbacks;
-    m_errorCode = 0;
+{	
+    new OCIHelperAdaptor( this );
+    QDBusConnection connection = QDBusConnection::systemBus();
+    if ( !connection.isConnected() ) {
+	qFatal( "Cannot connect to the D-Bus system bus" );
+	exit( 1 );
+    }
+    connection.registerObject( "/", this );
+    if ( !connection.registerService( "org.opensuse.OCIHelper" ) ) {
+	qDebug() << qPrintable( connection.lastError().message() );
+	exit( 1 );
+    }
+
+    // Proxy for OCI
+    QDBusConnection sysBus = QDBusConnection::systemBus();
+    if ( !sysBus.isConnected() ) {
+	qFatal( "Cannot connect to the D-Bus system bus" );
+	exit( 1 );
+    }
+    m_oci = new org::opensuse::oneclickinstaller( "org.opensuse.oneclickinstaller", "/OCI", sysBus, this );
+    if ( !m_oci->isValid() ) {
+	qFatal( "Oops! Cannot connect to the service org.opensuse.oneclickinstaller" );
+	exit( 1 );
+    }
+    
+    /******************************************* INSTALLATION *******************************************/
+    // Step 1. Mark packages for installation
+    //FIXME hardcoded installation
+    ZypperUtils::markPackagesForInstallation( "http://download.videolan.org/SuSE/Tumbleweed/", "vlc" );
+    m_zypp = ZypperUtils::zyppPtr();
+    
+    // Step 2. Resolve package dependencies
+    resolveConflicts();
 }
 
-void Backend::addRepositories()
+void Backend::resolveConflicts()
 {
-    qDebug() << "add repos called";
+    if ( !ZypperUtils::resolveConflictsAndDependencies() ) {
+	emit hasConflicts();
+	qDebug() << "emitting hasConflicts!";
+	resolve();
+	return;
+    }
+    
+    // This is the point where there are no conflicts, or all conflicts have been solved
+    emit noConflicts();
+    
+    // Step 3. Commit Changes
+    ZypperUtils::commitChanges();
+}
 
-    foreach( QUrl iter, repositories() ) {
-        zypp::RepoInfo repoInfo;
-        std::string url = iter.toString().toStdString();
-        repoInfo.addBaseUrl( zypp::Url( url ) );
-        repoInfo.setAlias( url );
-        repoInfo.setGpgCheck( true );
+void Backend::resolve( const ResolverProblem& problem )
+{
+    m_currentProblem = problem;
+    QString problemStatement( "<b>Problem:</b> " + QString::fromStdString( problem.description() ) );
+    QStringList solProposals;
+    
+    const ProblemSolutionList & solutions = problem.solutions();
+    for ( const auto & solPtr : solutions ) {
+	solProposals.append( QString::fromStdString( solPtr->description() ) );
+    }
+    
+    // Emit signal displayProblemSolution( QString, QStringList ) - First string = problem, second stringlist = solutions
+    emit displayProblemAndSolutions( problemStatement, solProposals );
+}
 
-        zypp::KeyRing::setDefaultAccept( zypp::KeyRing::TRUST_AND_IMPORT_KEY );
-
-        if( !exists( QString::fromStdString( url ) ) ) {
-            try {
-                m_manager->addRepository( repoInfo );
-            } catch( zypp::repo::RepoMetadataException e ) {
-                m_errorCode = 4;
-            }
-            catch( zypp::repo::RepoException ) {
-                m_errorCode = 5;
-            }
-        }
-        else
-            qDebug() << "Repository Exists";
-//        m_manager->buildCache( repoInfo );
-//        m_manager->loadFromCache( repoInfo );
+void Backend::applySolution( int solId )
+{
+    const ProblemSolutionList & solutions = m_currentProblem.solutions();
+    ProblemSolutionList::const_iterator solIter = solutions.begin();
+    std::advance( solIter, solId );
+    m_solutionsToTry.append( *solIter );
+    
+    qDebug() << "Returned solId from OCI - " << solId;
+    qDebug() << "===== Selected solution =====";
+    qDebug() << QString::fromStdString( ( *solIter )->description() );
+    qDebug() << "=============================";
+	    
+    if ( !m_resolverProblemList.isEmpty() )
+	resolve( *m_resolverProblemList.takeFirst() );
+    else {
+	qDebug() << "Apply selected solutions...";
+	m_zypp->resolver()->applySolutions( m_solutionsToTry.toStdList() );
+	qDebug() << "Dependencies solved";
+	resolveConflicts();
     }
 }
 
-bool Backend::exists(const QString& repo )
+void Backend::resolve()
 {
-    qDebug() << "Parameter is " << repo;
-    std::list< zypp::RepoInfo > repoList = std::list< zypp::RepoInfo >( m_manager->repoBegin(), m_manager->repoEnd() );
-
-    for( std::list< zypp::RepoInfo >::iterator it = repoList.begin(); it != repoList.end(); it++ ){
-        //std::cout <<std::endl<<"Repo URL is " << it->url().asString();
-        if( repo.toStdString().compare( it->url().asString() ) == 0 ) {
-            qDebug() << "returning true";
-            return true;
-        }
-    }
-
-    qDebug() << "returning false";
-    return false;
+    m_resolverProblemList = QList<ResolverProblem_Ptr>::fromStdList( m_zypp->resolver()->problems() );
+    qDebug() << "size=======" << m_resolverProblemList.size();
+    m_solutionsToTry.clear();
+    resolve( *m_resolverProblemList.takeFirst() );
 }
 
-void Backend::callBackendHelper()
+void Backend::install() {}
+
+void Backend::addRepository() {}
+
+void Backend::addPackage() {}
+
+void Backend::killBackend()
 {
-    QString command( "xdg-su -u root -c \"/usr/sbin/oneclickhelper " );
-    command.append( getFileName() );
-    command.append( "\"" );
-//    qDebug() << system( command.toLocal8Bit().data() );
-    m_process = new QProcess;
-
-    QObject::connect( m_process, SIGNAL( finished( int) ), this, SLOT( finished( int ) ) );
-    QObject::connect( m_process, SIGNAL( started() ), this, SLOT(started()) );
-
-    m_process->start( command );
-}
-
-int Backend::errorCode()
-{
-    return m_errorCode;
-}
-
-void Backend::started()
-{
-    qDebug() << "helper started";
-    emit installationStarted();
-}
-
-void Backend::finished( int v )
-{
-    if( v != 0 ) {
-        qDebug() << "helper finished but failed";
-        emit installationFailed();
-    } else {
-        qDebug() << "helper finished successfully";
-        emit installationCompleted();
-    }
-}
-
-void Backend::KillBackend()
-{
-    system( "kill $(pgrep zypper)" );
+    QCoreApplication::quit();
 }

@@ -1,0 +1,18 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.opensuse.OCIHelper">
+    <signal name="hasConflicts">
+    </signal>
+    <signal name="displayProblemAndSolutions">
+      <arg type="s" direction="out"/>
+      <arg type="as" direction="out"/>
+    </signal>
+    <signal name="noConflicts">
+    </signal>
+    <method name="killBackend">
+    </method>
+    <method name="applySolution">
+      <arg type="i" direction="in"/>
+    </method>
+  </interface>
+</node>

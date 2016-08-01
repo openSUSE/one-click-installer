@@ -1,5 +1,5 @@
 #ifndef MAINWINDOW_H
-#define MAINWINDIW_H
+#define MAINWINDOW_H
 
 #include <QDialog>
 #include <QLabel>
@@ -16,7 +16,7 @@
 #include "installscreen.h"
 #include "fakebackend.h"
 #include "packagebackend.h"
-#include "backend.h"
+#include "backendoci.h"
 
 class MainWindow : public QDialog
 {
@@ -30,18 +30,20 @@ public:
 private:
     PackageBackend *m_backend;
     FirstScreen *m_firstScreen;
-    QString m_tmpFileName;
     MainHeader *m_header;
+    
     QStackedLayout *m_screenStack;
-
     QHBoxLayout *m_warningLayout;
-
+    QSettings m_settings;
+    
     QPushButton *m_showSettings;
     QPushButton *m_cancel;
     QPushButton *m_install;
+    QPushButton *m_conflictCancel;
+    QPushButton *m_conflictContinueInstallation;
 
-    QSettings m_settings;
-
+    
+    QString m_tmpFileName;
     bool m_fakeRequested;
 
 private slots:
@@ -70,7 +72,16 @@ private slots:
      * Update the size of packages
      */
     void updateSize(const QString& size );
-
+    
+    /** 
+     * Show Check for conflicts screen
+     */
+    void showCheckForConflictsProgress();
+    
+    /** 
+     * Show Conflict resolution screen
+     */
+    void showConflictResolutionScreen();
 signals:
     void countChanged( int repoCount, int packageCount );
 };

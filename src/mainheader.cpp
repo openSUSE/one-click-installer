@@ -57,6 +57,17 @@ void MainHeader::updateDetails( const QString& size )
     m_statusLabel->setText( i18ncp( "Third argument is the total size of all packages", "This installer will download and install %1 package from %2 source totalling %3", "This installer will download and install %1 packages from %2 source(s) totalling %3", m_packageCount, m_repoCount, sizeString) );
 }
 
+void MainHeader::showCheckForConflictsHeader()
+{
+    m_statusLabel->setText( i18n( "Checking for <b>Software Conflicts</b> and <b>Package Dependencies</b>. Please Wait" ) );
+}
+
+
+void MainHeader::showConflictResolutionHeader()
+{
+    m_icon->setPixmap( QPixmap( "/usr/share/icons/hicolor/32x32/apps/conflictIcon.png" ) );
+    m_statusLabel->setText( i18n( "<b>Oops!</b> There is a software conflict." ) );
+}
 void MainHeader::installationStarted()
 {
     m_statusLabel->setText( i18ncp("Decides which sentence to use based on number of packages","Downloading and Installing Package...", "Downloading and Installing Packages...", m_packageCount) );

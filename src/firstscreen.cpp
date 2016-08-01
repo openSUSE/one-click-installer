@@ -57,6 +57,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& tmpFileName, c
         ZypperUtils::initRepository(repo->url().toStdString());
         ++m_numOfRepositories;
         m_backend->addRepository( QUrl( repo->url() ) );
+        
         RepositoryWidget *repositoryDetails = new RepositoryWidget( m_backend, i, m_repos.at( i ) );
         mainLayout->addWidget( repositoryDetails );
         if( !m_backend->exists( repo->url() ) )
@@ -66,6 +67,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& tmpFileName, c
             ++m_numOfPackages;
             m_backend->addPackage( package->name() );
             mainLayout->addSpacing( -10 );
+            
             PackageDetails *packDetails = new PackageDetails( package, packageID++, m_packages.count() );
             QObject::connect( packDetails, SIGNAL( sizeUpdated( QString ) ), this, SIGNAL( sizeUpdated( QString ) ) );
             QObject::connect( packDetails, SIGNAL( installableStateToggled( bool ) ), this, SLOT( checkPackagesInstallableState() ) );

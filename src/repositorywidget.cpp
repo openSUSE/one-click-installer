@@ -28,7 +28,6 @@ RepositoryWidget::RepositoryWidget(PackageBackend *backend, int index, OCI::Repo
     m_settings.sync();
 
     m_backend = backend;
-
     m_repo = repo;
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
