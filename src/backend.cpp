@@ -57,6 +57,7 @@ Backend::Backend()
     
     /******************************************* INSTALLATION *******************************************/
     // Step 1. Mark packages for installation
+    // Fixme: hardcoded installation package
     ZypperUtils::markPackagesForInstallation( "http://download.videolan.org/SuSE/Tumbleweed/", "vlc" );
     
     // Step 2. Resolve package dependencies
@@ -76,16 +77,14 @@ Backend::Backend()
 void Backend::resolve( const ResolverProblem& problem, ProblemSolutionList& todo )
 {
     QString problemStatement( "<b>Problem:</b> " + QString::fromStdString( problem.description() ) );
-    QString solProposals("");
+    QStringList solProposals;
     
     const ProblemSolutionList & solutions = problem.solutions();
     for ( const auto & solPtr : solutions ) {
-	// "$" is the separator
-	solProposals.append( QString::fromStdString( solPtr->description() ) + "$" );
+	solProposals.append( QString::fromStdString( solPtr->description() ) );
     }
     
-    // Emit signal displayProblemSolution( QString, QString ) - First string = problem, second string = solutions
-    // Each solution is separated by a "$"
+    // Emit signal displayProblemSolution( QString, QStringList ) - First string = problem, second stringlist = solutions
     emit displayProblemAndSolutions( problemStatement, solProposals );
     
     // get the solutionID here

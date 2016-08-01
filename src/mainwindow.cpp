@@ -63,7 +63,7 @@ MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, boo
         m_backend = new FakeBackend( this );
         m_fakeRequested = true;
     } else {
-        m_backend = new BackendOCI( m_tmpFileName, (int)getuid() );
+        m_backend = new BackendOCI( m_tmpFileName );
         m_fakeRequested = false;
     }
 
@@ -117,10 +117,10 @@ MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, boo
     QObject::connect( m_firstScreen, SIGNAL( sizeUpdated( QString ) ), this, SLOT( updateSize( QString ) ) );
     QObject::connect( m_firstScreen, SIGNAL( packageListInstallableStateToggled( bool ) ), m_install, SLOT( setEnabled( bool ) ) );
 
-    // Checking for Conflicts
+    // For Conflict Resolution
     QObject::connect( m_backend, SIGNAL( checkForConflicts() ), this, SLOT( showCheckForConflictsProgress() ) );
     QObject::connect( m_backend, SIGNAL( checkForConflicts() ), m_header, SLOT( showCheckForConflictsHeader() ) );
-    // Handling of Conflicts
+    
     QObject::connect( m_conflictContinueInstallation, SIGNAL( clicked() ), conflictResolutionScreen, SLOT( setSolutionID() ) );
     QObject::connect( m_conflictCancel, SIGNAL( clicked() ), conflictResolutionScreen, SLOT( cancelInstallation() ) );
     sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "hasConflicts", m_header, SLOT( showConflictResolutionHeader() ) );

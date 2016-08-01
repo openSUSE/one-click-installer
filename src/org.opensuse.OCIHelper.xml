@@ -5,7 +5,7 @@
     </signal>
     <signal name="displayProblemAndSolutions">
       <arg type="s" direction="out"/>
-      <arg type="s" direction="out"/>
+      <arg type="as" direction="out"/>
     </signal>
     <signal name="noConflicts">
     </signal>

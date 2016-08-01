@@ -27,12 +27,6 @@
 #include "backendoci.h"
 #include "utils.h"
 
-BackendOCI::BackendOCI(QString tempFileName, int ociID)
-{
-    m_tempFileName = tempFileName;
-    m_ociID = ociID;
-}
-
 bool BackendOCI::exists(const QString& repoUrl)
 {
     return ZypperUtils::exists( repoUrl.toStdString() );
@@ -44,7 +38,6 @@ void BackendOCI::callBackendHelper()
     
     QString command("xdg-su -u root -c \"/usr/sbin/oneclickhelper ");
     command.append( m_tempFileName );
-    //command.append( QString::number( m_ociID ) ); Not needed :)
     command.append( "\"" );
     qDebug() << command;
     

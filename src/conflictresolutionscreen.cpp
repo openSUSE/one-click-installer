@@ -48,18 +48,17 @@ ConflictResolutionScreen::ConflictResolutionScreen()
    
     m_mainLayout = new QVBoxLayout;
     
-    //QObject::connect( m_ociHelper, SIGNAL( displayProblemAndSolutions( QString, QString ) ), this, SLOT( problemSolutionWidget( QString, QString ) ) );
     QDBusConnection sysBus = QDBusConnection::systemBus();
     if ( !sysBus.isConnected() ) {
 	qFatal( "Cannot connect to the D-Bus system bus" );
 	exit( 1 );
     }
-    sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "displayProblemAndSolutions", this, SLOT( problemSolutionWidget( QString, QString ) ) );
+    sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "displayProblemAndSolutions", this, SLOT( problemSolutionWidget( QString, QStringList ) ) );
    
     setLayout ( m_mainLayout );
 }
 
-void ConflictResolutionScreen::problemSolutionWidget( QString probDescription, QString solutions )
+void ConflictResolutionScreen::problemSolutionWidget( QString probDescription, QStringList solutions )
 {
     m_solId = -1;
     if ( m_solutionWidget != NULL && m_questionLabel != NULL ) {
@@ -78,13 +77,15 @@ void ConflictResolutionScreen::problemSolutionWidget( QString probDescription, Q
     QVBoxLayout *solutionLayout = new QVBoxLayout( solutionWidget );
     solutionLayout->setSpacing( 0 );
     
-    for ( QString solution : solutions.split( "$", QString::SkipEmptyParts) ) {
+    int radioId = 0;
+    for ( QString solution : solutions ) {
 	QRadioButton *sol = new QRadioButton( solution );
+	m_buttonGroup.addButton( sol, radioId++ );
 	sol->setStyleSheet( "padding-left: 40px;" );
 	solutionLayout->addWidget( sol );
 	solutionLayout->setSpacing( 10 );
     }
-    
+        
     m_questionLabel = questionLabel;
     m_solutionWidget = solutionWidget;
     m_mainLayout->addWidget( questionLabel );
@@ -108,28 +109,8 @@ void ConflictResolutionScreen::cancelInstallation()
 
 void ConflictResolutionScreen::setSolutionID()
 {
-    /*
-     * Get the main layout  QLayout *layout = QWidget::layout();
-     * Access its children (especially solutionWidget)
-     * Check if QRadioButton is checked - by default it'll be the first one 
-     * Figure something out to uniquely identify the solution (like id number may be)
-     * send it to OCIHelper
-     * 
-     * This is similar to what we've done to disable Install Button when no packages
-     * are selected.
-     */
-    qDebug() << " in sendSolutionToOCIHelper ";
-    QList< QRadioButton* > list = m_solutionWidget->findChildren< QRadioButton* >();
-    for ( int i = 0; i < list.size(); i++ ) {
-	QRadioButton *button = list.at( i );
-	if( !button )
-	    continue;
-	qDebug() << i ;
-	if ( button->isChecked() ) {
-	    //emit solutionNumber( i );
-	    m_solId = i;
-	}
-    }
+    m_solId = m_buttonGroup.checkedId();
+    qDebug() << m_solId;
 }
 
 int ConflictResolutionScreen::solutionID()

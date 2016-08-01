@@ -15,8 +15,13 @@ public:
     /**
         Default Constructor
      */
-    BackendOCI( QString tempFileName, int ociID );
+    BackendOCI( QString tempFileName ) : m_process( 0L ), m_tempFileName( tempFileName )
+    {}
 
+    /**
+     * Dtor
+     */
+    ~BackendOCI() { delete m_process; }
     /**
         Call the Backend Helper
      */
@@ -32,7 +37,6 @@ signals:
     void checkForConflicts();
 private:
     QProcess *m_process;
-    int m_ociID;
     QString m_tempFileName;
 };
 

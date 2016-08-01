@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <QButtonGroup>
 #include "oci_helper_interface.h"
 
 class ConflictResolutionScreen : public QWidget
@@ -21,12 +22,13 @@ private:
     QPushButton *m_continueInstallation;
     QWidget *m_solutionWidget;
     QLabel *m_questionLabel;
+    QButtonGroup m_buttonGroup;
     
     int m_solId;
     org::opensuse::OCIHelper *m_ociHelper;
     
 private slots:
-    void problemSolutionWidget( QString problem, QString solutions );
+    void problemSolutionWidget( QString problem, QStringList solutions );
     void cancelInstallation();
     void setSolutionID();
 public Q_SLOTS:

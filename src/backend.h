@@ -34,7 +34,7 @@ public:
     
 Q_SIGNALS:
     void hasConflicts();
-    void displayProblemAndSolutions( QString, QString );
+    void displayProblemAndSolutions( QString, QStringList );
     void noConflicts();
     
 public Q_SLOTS:
