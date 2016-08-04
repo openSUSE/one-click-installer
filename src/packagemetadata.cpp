@@ -33,6 +33,7 @@ PackageMetadata::PackageMetadata()
 
 void PackageMetadata::getData( const QString& packageName )
 {
+<<<<<<< HEAD
     PoolItem packageObj = ZypperUtils::queryMetadataForPackage(packageName.toStdString());
     if (!packageObj) {
       qDebug() << "Package Not found";
@@ -41,6 +42,12 @@ void PackageMetadata::getData( const QString& packageName )
     }
     m_version = QString::fromStdString(packageObj.edition().asString());
     m_size = QString::fromStdString(packageObj.installSize().asString());
+=======
+    Info packageInfo = ZyppInfo::queryMetadataForPackage( packageName.toStdString() );
+    
+    m_version = QString::fromStdString( packageInfo.version() );
+    m_size = QString::fromStdString( packageInfo.installedSizeAsString() );
+>>>>>>> d5da3c3... Introduced two methods installedSize() and installedSizeAsString() in zyppinfo.h
     
     // We use QMetaObject::invokeMethod to queue the call until the finished() signal is connected
     // by the parent object later on in the code. Please, don't replace it with a direct call to
