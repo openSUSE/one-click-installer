@@ -63,7 +63,7 @@ Info ZyppInfo::packageObject( const PoolQuery& q )
 	packageInfo.setVersion( mainObject.edition().asString() );
 	packageInfo.setArch( mainObject.arch().asString() );
 	packageInfo.setVendor( mainObject.vendor().asString() );
-	packageInfo.setInstalled( isInstalled( (bool)installedObject ) );
+	packageInfo.setInstalled( (bool)installedObject );
 	packageInfo.setInstalledSize( mainObject.installSize().asString() );
 	
 	// set status
@@ -87,9 +87,4 @@ Info ZyppInfo::packageObject( const PoolQuery& q )
 KeyRingReceive ZyppInfo::keyReport()
 {
     return ZypperUtils::keyReport();
-}
-
-const string ZyppInfo::isInstalled(bool value)
-{
-    return value ? "Yes" : "No";
 }
