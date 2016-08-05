@@ -8,6 +8,7 @@
 #include <zypp/ResPool.h>
 #include <zypp/PoolQuery.h>
 #include <zypp/base/Easy.h>
+#include <zypp/ByteCount.h>
 #include "utils.h"
 
 class Info 
@@ -19,8 +20,7 @@ private:
     string m_arch;
     string m_vendor;
     string m_status;
-    string m_installedSizeStr;
-    unsigned long long m_installedSize;
+    ByteCount m_installedSize;
     bool m_installed;
 public:
     string repository() { return m_repositoryName; }
@@ -30,8 +30,8 @@ public:
     string vendor() { return m_vendor; }
     bool isInstalled() { return m_installed; }
     string status() { return m_status; }
-    string installedSizeAsString() { return m_installedSizeStr; }
-    unsigned long long installedSize() { return m_installedSize; }
+    string installedSizeAsString() { return m_installedSize.toString(); }
+    unsigned long long installedSize() { return (unsigned long long)m_installedSize; }
 
     void setRepositoryName( const string& repository ) { m_repositoryName = repository; }
     void setPackageName( const string& packageName ) { m_packageName = packageName; }
@@ -40,8 +40,7 @@ public:
     void setVendor( const string& vendor ) { m_vendor = vendor; }
     void setInstalled( bool Instflag ) { m_installed = Instflag; }
     void setStatus( const string& status ) { m_status = status; }
-    void setInstalledSizeStr( const string& installedSizeStr ) { m_installedSizeStr = installedSizeStr; }
-    void setInstalledSize( unsigned long long installedSize ) { m_installedSize = installedSize; }
+    void setInstalledSize( const ByteCount& count ) { m_installedSize = count; }
 };
 
 class ZyppInfo

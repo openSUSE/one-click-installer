@@ -24,7 +24,6 @@
  *  Previous Contributor: None
  ***********************************************************************************/
 
-#include <zypp/ByteCount.h>
 #include "zyppinfo.h"
 
 Info ZyppInfo::queryMetadataForPackage( const string& packageName )
@@ -65,11 +64,8 @@ Info ZyppInfo::packageObject( const PoolQuery& q )
 	packageInfo.setArch( mainObject.arch().asString() );
 	packageInfo.setVendor( mainObject.vendor().asString() );
 	packageInfo.setInstalled( (bool)installedObject );
+	packageInfo.setInstalledSize( mainObject.installSize() );
 	
-	// set InstalledSize
-	ByteCount count = mainObject.installSize();
-	packageInfo.setInstalledSize( (unsigned long long)count );
-	packageInfo.setInstalledSizeStr( count.asString() );
 	
 	// set status
 	string status;
