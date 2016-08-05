@@ -30,7 +30,7 @@ public:
     string vendor() { return m_vendor; }
     bool isInstalled() { return m_installed; }
     string status() { return m_status; }
-    string installedSizeAsString() { return m_installedSize.toString(); }
+    string installedSizeAsString() { return m_installedSize.asString(); }
     unsigned long long installedSize() { return (unsigned long long)m_installedSize; }
 
     void setRepositoryName( const string& repository ) { m_repositoryName = repository; }
