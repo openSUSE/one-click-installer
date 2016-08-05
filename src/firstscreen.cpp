@@ -57,7 +57,11 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& tmpFileName, c
         ZypperUtils::initRepository(repo->url().toStdString());
         ++m_numOfRepositories;
         m_backend->addRepository( QUrl( repo->url() ) );
-        
+	
+	// Write the name and the url of a repo to the temporary file - needed by OCIHelper
+        outData << "N " << repo->name() << "\n";
+	outData << "R " << repo->url() << "\n";
+	
         RepositoryWidget *repositoryDetails = new RepositoryWidget( m_backend, i, m_repos.at( i ) );
         mainLayout->addWidget( repositoryDetails );
         if( !m_backend->exists( repo->url() ) )
@@ -67,7 +71,10 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& tmpFileName, c
             ++m_numOfPackages;
             m_backend->addPackage( package->name() );
             mainLayout->addSpacing( -10 );
-            
+	    
+	    // Write the package name to the temporary file - needed by OCIHelper
+            outData << "P " << package->name() << "\n";
+	    
             PackageDetails *packDetails = new PackageDetails( package, packageID++, m_packages.count() );
             QObject::connect( packDetails, SIGNAL( sizeUpdated( QString ) ), this, SIGNAL( sizeUpdated( QString ) ) );
             QObject::connect( packDetails, SIGNAL( installableStateToggled( bool ) ), this, SLOT( checkPackagesInstallableState() ) );
@@ -85,13 +92,6 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& tmpFileName, c
         mainLayout->addWidget( m_warning );
     }
 
-    foreach( QUrl iter, m_backend->repositories()) {
-        outData << "R " << iter.toString() << "\n";
-    }
-
-    foreach( QString iter, m_backend->packages() ) {
-        outData << "P " << iter << "\n";
-    }
     dataFile.close();
 }
 

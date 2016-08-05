@@ -31,6 +31,7 @@
 #include <QUrl>
 #include <QStringList>
 #include "backend.h"
+#include "utils.h"
 
 int main( int argc, char *argv[] )
 {
@@ -41,6 +42,9 @@ int main( int argc, char *argv[] )
 	return 1;
     }
     
+    // Reset RepoManager. This step is necessary to run the manager with root privileges
+    ZypperUtils::resetRepoManager( Pathname( "/" ) );
+    
     QFile dataFile( argv[ 1 ] );
     if( !dataFile.open( QIODevice::ReadOnly ) ) {
         qDebug() << "Failed to open Data File";
@@ -48,19 +52,23 @@ int main( int argc, char *argv[] )
     }
     QTextStream inData( &dataFile );
 
-    /* Process the file and store repos and packages */ 
+    /* Process the file and add repos to the system and store packages in a QList */ 
+    QString repoAlias;
     QString line;
     do {
         line = inData.readLine();
         if( !line.isNull() ) {
-            if( line.at( 0 ) == 'R' ) {
+	    if (line.at( 0 ) == 'N' ) {
+		repoAlias = line.split( " " ).at( 1 );
+		repoAlias.append( "-repo" );
+	    } else if( line.at( 0 ) == 'R' ) {
                 QString repo = line.split( " " ).at( 1 );
                 qDebug() << repo;
-		//Backend::addRepository( repo ); -- just to get an idea. Don't take it literally :)
+		ZypperUtils::addRepository( repo.toStdString(), repoAlias.toStdString() );  // Add repo listed in .ymp file to the system repos
             } else if( line.at( 0 ) == 'P' ) {
                 QString package = line.split( " " ).at( 1 );
                 qDebug() << package;
-                //Backend::addPackage( package );
+                Backend::addPackage( package );
             }
         }
     } while( !line.isNull() );

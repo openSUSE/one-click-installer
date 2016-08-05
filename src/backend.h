@@ -2,8 +2,9 @@
 #define BACKEND_H
 
 #include <QObject>
+#include <QList>
 #include <QString>
-#include "utils.h"
+#include "zyppinstall.h"
 #include "oci_interface.h"
 
 class Backend : public QObject
@@ -18,20 +19,14 @@ public:
     Backend();
 
     /**
-        Function to perform installation
+     * Starts the installation process
      */
     void install();
-
-    /**
-        Add Repositories
-     */
-    static void addRepository();
-
-    /**
-     * Add packages
-     */
-    static void addPackage();
     
+    /**
+     * Add package 
+     */
+    static void addPackage( const QString& package );
 Q_SIGNALS:
     void hasConflicts();
     void displayProblemAndSolutions( QString, QStringList );
@@ -54,6 +49,8 @@ private:
     QList<ResolverProblem_Ptr> m_resolverProblemList;
     QList<ProblemSolution_Ptr> m_solutionsToTry;
     org::opensuse::oneclickinstaller *m_oci;
+        
+    static QStringList s_packages;
 };
 
 #endif
