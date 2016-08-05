@@ -38,7 +38,7 @@ int main( int argc, char *argv[] )
     QCoreApplication app ( argc, argv );
     qDebug() << "Helper Started";
     if ( argc < 2 ) {
-	qDebug() << "Usage: ./oneclickhelper <File Path> <Repository Name>";
+	qDebug() << "Usage: ./oneclickhelper <File Path>";
 	return 1;
     }
     
