@@ -38,7 +38,6 @@
 scoped_ptr<RepoManager> ZypperUtils::s_repoManager( new RepoManager( Pathname( "/tmp" ) ) );
 RepoInfo ZypperUtils::s_repoInfo;
 KeyRingReceive ZypperUtils::s_keyReceiveReport;
-ZYpp::Ptr ZypperUtils::s_zypp;
 
 //Methods
 /************************************* HELPER FUNCTIONS **************************************/
@@ -46,7 +45,7 @@ void ZypperUtils::initRepository( const string& repoUrl )
 {
     //KeyRing - Handling of gpg keys
     s_keyReceiveReport.connect();
-    initRepoManager( repoUrl );
+    addRepository( repoUrl );
     //TRUST_KEY_TEMPORARILY - we need only the key information 
     KeyRing::setDefaultAccept( KeyRing::TRUST_KEY_TEMPORARILY );
     cout << "TRUST_KEY_TEMPORARILY accepted" << endl;
@@ -87,7 +86,7 @@ void ZypperUtils::refreshRepoManager()
     s_repoManager->buildCache( s_repoInfo );
 }
 
-void ZypperUtils::initRepoManager( const string& repoUrl, const string& repoAlias )
+void ZypperUtils::addRepository( const string& repoUrl, const string& repoAlias )
 {
     initRepoInfo( repoUrl, repoAlias );   
     // Add it to the repoManager if not already present
@@ -111,38 +110,10 @@ bool ZypperUtils::exists(const string& repoUrl)
     return false;
 }
 
-/************************************* ZYPPER INFO **************************************/
-PoolItem ZypperUtils::queryMetadataForPackage( const string& packageName )
-{
-    PoolQuery q;
-    q.addKind( ResKind::package );
-    q.addAttribute( sat::SolvAttr::name, packageName );
-    q.setMatchExact();
-
-    return packageObject( q );
-}
-  
-PoolItem ZypperUtils::packageObject( const PoolQuery& q )
-{
-    PoolItem item;
-    for_( it, q.selectableBegin(), q.selectableEnd() ) {
-	const ui::Selectable& s =  *(*it);   
-	// An update candidate object is better than any installed object
-	PoolItem updateObject( s.updateCandidateObj() );
-	if ( updateObject )
-	    item = updateObject;
-	else
-	    item = s.installedObj();
-    }
-    return item;
-}
-
 KeyRingReceive ZypperUtils::keyReport()
 {
     return s_keyReceiveReport;
 }
-
-/************************************* ZYPPER INSTALL ************************************/
 
 void ZypperUtils::initSystemRepos()
 {
@@ -157,7 +128,7 @@ void ZypperUtils::initSystemRepos()
 	    continue;
 	bool refreshNeeded = false;
 	if ( repo.autorefresh() )  { // test whether to autorefresh repo metadata
-	    for (const Url& url : repo.baseUrls() ) {
+	    for ( const Url& url : repo.baseUrls() ) {
 		try {
 		    if (s_repoManager->checkIfToRefreshMetadata( repo, url ) == RepoManager::REFRESH_NEEDED ) {
 			cout << "Need to autorefresh repository " << repo.alias() << endl;
@@ -165,7 +136,7 @@ void ZypperUtils::initSystemRepos()
 		    }
 		    break;	// exit after first successful checkIfToRefreshMetadata
 		}
-		catch (const Exception& exp) {} // Url failed, try next one
+		catch ( const Exception& exp ) {} // Url failed, try next one
 	    }	  
 	}
 	
@@ -192,81 +163,13 @@ void ZypperUtils::initSystemRepos()
     }
 }
 
-void ZypperUtils::markPackagesForInstallation( const string& repoUrl, const string& packageName )
-{
-    Pathname sysRoot( "/" );
-    string repoAlias = packageName + "-repo";
-    // acquire initial zypp lock
-    s_zypp = getZYpp(); 
-    
-    makeNecessaryChangesToRunAsRoot( sysRoot );
-    initTarget( sysRoot );
-    initRepoManager( repoUrl, repoAlias ); // Add repo listed in .ymp file to the system repos
-    initSystemRepos(); // Load system repos into ResPool to resolve missing dependencies
-    
-    // select/specify package(s) to install
-    PoolQuery q;
-    q.addKind( ResKind::package );
-    q.addAttribute( sat::SolvAttr::name, packageName );
-    q.setMatchExact();
-    
-    PoolItemBest bestMatches(q.begin(), q.end());    
-    if ( !bestMatches.empty() ) {
-	for_( it, bestMatches.begin(), bestMatches.end() ) {
-	    ui::asSelectable()( *it )->setOnSystem( *it, ResStatus::USER );
-	}
-    }
-    cout << s_zypp->pool() << endl;   
-    cout << "=====================[ pool ready ]=============================" << endl;
-}
-
-bool ZypperUtils::resolveConflictsAndDependencies()
-{
-    // Solve Selection
-    cout << "Solving dependencies..." << endl;
-    return s_zypp->resolver()->resolvePool();
-}
-
-bool ZypperUtils::commitChanges()
-{
-    // Commit the changes 
-    // Please note that dryRunFlag and zypp::DownloadOnly are for now
-    cout << "Committing the changes" << endl;
-    bool dryRunFlag = false;
-    ZYppCommitPolicy policy;
-    if ( !dryRunFlag ) {
-	policy.dryRun( true );
-	dryRunFlag = true;
-    }
-    policy.downloadMode( zypp::DownloadOnly );
-    
-    try {
-	ZYppCommitResult result = s_zypp->commit( policy );
-	if ( !( result.allDone() || (dryRunFlag && result.noError() ) ) )
-	    throw "Incomplete Commit";
-	cout << "Commit Succeeded" << endl;
-    }
-    catch ( const Exception& exp ) {
-	cout << "Commit aborted with exception" << endl;
-	throw;	
-    }
-}
-
-void ZypperUtils::initTarget( const Pathname& sysRoot )
-{
-    cout << "Initializing target at " << sysRoot << endl;
-    s_zypp->initializeTarget( sysRoot ); //initialize target
-    cout << "Loading target resolvables" << endl;
-    s_zypp->getTarget()->load(); // load installed packages to pool
-}
-
-void ZypperUtils::makeNecessaryChangesToRunAsRoot( const Pathname& sysRoot )
+void ZypperUtils::resetRepoManager( const Pathname& sysRoot )
 {
     /* Need to remove temporary PoolItems (loaded into pool when querying package information (metadata))
      * from the ResPool to avoid unnecessary conflicts.
      * 
      * The following code snippet does the work but needs refinement
-     * if ( s_zypp->pool().empty() ) {
+     * if ( !s_zypp->pool().empty() ) {
      * 	   Repository repo = s_zypp->pool().reposFind( "temp" );
      *     repo.eraseFromPool();
      * }
@@ -285,9 +188,4 @@ void ZypperUtils::makeNecessaryChangesToRunAsRoot( const Pathname& sysRoot )
 	cout << "Oops! Failed to init repo manager" << endl;
 	throw;
     }
-}
-
-ZYpp::Ptr ZypperUtils::zyppPtr()
-{
-    return s_zypp;
 }

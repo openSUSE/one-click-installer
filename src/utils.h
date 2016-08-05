@@ -8,7 +8,6 @@
 #include <zypp/RepoInfo.h>
 #include <zypp/PoolItem.h>
 #include <zypp/PoolQuery.h>
-#include <zypp/ZYpp.h>
 #include <boost/scoped_ptr.hpp>
 #include "keyring.h"
 
@@ -22,9 +21,6 @@ private:
   static scoped_ptr<RepoManager> s_repoManager;
   static RepoInfo s_repoInfo;
   static KeyRingReceive s_keyReceiveReport;
-  
-  static ZYpp::Ptr s_zypp;
-  
 public:
   /**
    * Initialize Repositories 
@@ -43,62 +39,28 @@ public:
   static void initRepoInfo( const string& repoUrl, const string& packageName );
   
   /**
-   * Intialize RepoManager
+   * Add repository
    */
-  static void initRepoManager( const string& repoUrl, const string& packageName = "temp" );
+  static void addRepository( const string& repoUrl, const string& repoAlias = "temp" );
   
    /**
    * Return true if repository exists
    */
   static bool exists( const string& repoUrl );
  
-  /*********************************** ZYPPER INFO ***********************************/
-  /**
-   * Executes query to obtain meta-data 
-   */
-  static PoolItem queryMetadataForPackage( const string& packageName );
-  
-  /**
-   * Returns PoolItem object to the user to display various attributes of a package
-   */
-  static PoolItem packageObject( const PoolQuery& q );
-  
   /**
    * Returns KeyRing report
    */
   static KeyRingReceive keyReport();
   
-  /********************************* ZYPPER INSTALL **********************************/
- 
   /**
-   * Marks packages for installation in pool
+   * Load System repos 
    */
-  static void markPackagesForInstallation( const string& repoUrl, const string& packageName );
+  static void initSystemRepos();  
   
   /**
-   * Resolves conflicts and dependencies. Returns true on success and false if problems exist
+   * Reset RepoManager
    */
-  static bool resolveConflictsAndDependencies();
-  
-  /**
-   * Commits changes to the system
-   */
-  static bool commitChanges();
- 
-  /**
-   * Initialize Target - Loads installed packages to pool
-   */
-  static void initTarget( const Pathname& sysRoot ); 
-  
-  /**
-   * Returns ZYpp::Ptr
-   */
-  static ZYpp::Ptr zyppPtr();
-  
-  static void initSystemRepos();
-  
-private:
-  static void makeNecessaryChangesToRunAsRoot( const Pathname& sysRoot );
-  
+  static void resetRepoManager( const Pathname& sysRoot );
 };
 #endif
