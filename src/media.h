@@ -134,6 +134,111 @@ namespace OCICallbacks
 			   const string& description,
 			   media::AuthData* authData );
   };
+  
+  // progress for downloading a resolvable
+  class DownloadResolvableReportReceiver: public callback::ReceiveReport<repo::DownloadResolvableReport>
+  {
+  private:
+      Resolvable::constPtr m_resolvablePtr;
+      Url m_url;
+      Pathname m_delta;
+      ByteCount m_deltaSize;
+      string m_labelApplyDelta;
+      Pathname m_patch;
+      ByteCount m_patchSize;
+      unsigned m_packageCurrent;
+      
+  public:
+      /**
+       * Dowmload delta rpm:
+       *	 - path below url reported on start()
+       *	 - expected download size (0 if unknown)
+       *	 - download is interruptable
+       *	 - problems are just informal
+       */
+      virtual void startDeltaDownload( const Pathname& fileName, const ByteCount& downloadSize )
+      {
+	  m_delta = fileName;
+	  m_deltaSize = downloadSize;
+	  cout << "Retrieving delta: " << m_delta << ", " << m_deltaSize << endl;
+      }
+      
+      virtual void problemDeltaDownload( const string& description )
+      {
+	  cout << description << endl;
+      }
+      
+      /**
+       * Apply delta rpm:
+       *	 - local path of downloaded delta
+       *	 - aplpy is not interruptable
+       *	 - problems are just informal
+       */
+      virtual void startDeltaApply( const Pathname& filename )
+      {
+	  m_delta = filename.basename();
+	  m_labelApplyDelta = m_delta.asString();
+	  cout << "Applying Delta: " << m_delta;
+      }
+      
+      virtual void progressDeltaApply( int value )
+      {
+	  cout << m_labelApplyDelta << " " << value << endl;
+      }
+      
+      virtual void problemDeltaApply( const string& description )
+      {
+	  cout << description;
+      }
+      
+      virtual void finishDeltaApply()
+      {
+	  cout << "finished applying " << m_labelApplyDelta;
+      }
+      
+      virtual void start( Resolvable::constPtr resolvablePtr, const Url& url)
+      {
+	  m_resolvablePtr = resolvablePtr;
+	  m_url = url;
+	  m_packageCurrent = 0;
+	  Package::constPtr currentPackage = asKind<Package>( m_resolvablePtr );
+	  
+	  // Complete information for a GUI object to present it to the user
+	  // emitted each time a new resolvable is being downloaded.
+	  // Equivalent zypper output is as follows - 
+	  // Output: Retrieving package gnome-video-effects-0.4.1-3.9.noarch  (1/39),  67.3 KiB (192.6 KiB unpacked)
+	  
+	  /*emit resolvableData( m_resolvablePtr->name(),
+			       m_resolvablePtr->kind().asString(),			       
+			       m_resolvablePtr->edition().asString(),
+			       m_resolvablePtr->arch().asString(),
+			       ++m_packageCurrent,
+			       currentPackage->downloadSize().asString(),
+			       currentPackage->installSize().asString()); */
+	  
+	  // An rpm_download flag for OCIHelper? Awesome design by zypper programmers :)
+	  // OCIHelper.runtimeData().rpm_download = true;	  
+      }
+      
+      // Not needed. The progress will be reported by the DownloadProgressReportReceiver's progress method
+      // virtual bool progress( int value, Resolvable::constPtr resolvablePtr ) { return true; }
+      
+      virtual Action problem( Resolvable::constPtr resolvablePtr, Error error, const string& description )
+      {
+	  cout << "error report" << endl;
+	  // emit( error, description );
+	  // set the rpm_download flag false
+	  // OCIHelper::instance()->runtimeData().rpm_download = false;
+	  return (Action) DownloadResolvableReport::ABORT;
+      }
+      
+      // Detail information about the result of a performed pkgGpgCheck.
+      // Not really needed unless you say otherwise. :)
+      // virtual void pkgGpgCheck( const UserData& userData )  { }
+      
+      // Not needed as DownloadProgressReportReceiver is handling the progress.
+      // virtual void finish( Resolvable::constPtr /* resolvablePtr */, Error error, const string& reason ) {}
+  };
 } // namespace OCICallbacks
 
 class MediaCallbacks
