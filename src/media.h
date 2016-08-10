@@ -150,7 +150,7 @@ namespace OCICallbacks
       
   public:
       /**
-       * Dowmload delta rpm:
+       * Download delta rpm:
        *	 - path below url reported on start()
        *	 - expected download size (0 if unknown)
        *	 - download is interruptable
@@ -171,7 +171,7 @@ namespace OCICallbacks
       /**
        * Apply delta rpm:
        *	 - local path of downloaded delta
-       *	 - aplpy is not interruptable
+       *	 - apply is not interruptable
        *	 - problems are just informal
        */
       virtual void startDeltaApply( const Pathname& filename )
@@ -239,6 +239,30 @@ namespace OCICallbacks
       // Not needed as DownloadProgressReportReceiver is handling the progress.
       // virtual void finish( Resolvable::constPtr /* resolvablePtr */, Error error, const string& reason ) {}
   };
+  
+  // This is not needed for now - just keeping it around for future use
+  class ProgressReportReceiver : public callback::ReceiveReport<ProgressReport>
+  {
+  public:
+      virtual void start( const ProgressData& data )
+      {
+	  cout << "=========================" << endl;
+	  cout << "Object Numeric Id: " << data.numericId() << endl;
+	  cout << "Counter Name: " << data.name() << endl;
+	  cout << "Report Alive: " << data.reportAlive() << endl;
+	  cout << "=========================" << endl;
+      }
+      
+      virtual bool progress( const ProgressData& data )
+      {
+	  cout << "In ProgressReportReceiver progress() ";
+	  if (data.reportAlive())
+	    cout << data.numericId() << data.name();
+	  else
+            cout << data.numericId() << " " << data.name() << " " << data.val();
+	  return true;
+      }
+  };
 } // namespace OCICallbacks
 
 class MediaCallbacks
@@ -261,5 +285,24 @@ private:
     OCICallbacks::MediaChangeReportReceiver m_mediaChangeReport;
     OCICallbacks::DownloadProgressReportReceiver m_mediaDownloadReport;
     OCICallbacks::AuthenticationReportReceiver m_mediaAuthenticationReport;
+};
+
+class SourceCallbacks
+{
+public:
+    SourceCallbacks()
+    {
+      m_downloadReport.connect();
+      m_progressReport.connect();
+    }
+
+    ~SourceCallbacks()
+    {
+      m_downloadReport.disconnect();
+      m_progressReport.disconnect();
+    }
+private:
+    OCICallbacks::DownloadResolvableReportReceiver m_downloadReport;
+    OCICallbacks::ProgressReportReceiver m_progressReport;
 };
 #endif
