@@ -352,6 +352,65 @@ namespace OCICallbacks
       string m_progressId;
       string m_labelPrefix;
   };
+  
+  // progress for installing a resolvable
+  class InstallResolvableReportReceiver : public callback::ReceiveReport<target::rpm::InstallResolvableReport>
+  {
+  public:
+      virtual void start( Resolvable::constPtr resolvable )
+      {
+	  // just take these values for time being. 
+	  unsigned rpm_pkg_current = 0; // = OCIHelper.runtimeData().rpm_pkg_current;
+	  unsigned rpm_pkgs_total = 1;  // = OCIHelper.runtimeData().rpm_pkgs_total
+	  cout << "Installing: " << resolvable->asString();
+	  m_progress.reset( new ProgressBar( "install-resolvable",
+					     resolvable->asString(),
+					     ++rpm_pkg_current,
+					     rpm_pkgs_total ) );
+	  (*m_progress)->range( 100 );
+      }
+      
+      virtual bool progress(int value, Resolvable::constPtr resolvable )
+      {
+	  if ( m_progress )
+	      (*m_progress)->set( value );
+	  return true;
+      }
+      
+      virtual Action problem( Resolvable::constPtr resolvable, Error error, const string& description, RpmLevel /*unused*/)
+      {
+	  if ( m_progress ) {
+	      (*m_progress).error();
+	      m_progress.reset();
+	  }
+	  
+	  cout << "Installation of " << resolvable->asString() << " failed" << endl;
+	  // emit the problem
+	  // emit problemEncountered( resolvable->asString(), description );
+	  return (Action) ABORT;
+      }
+      
+      virtual void finish( Resolvable::constPtr resolvable, Error error, const string& reason, RpmLevel /*unused */)
+      {
+	  if ( m_progress ) {
+	      (*m_progress).error( error != NO_ERROR );
+	      m_progress.reset();
+	  }
+	  
+	  if ( error != NO_ERROR ) {
+	      // quit the helper and OCI
+	  }
+	  else {
+	      if ( !reason.empty() ) ;
+		  //emit( "install-finish", reason);
+	  }
+      }
+      
+      virtual void reportend()
+      { m_progress.reset(); }
+  private:
+      scoped_ptr<ProgressBar> m_progress;
+  };
 } // namespace OCICallbacks
 
 class MediaCallbacks
