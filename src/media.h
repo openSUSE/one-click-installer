@@ -150,7 +150,7 @@ namespace OCICallbacks
       
   public:
       /**
-       * Download delta rpm:
+       * Dowmload delta rpm:
        *	 - path below url reported on start()
        *	 - expected download size (0 if unknown)
        *	 - download is interruptable
@@ -171,7 +171,7 @@ namespace OCICallbacks
       /**
        * Apply delta rpm:
        *	 - local path of downloaded delta
-       *	 - apply is not interruptable
+       *	 - aplpy is not interruptable
        *	 - problems are just informal
        */
       virtual void startDeltaApply( const Pathname& filename )
@@ -262,6 +262,95 @@ namespace OCICallbacks
             cout << data.numericId() << " " << data.name() << " " << data.val();
 	  return true;
       }
+  };
+  
+  // Convenience class for progress output. Needed by InstallResolvableReportReceiver
+  class ProgressBar : private base::NonCopyable
+  {
+  public:
+      ProgressBar( const string& progressId_R, const string& label_R, unsigned current_R = 0, unsigned total_R = 0 )
+	: m_error( indeterminate )
+	, m_progressId( progressId_R )
+      {
+	  m_progress.name( label_R );
+	  m_progress.sendTo( Print( *this ) );
+      }
+      
+      ~ProgressBar()
+      {
+	  // suppress ProgressData final report
+	  m_progress.noSend();
+	  if ( indeterminate( m_error ) )
+	      m_error = ( m_progress.reportValue() != 100 && m_progress.reportPercent() );
+	  // emit the error
+	  // emit ( m_progressId, m_progress.name(), m_error );
+      }
+      
+      /** print(emit) the progress bar not waiting for a new trigger */
+      void print()
+      { 
+	  // emit( m_progressId, outLabel( m_progress.name() ), m_progress.reportValue() );
+      }
+      
+      /** \overload also change the progress bar label */
+      void print( const string& label_R )
+      { m_progress.name( label_R ); print(); }
+      
+      /** Indicate the error condition for the final progress bar */
+      void error( TriBool error_R = true )
+      { m_error = error_R; }
+      
+      /** \overload disambiguate */
+      void error( bool error_R )
+      { m_error = error_R; }
+      
+      /** \overload also change the progress data (bar) label */
+      void error( const string& label_R )
+      { m_progress.name( label_R ); error( true ); }
+      
+      /** \overload set the TriBool and change the progress bar label */
+      void error( TriBool error_R, const string& label_R )
+      { m_progress.name( label_R ); error( error_R ); }
+      
+  public:
+      /** \name Access the embedded ProgressData object */
+      //@{
+      ProgressData * operator->()
+      { return &m_progress; }
+      
+      const ProgressData * operator->() const
+      { return &m_progress; }
+      
+      ProgressData & operator*()
+      { return m_progress; }
+      
+      const ProgressData & operator*() const
+      { return m_progress; }
+      //@}
+      
+  private:
+      /** ProgressData::ReceiverFnc printing to a ProgressBar */
+      class Print
+      {
+      public:
+	  Print( ProgressBar& bar_R ) : m_bar( &bar_R ) {}
+	  bool operator()( const ProgressData& progress_R )
+	  {
+	      // emit the actual installation progress
+	      // emit( m_bar->m_progressId, m_bar->outLabel( progress_R.name() ), progress_R.reportValue() );
+	      return true;
+	  }
+      private:
+	  ProgressBar *m_bar;
+      };
+      
+      string outLabel( const string& msg_R ) const
+      { return m_labelPrefix.empty() ? msg_R : m_labelPrefix + msg_R; }
+  private:
+      TriBool m_error;
+      ProgressData m_progress;
+      string m_progressId;
+      string m_labelPrefix;
   };
 } // namespace OCICallbacks
 
