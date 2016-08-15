@@ -150,7 +150,7 @@ namespace OCICallbacks
       
   public:
       /**
-       * Dowmload delta rpm:
+       * Download delta rpm:
        *	 - path below url reported on start()
        *	 - expected download size (0 if unknown)
        *	 - download is interruptable
@@ -171,7 +171,7 @@ namespace OCICallbacks
       /**
        * Apply delta rpm:
        *	 - local path of downloaded delta
-       *	 - aplpy is not interruptable
+       *	 - apply is not interruptable
        *	 - problems are just informal
        */
       virtual void startDeltaApply( const Pathname& filename )
@@ -379,8 +379,9 @@ namespace OCICallbacks
       
       virtual Action problem( Resolvable::constPtr resolvable, Error error, const string& description, RpmLevel /*unused*/)
       {
+	  // finish progress - indicate error
 	  if ( m_progress ) {
-	      (*m_progress).error();
+	      ( *m_progress ).error();
 	      m_progress.reset();
 	  }
 	  
@@ -389,7 +390,7 @@ namespace OCICallbacks
 	  // emit problemEncountered( resolvable->asString(), description );
 	  return (Action) ABORT;
       }
-      
+    
       virtual void finish( Resolvable::constPtr resolvable, Error error, const string& reason, RpmLevel /*unused */)
       {
 	  if ( m_progress ) {
@@ -403,6 +404,67 @@ namespace OCICallbacks
 	  else {
 	      if ( !reason.empty() ) ;
 		  //emit( "install-finish", reason);
+	  }
+      }
+      
+      virtual void reportend()
+      { m_progress.reset(); }
+  private:
+      scoped_ptr<ProgressBar> m_progress;
+  };
+  
+  // progress for removing a resolvable
+  class RemoveResolvableReportReceiver : public callback::ReceiveReport<target::rpm::RemoveResolvableReport>
+  {
+  public:
+      virtual void start( Resolvable::constPtr resolvable )
+      {
+	  cout << "Removing " << resolvable->asString();
+	  
+	  unsigned rpm_pkg_current = 0; // = OCIHelper.runtimeData().rpm_pkg_current;
+	  unsigned rpm_pkgs_total = 1;  // = OCIHelper.runtimeData().rpm_pkgs_total
+	  m_progress.reset( new ProgressBar( "remove-resolvable",
+					     resolvable->asString(),
+					     ++rpm_pkg_current,
+					     rpm_pkgs_total ) );
+	  ( *m_progress )->range( 100 ); // reports percentage
+      }
+      
+      virtual bool progress( int value, Resolvable::constPtr resolvable )
+      {
+	  if ( m_progress )
+	      ( *m_progress )->set( value );
+	  return true;
+      }
+      
+      virtual Action problem( Resolvable::constPtr resolvable, Error error, const string& description )
+      {
+	  // finish progress - indicate error
+	  if ( m_progress ) {
+	      ( *m_progress ).error();
+	      m_progress.reset();
+	  }
+	  
+	  cout << "Removal of " << resolvable->asString() << " failed" << endl;
+	  // emit the problem
+	  // emit problemEncountered( resolvable->asString(), description );
+	  return (Action) ABORT;
+      }
+      
+      virtual void finish( Resolvable::constPtr resolvable, Error error, const string& reason )
+      {
+	  // finish progress - indicate error
+	  if ( m_progress ) {
+	      ( *m_progress ).error( error != NO_ERROR );
+	      m_progress.reset();
+	  }
+	  
+	  if ( error != NO_ERROR ) {
+	      // quit the helper and OCI
+	  }
+	  else {
+	      if ( !reason.empty() ) ;
+		  //emit( "remove-finish", reason);
 	  }
       }
       
