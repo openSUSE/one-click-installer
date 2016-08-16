@@ -356,6 +356,72 @@ namespace OCICallbacks
       string m_labelPrefix;
   };
   
+  /** 
+   *  \class DownloadProgress
+   *  \brief Listens on media::DownloadProgressReport to feed a ProgressBar
+   *  
+   *  Forward callbacks to any original receiver
+   */
+  class DownloadProgress : public callback::ReceiveReport<media::DownloadProgressReport>
+  {
+  public:
+      DownloadProgress( ProgressBar& progressBar_R )
+      : m_progressBar( &progressBar_R )
+      , m_oldReceiver( Distributor::instance().getReceiver() )
+      {
+	  connect();
+      }
+      
+      ~DownloadProgress()
+      {
+	  if ( m_oldReceiver )
+	      Distributor::instance().setReceiver( *m_oldReceiver );
+	  else
+	      Distributor::instance().noReceiver();
+      }
+      
+      virtual void start( const Url& file, Pathname localFile )
+      {
+	  ( *m_progressBar )->range( 100 );	// receives %
+	  
+	  if ( m_oldReceiver )
+	      m_oldReceiver->start( file, localFile );
+      }
+      
+      virtual bool progress( int value, const Url& file, double dbpsAvg = -1, double dbpsCurrent = -1 )
+      {
+	  ( *m_progressBar )->set( value );
+	  
+	  if ( m_oldReceiver )
+	      return m_oldReceiver->progress( value, file, dbpsAvg, dbpsCurrent );
+	  return true;
+      }
+      
+      virtual Action probem( const Url& file, Error error, const string& description )
+      {
+	  if ( m_oldReceiver )
+	      return m_oldReceiver->problem( file, error, description );
+	  return Receiver::problem( file, error, description );
+      }
+      
+      virtual void finish( const Url& file, Error error, const string& reason )
+      {
+	  if ( error == NO_ERROR )
+	      ( *m_progressBar )->toMax();
+	  else {
+	      cout << "Reason [in Download Progress ]" << endl;
+	      m_progressBar->error();
+	  }
+	  
+	  if ( m_oldReceiver )
+	      m_oldReceiver->finish( file, error, reason );
+      }
+      
+  private:
+      ProgressBar *m_progressBar;
+      Receiver *m_oldReceiver;
+  };
+  
   // progress for installing a resolvable
   class InstallResolvableReportReceiver : public callback::ReceiveReport<target::rpm::InstallResolvableReport>
   {
@@ -587,5 +653,26 @@ public:
 private:
     OCICallbacks::DownloadResolvableReportReceiver m_downloadReport;
     OCICallbacks::ProgressReportReceiver m_progressReport;
+};
+
+class RpmCallbacks 
+{
+public:
+    RpmCallbacks()
+    {
+	m_installReceiver.connect();
+	m_removeReceiver.connect();
+	m_fileConflictsReceiver.connect();
+    }
+    ~RpmCallbacks()
+    {
+	m_installReceiver.disconnect();
+	m_removeReceiver.disconnect();
+	m_fileConflictsReceiver.disconnect();
+    }
+private:
+    OCICallbacks::InstallResolvableReportReceiver m_installReceiver;
+    OCICallbacks::RemoveResolvableReportReceiver m_removeReceiver;
+    OCICallbacks::FindFileConflictsReportReceiver m_fileConflictsReceiver;
 };
 #endif
