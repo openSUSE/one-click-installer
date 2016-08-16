@@ -21,6 +21,9 @@
 #include <zypp/base/Logger.h>
 #include <zypp/Pathname.h>
 #include <zypp/Url.h>
+#include <zypp/sat/Queue.h>
+#include <zypp/sat/FileConflicts.h>
+#include <zypp/base/Easy.h>
 
 #define REPEAT_LIMIT 3
 
@@ -466,6 +469,76 @@ namespace OCICallbacks
 	      if ( !reason.empty() ) ;
 		  //emit( "remove-finish", reason);
 	  }
+      }
+      
+      virtual void reportend()
+      { m_progress.reset(); }
+  private:
+      scoped_ptr<ProgressBar> m_progress;
+  };
+  
+  class FindFileConflictsReportReceiver : public callback::ReceiveReport<target::FindFileConflictstReport>
+  {
+  public:
+      virtual void reportbegin()
+      {
+	  m_progress.reset( new ProgressBar( "fileconflict-check",
+					     // progressbar label
+					     "Checking for file conflicts:" ) );
+      }
+      
+      virtual bool start( const ProgressData& progress_R )
+      {
+	  ( *m_progress )->set( progress_R );
+	  // return !OCI::instance()->exitRequested(); //refer to line 88 (media.h)
+	  return true; //this should suffice for now. Temporary fix
+      }
+      
+      virtual bool progress( const ProgressData& progress_R, const sat::Queue& noFilelist_R )
+      {
+	  ( *m_progress )->set( progress_R );
+	  // return !OCI::instance()->exitRequested(); //refer to line 88 (media.h)
+	  return true; //this should suffice for now. Temporary fix
+      }
+      
+      virtual bool result( const ProgressData& progress_R, const sat::Queue& noFilelist_R, const sat::FileConflicts& conflicts_R )
+      {
+	  // finish progress - only conflicts count as error
+	  ( *m_progress ).error( !conflicts_R.empty() );
+	  m_progress.reset();
+	  
+	  if ( conflicts_R.empty() && noFilelist_R.empty() )
+	      return true;// !OCI::instance()->exitRequested();
+	  
+	  // show error result
+	  if ( !noFilelist_R.empty() ) //warning
+	  {
+	      cout << "Checking for file conflicts requires not installed packages to be downloaded in advance "
+	              "in order to access their file lists." << endl;
+	      // print them out
+	      cout << "The following packages had to be excleuded from file conflicts check because they are not yet downloaded" << endl;
+	      for_( it, noFilelist_R.begin(), noFilelist_R.end() )
+		  cout << ( *it ) << endl;;
+	  }
+	  
+	  if ( !conflicts_R.empty() )
+	  {
+	      // use i18np() here
+	      cout << "Detected " << conflicts_R.size() << "file conflict(s)" << endl;
+	      //print them out
+	      for_( it, conflicts_R.begin(), conflicts_R.end() )
+		  cout << ( *it ) << endl;
+	      
+	      // print general info about why file conflicts usually occur
+	      cout << "File conflicts happen when two packages attempt to install files with the same name but different contents. If you continue, conflicting files will be replaced losing the previous content." << endl;
+	      
+	      // Use the same control flow used for handling package conflicts
+	      bool cont = false; // read y/n answer here 
+	      
+	      if ( !cont )
+		  return false;	// aborted
+	  }
+	  return true; //!OCI::instance()->exitRequested();
       }
       
       virtual void reportend()
