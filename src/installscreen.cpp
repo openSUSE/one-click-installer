@@ -1,138 +1,127 @@
-//      Copyright 2012 Saurabh Sood <saurabh@saurabh.geeko>
-//      
-//      This program is free software; you can redistribute it and/or modify
-//      it under the terms of the GNU General Public License as published by
-//      the Free Software Foundation; either version 2 of the License, or
-//      (at your option) any later version.
-//      
-//      This program is distributed in the hope that it will be useful,
-//      but WITHOUT ANY WARRANTY; without even the implied warranty of
-//      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//      GNU General Public License for more details.
-//      
-//      You should have received a copy of the GNU General Public License
-//      along with this program; if not, write to the Free Software
-//      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-//      MA 02110-1301, USA.
-//      
-//      
-
+/***********************************************************************************
+ *  One Click Installer makes it easy for users to install software, no matter
+ *  where that software is located.
+ *
+ *  Copyright (C) 2016  Shalom <shalomray7@gmail.com>
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ************************************************************************************
+ *  This program's developed as part of GSoC - 2016
+ *  Project: One Click Installer
+ *  Mentors: Antonio Larrosa, and Cornelius Schumacher
+ *  Organization: OpenSUSE
+ *  Previous Contributor: None
+ ***********************************************************************************/
 
 #include <klocalizedstring.h>
+#include <QHBoxLayout>
 #include "installscreen.h"
 
-InstallScreen::InstallScreen(PackageBackend *backend, const QString& tmpFileName, QObject *parent )
+InstallScreen::InstallScreen()
 {
-    setStyleSheet( "" );
-    m_backend = backend;
-    m_tmpFileName = tmpFileName;
-
-    m_watcher = new QFileSystemWatcher;
-    m_watcher->addPath( QString::fromLocal8Bit( "/var/log/oneclick.log" ) );
-
-    QObject::connect( m_watcher, SIGNAL( fileChanged( QString ) ), this, SLOT( logFileChanged( QString ) ) );
-
-    QWidget *packageWidget = new QWidget;
-    packageWidget->setObjectName( "packageWidget" );
-    packageWidget->setStyleSheet( "QWidget#packageWidget{ background-color : white; border-bottom : 1px solid rgb(196,181,147); border-left : 1px solid rgb(196,181,147); border-top : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147); }" );
-
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    QVBoxLayout *installLayout = new QVBoxLayout( packageWidget );
-
-    QVBoxLayout *sourceLayout = new QVBoxLayout;
-    QHBoxLayout *buttonLayout = new QHBoxLayout;
-
-    m_installStatus = new QLabel( i18n("Downloading and Installing Packages") );
-    m_cancel = new QPushButton( i18n("Cancel Installation") );
-
-    QObject::connect( m_cancel, SIGNAL( clicked() ), this, SLOT( cancelInstallation() ) );
-
+    m_mainLayout = new QVBoxLayout;
+        
+    // status widget and its layout
+    m_statusWidget = new QTextBrowser;
+    m_statusWidget->setObjectName( "statusWidget" );
+    m_statusWidget->setStyleSheet( "QTextBrowser#statusWidget{ background-color : white; border-bottom: 1px solid rgb(196, 181, 147); border-left : 1px solid rgb(196,181,147); border-top : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147); }" );
+    m_statusWidget->setMinimumSize( 500, 180 );
+       
+    // Cancel button
+    m_cancelButton = new QPushButton( "Cancel" );
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
+    buttonLayout->addSpacing( 400 );
+    buttonLayout->addWidget( m_cancelButton );
+    
+    // Current message label, Progress Bar
+    m_currentPackageStatusLabel = new QLabel( "Please Wait..." );
     m_progressBar = new QProgressBar;
-    m_progressBar->setFixedHeight( 20 );
     m_progressBar->setMinimum( 0 );
     m_progressBar->setMaximum( 100 );
     m_progressBar->setRange( 0, 100 );
-
-    installLayout->addWidget( m_progressBar );
-    installLayout->setSpacing( 20 );
-
-    foreach( QUrl iter, m_backend->repositories() ) {
-        QLabel *sourceLabel = new QLabel( i18n("Added Source: %1").arg(iter.toString()) );
-        sourceLabel->setStyleSheet( "background-color: rgb(254, 250, 210); border-bottom : 1px solid rgb(252,233,79); border-left : 1px solid rgb(196,181,147); border-top : 1px solid rgb(196,181,147); border-right : 1px solid rgb(196,181,147);" );
-        sourceLayout->addWidget( sourceLabel );
-        sourceLayout->setSpacing( 0 );
-        sourceLabel->setFixedHeight( 40 );
-//        sourceLabel->setContentsMargins( 20, 20, 20, 20 );
-    }
-
-    int i = 0;
-
-    foreach( QString iter, m_backend->packages() ) {
-        QHBoxLayout *packageLayout = new QHBoxLayout;
-        m_packageLayouts.insert( i, packageLayout );
-        QLabel *package = new QLabel( i18n("<b>Installing: </b> %1").arg(iter) );
-        package->setFixedHeight( 40 );
-        package->setStyleSheet( "background-color : white" );
-        packageLayout->addWidget( package );
-        packageLayout->setSpacing( 200 );
-        installLayout->addLayout( packageLayout );
-    }
-
-    buttonLayout->addSpacing( 400 );
-    buttonLayout->addWidget( m_cancel );
-    mainLayout->setSpacing( 0 );
-    mainLayout->addLayout( sourceLayout );
-    mainLayout->addSpacing( 0 );
-    mainLayout->addWidget( packageWidget );
-    mainLayout->addSpacing( 20 );
-    mainLayout->addLayout( buttonLayout );
-
-    setLayout( mainLayout );
+    m_progressBar->setTextVisible( true );
+    
+    // All set! Now add widgets to the m_mainLayout
+    m_mainLayout->addWidget( m_statusWidget );
+    m_mainLayout->setSpacing( 0 );
+    m_mainLayout->addWidget( horizontalLine() );
+    m_mainLayout->setSpacing( 0 );
+    m_mainLayout->addWidget( m_currentPackageStatusLabel );
+    m_mainLayout->setSpacing( 0 );
+    m_mainLayout->addWidget( m_progressBar );
+    m_mainLayout->setSpacing( 0 );
+    m_mainLayout->addWidget( horizontalLine() );
+    m_mainLayout->setSpacing( 5 );
+    m_mainLayout->addLayout( buttonLayout );
+    
+    // Signals and slots
+    QObject::connect( m_cancelButton, SIGNAL( clicked() ), this, SLOT( cancelInstallation() ) );
+    
+    setLayout( m_mainLayout );
 }
 
-
-void InstallScreen::showCompletionStatus()
+void InstallScreen::initDBusServices()
 {
-    m_progressBar->hide();
-
-    foreach( QHBoxLayout *l, m_packageLayouts ) {
-        QLabel *completed = new QLabel( i18n("Installed") );
-        completed->setStyleSheet( "background-color : white" );
-        l->addWidget( completed );
+    m_ociHelper = new org::opensuse::OCIHelper("org.opensuse.OCIHelper", "/", QDBusConnection::systemBus(), this);
+    if ( !m_ociHelper->isValid() ) {
+	qFatal( "Oops! Cannot connect to the service org.opensuse.OCIHelper" );
+	exit( 1 );
     }
+    
+    m_mediaCallbacks = new org::opensuse::MediaCallbacks("org.opensuse.MediaCallbacks", "/Media", QDBusConnection::systemBus(), this);
+    if ( !m_mediaCallbacks->isValid() ) {
+	qFatal( "Oops! Cannot connect to the service org.opensuse.MediaCallbacks" );
+	exit( 1 );
+    }
+    
+    qDebug() << " DBus proxies initialized";
+    
+    // signals and slots
+    connect( m_mediaCallbacks, SIGNAL( startResolvable( QString ) ), this, SLOT( newResolvableInAction( QString ) ) );
+    connect( m_mediaCallbacks, SIGNAL( finishResolvable( bool ) ), this, SLOT( updateCurrentResolvableStatusUponCompletion( bool ) ) );
+    connect( m_mediaCallbacks, SIGNAL( progress( int ) ), m_progressBar, SLOT( setValue( int ) ) ); // update progress
 }
 
-void InstallScreen::logFileChanged( const QString& path )
+// Invoke this every time startResolvable() is emitted from start() method[ in media.h ] in OCIHelper
+void InstallScreen::newResolvableInAction( QString label_R )
 {
-    qDebug() << "changed";
-    QFile file( path );
-    if( file.open( QIODevice::ReadOnly ) ) {
-        QString str( file.readAll() );
+    m_statusWidget->setText( m_statusWidget->toPlainText() + label_R + "\n" );
+    m_currentPackageStatusLabel->setText( label_R );
+    m_progressBar->reset();
+}
 
-        if( str == "" || str.isNull() )
-            return;
-        QStringList line = str.split(QRegExp("[\r\n]"),QString::SkipEmptyParts);
+// Invoke this every time finishResolvable() is emitted from finish() method[ in media.h ] in OCIHelper
+void InstallScreen::updateCurrentResolvableStatusUponCompletion( bool success )
+{
+    // set the progress bar to 100
+    m_progressBar->setValue( 100 );
+    m_currentPackageStatusLabel->setText( "Done" );
+}
 
-        QString final = line.last();
-        qDebug() << final;
-        QString num = final.split( "=" ).at( 1 );
-        num.remove( 0, 1 );
-        num.remove( num.length() - 1, 1 );
-        int val = num.toInt();
-
-        qDebug() << val;
-
-        m_progressBar->setValue( val );
-
-    }
+QWidget* InstallScreen::horizontalLine()
+{
+    QWidget* horizontalLine = new QWidget;
+    horizontalLine->setFixedHeight( 2 );
+    horizontalLine->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+    horizontalLine->setStyleSheet( QString( "background-color: #c0c0c0;" ) );
+    return horizontalLine;
 }
 
 void InstallScreen::cancelInstallation()
 {
-    qDebug() << "cancelling installation";
-
-    // The following feature will be added as development progresses on :)
-    //ClientDBus *client = new ClientDBus( "org.opensuse.oneclickinstaller", "/", QDBusConnection::sessionBus(), 0 );
-    //client->KillBackend();
-    //qApp->quit();
+    qDebug() << "cancelling installation";  
+    
+    m_ociHelper->killBackend(); // quit OCIHelper
+    qApp->quit(); // quit OCI
 }
