@@ -36,11 +36,14 @@ set(srcs_DBUS_OCIHelper org.opensuse.OCIHelper.xml)
 set(srcs_DBUS_OCI org.opensuse.oneclickinstaller.xml)
 qt5_add_dbus_interface(prog_iFaceHelper org.opensuse.OCIHelper.xml oci_helper_interface)
 qt5_add_dbus_interface(prog_iFaceOCI org.opensuse.oneclickinstaller.xml oci_interface)
+qt5_add_dbus_interface(prog_iFaceHelper org.opensuse.mediacallbacks.xml media_callbacks_interface)
 
 qt5_add_dbus_adaptor(srcs_DBUS_OCIHelper org.opensuse.OCIHelper.xml backend.h Backend)
+qt5_add_dbus_adaptor(srcs_DBUS_OCIHelper org.opensuse.mediacallbacks.xml callbacks.h Callbacks)
 qt5_add_dbus_adaptor(srcs_DBUS_OCI org.opensuse.oneclickinstaller.xml conflictresolutionscreen.h ConflictResolutionScreen)
 
 qt5_generate_moc(backend.h backend.moc)
+qt5_generate_moc(callbacks.h callbacks.moc)
 qt5_generate_moc(conflictresolutionscreen.h conflictresolutionscreen.moc)
 
 #Executables fail to build with Qt5 in the default configuration
