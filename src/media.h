@@ -25,6 +25,14 @@
 #include <zypp/sat/FileConflicts.h>
 #include <zypp/base/Easy.h>
 
+#include <QObject>
+#include <QWidget>
+#include <QDBusConnection>
+#include <QDBusMessage>
+#include <QString>
+
+#include "callbacks.h" // emit values to the OCI
+
 #define REPEAT_LIMIT 3
 
 using namespace std;
@@ -32,8 +40,10 @@ using namespace zypp;
 using media::MediaChangeReport;
 using media::DownloadProgressReport;
 
+static Callbacks s_toOCI;
+
 namespace OCICallbacks
-{
+{	
   class RepeatCounter 
   {
   public:
@@ -78,6 +88,9 @@ namespace OCICallbacks
       {
 	  m_lastReported = time( NULL );
 	  m_lastDrateAvg = -1;
+	  
+	  QString info( QString::fromStdString( "Retrieving: " + Pathname( url.getPathName() ).basename() ) );
+	  s_toOCI.emitStartResolvable( info );
       }
       
       /**
@@ -108,7 +121,7 @@ namespace OCICallbacks
 	   * It will update the progress bar (GUI) based on value (percentage downloaded)
 	   * update the speed based on drateNow in the header - internet speed */
 	  
-	  // emit downloadProgress( url, value, (long) drateNow )
+	  s_toOCI.emitProgress( value );
 	  m_lastDrateAvg = drateAvg;
 	  return true;
       }
@@ -125,7 +138,9 @@ namespace OCICallbacks
 	  // Reports end of a download
 	  // error != NO_ERROR --->> did the download finish with error?
 	  // emit successFlag( uri, m_lastDrateAvg, error != NO_ERROR );
+	  s_toOCI.emitFinishResolvable( error != NO_ERROR );
       }
+  
   private:
       time_t m_lastReported;
       double m_lastDrateAvg;
@@ -164,6 +179,8 @@ namespace OCICallbacks
 	  m_delta = fileName;
 	  m_deltaSize = downloadSize;
 	  cout << "Retrieving delta: " << m_delta << ", " << m_deltaSize << endl;
+	  QString info( QString::fromStdString( "Retrieving Delta: " + fileName.asString() ) );
+	  s_toOCI.emitStartResolvable( info );
       }
       
       virtual void problemDeltaDownload( const string& description )
@@ -182,11 +199,14 @@ namespace OCICallbacks
 	  m_delta = filename.basename();
 	  m_labelApplyDelta = m_delta.asString();
 	  cout << "Applying Delta: " << m_delta;
+	  QString info( QString::fromStdString( "Applying Delta: " + filename.asString() ) );
+	  s_toOCI.emitStartResolvable( info );
       }
       
       virtual void progressDeltaApply( int value )
       {
 	  cout << m_labelApplyDelta << " " << value << endl;
+	  s_toOCI.emitProgress( value );
       }
       
       virtual void problemDeltaApply( const string& description )
@@ -197,6 +217,7 @@ namespace OCICallbacks
       virtual void finishDeltaApply()
       {
 	  cout << "finished applying " << m_labelApplyDelta;
+	  s_toOCI.emitFinishResolvable( true );
       }
       
       virtual void start( Resolvable::constPtr resolvablePtr, const Url& url)
@@ -220,7 +241,7 @@ namespace OCICallbacks
 			       currentPackage->installSize().asString()); */
 	  
 	  // An rpm_download flag for OCIHelper? Awesome design by zypper programmers :)
-	  // OCIHelper.runtimeData().rpm_download = true;	  
+	  // OCIHelper.runtimeData().rpm_download = true;
       }
       
       // Not needed. The progress will be reported by the DownloadProgressReportReceiver's progress method
@@ -341,6 +362,7 @@ namespace OCICallbacks
 	  {
 	      // emit the actual installation progress
 	      // emit( m_bar->m_progressId, m_bar->outLabel( progress_R.name() ), progress_R.reportValue() );
+	      s_toOCI.emitProgress( progress_R.reportValue() );
 	      return true;
 	  }
       private:
@@ -437,6 +459,8 @@ namespace OCICallbacks
 					     ++rpm_pkg_current,
 					     rpm_pkgs_total ) );
 	  (*m_progress)->range( 100 );
+	  QString info( QString::fromStdString( "Installing: " + resolvable->name() ) );
+	  s_toOCI.emitStartResolvable( info );
       }
       
       virtual bool progress(int value, Resolvable::constPtr resolvable )
@@ -462,6 +486,7 @@ namespace OCICallbacks
     
       virtual void finish( Resolvable::constPtr resolvable, Error error, const string& reason, RpmLevel /*unused */)
       {
+	  s_toOCI.emitFinishResolvable( error != NO_ERROR );
 	  if ( m_progress ) {
 	      (*m_progress).error( error != NO_ERROR );
 	      m_progress.reset();
@@ -497,6 +522,8 @@ namespace OCICallbacks
 					     ++rpm_pkg_current,
 					     rpm_pkgs_total ) );
 	  ( *m_progress )->range( 100 ); // reports percentage
+	  QString info( QString::fromStdString( "Removing: " + resolvable->name() ) );
+	  s_toOCI.emitStartResolvable( info );
       }
       
       virtual bool progress( int value, Resolvable::constPtr resolvable )
@@ -522,6 +549,7 @@ namespace OCICallbacks
       
       virtual void finish( Resolvable::constPtr resolvable, Error error, const string& reason )
       {
+	  s_toOCI.emitFinishResolvable( error != NO_ERROR );
 	  // finish progress - indicate error
 	  if ( m_progress ) {
 	      ( *m_progress ).error( error != NO_ERROR );
@@ -557,6 +585,8 @@ namespace OCICallbacks
       {
 	  ( *m_progress )->set( progress_R );
 	  // return !OCI::instance()->exitRequested(); //refer to line 88 (media.h)
+	  QString info( QString::fromStdString( "Checking For File Conflicts" ) );
+	  s_toOCI.emitStartResolvable( info );
 	  return true; //this should suffice for now. Temporary fix
       }
       
@@ -573,8 +603,10 @@ namespace OCICallbacks
 	  ( *m_progress ).error( !conflicts_R.empty() );
 	  m_progress.reset();
 	  
-	  if ( conflicts_R.empty() && noFilelist_R.empty() )
+	  if ( conflicts_R.empty() && noFilelist_R.empty() ) {
+	      s_toOCI.emitFinishResolvable( true );
 	      return true;// !OCI::instance()->exitRequested();
+	  }
 	  
 	  // show error result
 	  if ( !noFilelist_R.empty() ) //warning
