@@ -82,6 +82,11 @@ private slots:
      * Show Conflict resolution screen
      */
     void showConflictResolutionScreen();
+    
+    /**
+     * Show Installation Screen
+     */
+    void showInstallationScreen();
 signals:
     void countChanged( int repoCount, int packageCount );
 };
