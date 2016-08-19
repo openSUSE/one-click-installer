@@ -16,6 +16,7 @@ include_directories(${Qt5DBus_INCLUDES})
 set(Qt5_USE_DBUS, true)
 
 find_package(PACKAGEKITQT5 REQUIRED)
+find_package(KF5WidgetsAddons REQUIRED)
 find_package(KF5I18n NO_MODULE)
 
 #We need -DQT_WIDGETS_LIB when using QtWidgets in Qt5
@@ -54,7 +55,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 add_executable(oneclickhelper ${QT_LIBRARIES} ${oneclickhelper_SOURCES} ${prog_iFaceOCI} ${oneclickhelper_HEADERS} ${srcs_DBUS_OCIHelper} ${oneclickhelper_HEADERS_MOC})
 add_executable(oneclickinstaller ${QT_LIBRARIES} ${prog_iFaceHelper} ${srcs_DBUS_OCI} ${oneclickinstaller_SOURCES} ${oneclickinstaller_HEADERS} ${oneclickinstaller_HEADERS_MOC})
 
-target_link_libraries(oneclickhelper ${QT_QTGUI_LIBRARY} zypp ${QT_QTDBUS_LIBRARY})
+target_link_libraries(oneclickhelper ${QT_QTGUI_LIBRARY} zypp KF5::I18n KF5::WidgetsAddons ${QT_QTDBUS_LIBRARY})
 target_link_libraries(oneclickinstaller ${QT_QTGUI_LIBRARY} KF5::I18n zypp ${QT_QTDBUS_LIBRARY} ${PackageKitQt5_LIBRARIES})
 
 INSTALL(TARGETS oneclickhelper DESTINATION /usr/sbin)
