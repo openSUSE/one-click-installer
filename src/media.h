@@ -25,12 +25,9 @@
 #include <zypp/sat/FileConflicts.h>
 #include <zypp/base/Easy.h>
 
-#include <QObject>
-#include <QWidget>
-#include <QDBusConnection>
-#include <QDBusMessage>
-#include <QString>
 
+#include <QString>
+#include <KF5/KWidgetsAddons/kmessagebox.h> //for file conflicts
 #include "callbacks.h" // emit values to the OCI
 
 #define REPEAT_LIMIT 3
@@ -614,7 +611,7 @@ namespace OCICallbacks
 	      cout << "Checking for file conflicts requires not installed packages to be downloaded in advance "
 	              "in order to access their file lists." << endl;
 	      // print them out
-	      cout << "The following packages had to be excleuded from file conflicts check because they are not yet downloaded" << endl;
+	      cout << "The following packages had to be excluded from file conflicts check because they are not yet downloaded" << endl;
 	      for_( it, noFilelist_R.begin(), noFilelist_R.end() )
 		  cout << ( *it ) << endl;;
 	  }
@@ -627,11 +624,12 @@ namespace OCICallbacks
 	      for_( it, conflicts_R.begin(), conflicts_R.end() )
 		  cout << ( *it ) << endl;
 	      
-	      // print general info about why file conflicts usually occur
-	      cout << "File conflicts happen when two packages attempt to install files with the same name but different contents. If you continue, conflicting files will be replaced losing the previous content." << endl;
-	      
-	      // Use the same control flow used for handling package conflicts
-	      bool cont = false; // read y/n answer here 
+	      // prompt general info (for now) about why file conflicts usually occur
+	      bool cont = true;
+	      string generalInfo = "File conflicts happen when two packages attempt to install files with the same name but different contents. If you continue, conflicting files will be replaced losing the previous content. Continue? [yes/no]";
+	      int reply = KMessageBox::questionYesNo( 0, QString::fromStdString( generalInfo ), "File Conflicts!" );
+	      if ( reply == KMessageBox::ButtonCode::No )
+		  cont = false;
 	      
 	      if ( !cont )
 		  return false;	// aborted
