@@ -32,6 +32,13 @@ InstallScreen::InstallScreen()
 {
     m_mainLayout = new QVBoxLayout;
         
+    // log file
+    m_logFile.setFileName( "/tmp/oci_log.txt" );
+    if( !m_logFile.open( QIODevice::Truncate | QIODevice::WriteOnly ) ) {
+        qDebug() << "Could not open Data File";
+    }
+    m_outData = new QTextStream( &m_logFile );
+    
     // status widget and its layout
     m_statusWidget = new QTextBrowser;
     m_statusWidget->setObjectName( "statusWidget" );
@@ -96,7 +103,9 @@ void InstallScreen::initDBusServices()
 // Invoke this every time startResolvable() is emitted from start() method[ in media.h ] in OCIHelper
 void InstallScreen::newResolvableInAction( QString label_R )
 {
-    m_statusWidget->setText( m_statusWidget->toPlainText() + label_R + "\n" );
+    m_statusWidget->append( label_R );
+    // write it to the log file
+    ( *m_outData ) << label_R << "\n";
     m_currentPackageStatusLabel->setText( label_R );
     m_progressBar->reset();
 }
@@ -122,6 +131,12 @@ void InstallScreen::cancelInstallation()
 {
     qDebug() << "cancelling installation";  
     
+    closeLogFile();
     m_ociHelper->killBackend(); // quit OCIHelper
     qApp->quit(); // quit OCI
+}
+
+void InstallScreen::closeLogFile()
+{
+    m_logFile.close();
 }
