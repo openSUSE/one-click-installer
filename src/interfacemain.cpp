@@ -33,6 +33,10 @@
 #include "backend.h"
 #include "utils.h"
 #include "media.h"
+
+// Runtime Data
+RuntimeData *RuntimeData::s_instance = 0;
+
 int main( int argc, char *argv[] )
 {
     QCoreApplication app ( argc, argv );

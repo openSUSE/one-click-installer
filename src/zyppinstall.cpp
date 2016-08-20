@@ -37,6 +37,7 @@
 #include <zypp/media/MediaException.h>
 #include "zyppinstall.h"
 #include "utils.h"
+#include "runtimedata.h"
 
 ZYpp::Ptr ZyppInstall::s_zypp = getZYpp(); // acquire initial zypp lock
 

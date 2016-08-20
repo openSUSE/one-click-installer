@@ -29,6 +29,7 @@
 #include <QString>
 #include <KF5/KWidgetsAddons/kmessagebox.h> //for file conflicts
 #include "callbacks.h" // emit values to the OCI
+#include "runtimedata.h"
 
 #define REPEAT_LIMIT 3
 
