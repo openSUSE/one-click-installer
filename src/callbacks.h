@@ -10,11 +10,15 @@ class Callbacks : public QObject
 public:
     Callbacks();
     void emitStartResolvable( QString info );
-    void emitFinishResolvable( bool success );
+    void emitFinishResolvable( QString info, bool success );
     void emitProgress( int value );
+    void emitStartDownload( QString );
+    void emitFinishDownload( QString, bool success );
 Q_SIGNALS:
+    void startDownload( QString );
+    void finishDownload( QString, bool );
     void startResolvable( QString );
-    void finishResolvable( bool );
+    void finishResolvable( QString, bool );
     void progress( int );
 };
 #endif
