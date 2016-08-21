@@ -35,6 +35,7 @@
 #include <zypp/Pathname.h>
 #include <zypp/FileChecker.h>
 #include <zypp/media/MediaException.h>
+
 #include "zyppinstall.h"
 #include "utils.h"
 #include "runtimedata.h"
@@ -84,7 +85,17 @@ bool ZyppInstall::commitChanges()
     policy.downloadMode( zypp::DownloadOnly );
     
     try {
+	// set runtime data
+	// RuntimeData::instance()->setCommitPackagesTotal( summary.packagesToGetAndInstall() );
+	RuntimeData::instance()->setCommitPackagesTotal( s_zypp->resolver()->getTransaction().actionSize() ); //temporary fix
+	RuntimeData::instance()->setCommitPackageCurrent( 0 );
+	RuntimeData::instance()->setRpmPackagesTotal( s_zypp->resolver()->getTransaction().actionSize() );
+	RuntimeData::instance()->setRpmPackageCurrent( 0 );
+	RuntimeData::instance()->setEnteredCommit( true );
+	
 	ZYppCommitResult result = s_zypp->commit( policy );
+	
+	RuntimeData::instance()->setEnteredCommit( false );
 	if ( !result.allDone() || !( dryRunFlag && result.noError() ) ) {
 	     //OCIHelper::instance()->setExitCode( result.attemptToModify() ?
 		//				 ERR_COMMIT : ERR_ZYPP );
@@ -141,6 +152,10 @@ bool ZyppInstall::commitChanges()
 	string message = "Problem occured during or after installation or removal of packages";
 	//OCIHelper::instance()->setExitDescription( ERR_COMMIT, message );
 	return false;
+    }
+    catch ( const char* exp)
+    {
+	cout << "Error committing";
     }
     
     /*string output; 
