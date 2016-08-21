@@ -29,7 +29,9 @@ public slots:
 private slots:
     void cancelInstallation();
     void newResolvableInAction( QString );
-    void updateCurrentResolvableStatusUponCompletion( bool );
+    void newProgressInAction( QString );
+    void updateCurrentResolvableStatusUponCompletion( QString, bool );
+    void updateCurrentProgressStatusUponCompletion( QString, bool );
 private:
     QWidget* horizontalLine();
     QLabel* loadingAnimation(); 

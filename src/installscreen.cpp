@@ -95,27 +95,42 @@ void InstallScreen::initDBusServices()
     qDebug() << " DBus proxies initialized";
     
     // signals and slots
-    connect( m_mediaCallbacks, SIGNAL( startResolvable( QString ) ), this, SLOT( newResolvableInAction( QString ) ) );
-    connect( m_mediaCallbacks, SIGNAL( finishResolvable( bool ) ), this, SLOT( updateCurrentResolvableStatusUponCompletion( bool ) ) );
+    connect( m_mediaCallbacks, SIGNAL( startProgress( QString ) ), this, SLOT( newProgressInAction( QString ) ) );
+    connect( m_mediaCallbacks, SIGNAL( startResolvable( QString ) ), this, SLOT( newResolvableInAction( QString ) ) );    
+    connect( m_mediaCallbacks, SIGNAL( finishProgress( QString, bool ) ), this, SLOT( updateCurrentProgressStatusUponCompletion( QString, bool ) ) );
+    connect( m_mediaCallbacks, SIGNAL( finishResolvable( QString, bool ) ), this, SLOT( updateCurrentResolvableStatusUponCompletion( QString, bool ) ) );
     connect( m_mediaCallbacks, SIGNAL( progress( int ) ), m_progressBar, SLOT( setValue( int ) ) ); // update progress
 }
 
-// Invoke this every time startResolvable() is emitted from start() method[ in media.h ] in OCIHelper
+// Invoke this every time startResolvable() is emitted from start() method[ in media.h ] except for 
+// DownloadProgressReportReceiver in OCIHelper
 void InstallScreen::newResolvableInAction( QString label_R )
 {
     m_statusWidget->append( label_R );
+}
+
+// Invoke this every time finishResolvable() is emitted from finish() method[ in media.h ] except 
+// DownloadProgressReportReceiver in OCIHelper
+void InstallScreen::updateCurrentResolvableStatusUponCompletion( QString finish_R, bool success )
+{
+    m_statusWidget->append( finish_R );
+}
+
+void InstallScreen::newProgressInAction( QString label_R )
+{
+    m_currentPackageStatusLabel->setText( label_R );
     // write it to the log file
     ( *m_outData ) << label_R << "\n";
-    m_currentPackageStatusLabel->setText( label_R );
     m_progressBar->reset();
 }
 
-// Invoke this every time finishResolvable() is emitted from finish() method[ in media.h ] in OCIHelper
-void InstallScreen::updateCurrentResolvableStatusUponCompletion( bool success )
+void InstallScreen::updateCurrentProgressStatusUponCompletion( QString finish_R, bool success )
 {
     // set the progress bar to 100
     m_progressBar->setValue( 100 );
-    m_currentPackageStatusLabel->setText( "Done" );
+    // write it to the log file
+    ( *m_outData ) << finish_R << "\n";
+    m_currentPackageStatusLabel->setText( finish_R );
 }
 
 QWidget* InstallScreen::horizontalLine()
@@ -138,5 +153,6 @@ void InstallScreen::cancelInstallation()
 
 void InstallScreen::closeLogFile()
 {
+    qDebug() << "closing file [ in installscreen ]";
     m_logFile.close();
 }
