@@ -12,11 +12,11 @@ public:
     void emitStartResolvable( QString info );
     void emitFinishResolvable( QString info, bool success );
     void emitProgress( int value );
-    void emitStartDownload( QString );
-    void emitFinishDownload( QString, bool success );
+    void emitStartProgress( QString );
+    void emitFinishProgress( QString, bool success );
 Q_SIGNALS:
-    void startDownload( QString );
-    void finishDownload( QString, bool );
+    void startProgress( QString );
+    void finishProgress( QString, bool );
     void startResolvable( QString );
     void finishResolvable( QString, bool );
     void progress( int );

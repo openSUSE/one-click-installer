@@ -48,11 +48,11 @@ void Callbacks::emitStartResolvable( QString info )
 void Callbacks::emitFinishResolvable( QString info, bool success )
 { emit finishResolvable( info, success ); }
 
-void Callbacks::emitStartDownload( QString info )
-{ emit startDownload( info ); }
+void Callbacks::emitStartProgress( QString info )
+{ emit startProgress( info ); }
 
-void Callbacks::emitFinishDownload( QString info, bool success )
-{ emit finishDownload( info, success ); }
+void Callbacks::emitFinishProgress( QString info, bool success )
+{ emit finishProgress( info, success ); }
 
 void Callbacks::emitProgress( int value )
 { emit progress( value ); }
