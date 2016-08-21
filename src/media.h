@@ -88,7 +88,7 @@ namespace OCICallbacks
 	  m_lastDrateAvg = -1;
 	  
 	  QString info( QString::fromStdString( "Retrieving: " + Pathname( url.getPathName() ).basename() ) );
-	  s_toOCI.emitStartResolvable( info );
+	  s_toOCI.emitStartProgress( info );
       }
       
       /**
@@ -135,8 +135,9 @@ namespace OCICallbacks
       {
 	  // Reports end of a download
 	  // error != NO_ERROR --->> did the download finish with error?
-	  // emit successFlag( uri, m_lastDrateAvg, error != NO_ERROR );
-	  s_toOCI.emitFinishResolvable( error != NO_ERROR );
+	 
+	  QString info( QString::fromStdString( "Retrieved: " + Pathname( uri.getPathName() ).basename() ) );
+	  s_toOCI.emitFinishProgress( info, error != NO_ERROR );
       }
   
   private:
@@ -162,7 +163,6 @@ namespace OCICallbacks
       string m_labelApplyDelta;
       Pathname m_patch;
       ByteCount m_patchSize;
-      unsigned m_packageCurrent;
       
   public:
       /**
@@ -215,31 +215,28 @@ namespace OCICallbacks
       virtual void finishDeltaApply()
       {
 	  cout << "finished applying " << m_labelApplyDelta;
-	  s_toOCI.emitFinishResolvable( true );
+	  s_toOCI.emitFinishResolvable( QString::fromStdString( "Finished Applying" ), true );
       }
       
       virtual void start( Resolvable::constPtr resolvablePtr, const Url& url)
       {
 	  m_resolvablePtr = resolvablePtr;
 	  m_url = url;
-	  m_packageCurrent = 0;
 	  Package::constPtr currentPackage = asKind<Package>( m_resolvablePtr );
 	  
-	  // Complete information for a GUI object to present it to the user
-	  // emitted each time a new resolvable is being downloaded.
-	  // Equivalent zypper output is as follows - 
-	  // Output: Retrieving package gnome-video-effects-0.4.1-3.9.noarch  (1/39),  67.3 KiB (192.6 KiB unpacked)
-	  
-	  /*emit resolvableData( m_resolvablePtr->name(),
-			       m_resolvablePtr->kind().asString(),			       
-			       m_resolvablePtr->edition().asString(),
-			       m_resolvablePtr->arch().asString(),
-			       ++m_packageCurrent,
-			       currentPackage->downloadSize().asString(),
-			       currentPackage->installSize().asString()); */
+	  /*
+	   * - Complete information for a GUI object to present it to the user
+	   * - emitted each time a new resolvable is being downloaded.
+	   * - Equivalent zypper output is as follows - 
+	   * - Output: (1/39) Retrieving package gnome-video-effects-0.4.1-3.9.noarch
+	   */
 	  
 	  // An rpm_download flag for OCIHelper? Awesome design by zypper programmers :)
 	  // OCIHelper.runtimeData().rpm_download = true;
+	  
+	  //set current package
+	  RuntimeData::instance()->setCommitPackageCurrent( RuntimeData::instance()->commitPackageCurrent() + 1 );
+	  s_toOCI.emitStartResolvable( QString::fromStdString( getStartDownloadResolvableInfo( resolvablePtr ) ) );
       }
       
       // Not needed. The progress will be reported by the DownloadProgressReportReceiver's progress method
@@ -258,8 +255,34 @@ namespace OCICallbacks
       // Not really needed unless you say otherwise. :)
       // virtual void pkgGpgCheck( const UserData& userData )  { }
       
-      // Not needed as DownloadProgressReportReceiver is handling the progress.
-      // virtual void finish( Resolvable::constPtr /* resolvablePtr */, Error error, const string& reason ) {}
+      // Although DownloadProgressReportReceiver is handling the progress, report download size and unpacked size
+      virtual void finish( Resolvable::constPtr resolvablePtr , Error error, const string& reason )
+      {
+	  s_toOCI.emitFinishResolvable( QString::fromStdString( getFinishDownloadResolvableInfo( resolvablePtr ) ), error != NO_ERROR );
+      }
+      
+      string getStartDownloadResolvableInfo( Resolvable::constPtr resolvablePtr )
+      {
+	  // #006325 -> Dark Green
+	  string line( str::Format( "<font color=#006325> ( %s / %s ) </font> <b>Retrieving %s:</b> </b><font color=\"Red\">%s-%s.%s</font>" )
+				    % RuntimeData::instance()->commitPackageCurrent()
+				    % RuntimeData::instance()->commitPackagesTotal()
+				    % resolvablePtr->kind()
+				    % resolvablePtr->name()
+				    % resolvablePtr->edition()
+				    % resolvablePtr->arch() );
+				    
+	  return line;	    
+      }
+      
+      string getFinishDownloadResolvableInfo( Resolvable::constPtr resolvablePtr)
+      {
+	  // #14148c -> Dark Blue; 
+	  string line( str::Format( "Download Size:<font color= #14148c> %s </font> Unpacked Size:<font color=\"Purple\"> %s </font><br>" )
+				    % resolvablePtr->downloadSize()
+				    % resolvablePtr->installSize() );
+	  return line;
+      }
   };
   
   // This is not needed for now - just keeping it around for future use
@@ -304,14 +327,12 @@ namespace OCICallbacks
 	  m_progress.noSend();
 	  if ( indeterminate( m_error ) )
 	      m_error = ( m_progress.reportValue() != 100 && m_progress.reportPercent() );
-	  // emit the error
-	  // emit ( m_progressId, m_progress.name(), m_error );
       }
       
       /** print(emit) the progress bar not waiting for a new trigger */
       void print()
       { 
-	  // emit( m_progressId, outLabel( m_progress.name() ), m_progress.reportValue() );
+	   //s_toOCI.emitStartProgress( m_progressId, outLabel( m_progress.name() ), m_progress.reportValue() );
       }
       
       /** \overload also change the progress bar label */
@@ -359,7 +380,6 @@ namespace OCICallbacks
 	  bool operator()( const ProgressData& progress_R )
 	  {
 	      // emit the actual installation progress
-	      // emit( m_bar->m_progressId, m_bar->outLabel( progress_R.name() ), progress_R.reportValue() );
 	      s_toOCI.emitProgress( progress_R.reportValue() );
 	      return true;
 	  }
@@ -448,17 +468,21 @@ namespace OCICallbacks
   public:
       virtual void start( Resolvable::constPtr resolvable )
       {
-	  // just take these values for time being. 
-	  unsigned rpm_pkg_current = 0; // = OCIHelper.runtimeData().rpm_pkg_current;
-	  unsigned rpm_pkgs_total = 1;  // = OCIHelper.runtimeData().rpm_pkgs_total
-	  cout << "Installing: " << resolvable->asString();
+	  //set current rpm package
+	  RuntimeData::instance()->setRpmPackageCurrent( RuntimeData::instance()->rpmPackageCurrent() + 1 );
+	  
+	  unsigned rpm_pkg_current = RuntimeData::instance()->rpmPackageCurrent();
+	  unsigned rpm_pkgs_total = RuntimeData::instance()->rpmPackagesTotal();
+	  
 	  m_progress.reset( new ProgressBar( "install-resolvable",
 					     resolvable->asString(),
-					     ++rpm_pkg_current,
+					     rpm_pkg_current,
 					     rpm_pkgs_total ) );
-	  (*m_progress)->range( 100 );
-	  QString info( QString::fromStdString( "Installing: " + resolvable->name() ) );
-	  s_toOCI.emitStartResolvable( info );
+	  (*m_progress)->range( 100 );	  
+	  
+	  QString info( QString::fromStdString( "Installing: " + resolvable->asString() ) );
+	  s_toOCI.emitStartResolvable( QString::fromStdString( getStartInstallResolvableInfo( resolvable ) ) );
+	  s_toOCI.emitStartProgress( info );
       }
       
       virtual bool progress(int value, Resolvable::constPtr resolvable )
@@ -484,7 +508,6 @@ namespace OCICallbacks
     
       virtual void finish( Resolvable::constPtr resolvable, Error error, const string& reason, RpmLevel /*unused */)
       {
-	  s_toOCI.emitFinishResolvable( error != NO_ERROR );
 	  if ( m_progress ) {
 	      (*m_progress).error( error != NO_ERROR );
 	      m_progress.reset();
@@ -495,12 +518,33 @@ namespace OCICallbacks
 	  }
 	  else {
 	      if ( !reason.empty() ) ;
-		  //emit( "install-finish", reason);
+		  s_toOCI.emitFinishResolvable( QString::fromStdString( getFinishInstallResolvableInfo( resolvable ) ), error != NO_ERROR );
 	  }
+	  QString info( QString::fromStdString( "Installed: " + resolvable->asString() ) );
+	  s_toOCI.emitFinishProgress( info, error != NO_ERROR );
       }
       
       virtual void reportend()
       { m_progress.reset(); }
+      
+      string getStartInstallResolvableInfo( Resolvable::constPtr resolvablePtr )
+      {
+	  // #006325 -> Dark Green
+	  string line( str::Format( "<font color=#006325> ( %s / %s ) </font> <b>Installing :</b> </b><font color=\"Red\">%s</font>" )
+				    % RuntimeData::instance()->rpmPackageCurrent()
+				    % RuntimeData::instance()->rpmPackagesTotal()
+				    % resolvablePtr->asString() );
+				    
+	  return line;	    
+      }
+      string getFinishInstallResolvableInfo( Resolvable::constPtr resolvablePtr)
+      {
+	  // #14148c -> Dark Blue; 
+	  string line( str::Format( "Installed:<font color= #14148c> %s </font> Status:<font color=\"Purple\"> %s </font><br>" )
+				    % resolvablePtr->asString()
+				    % "Done" );
+	  return line;
+      }
   private:
       scoped_ptr<ProgressBar> m_progress;
   };
@@ -513,15 +557,20 @@ namespace OCICallbacks
       {
 	  cout << "Removing " << resolvable->asString();
 	  
-	  unsigned rpm_pkg_current = 0; // = OCIHelper.runtimeData().rpm_pkg_current;
-	  unsigned rpm_pkgs_total = 1;  // = OCIHelper.runtimeData().rpm_pkgs_total
+	  //set current rpm package
+	  RuntimeData::instance()->setRpmPackageCurrent( RuntimeData::instance()->rpmPackageCurrent() + 1 );
+	  
+	  unsigned rpm_pkg_current = RuntimeData::instance()->rpmPackageCurrent();
+	  unsigned rpm_pkgs_total = RuntimeData::instance()->rpmPackagesTotal();
+	  
 	  m_progress.reset( new ProgressBar( "remove-resolvable",
 					     resolvable->asString(),
-					     ++rpm_pkg_current,
+					     rpm_pkg_current,
 					     rpm_pkgs_total ) );
 	  ( *m_progress )->range( 100 ); // reports percentage
-	  QString info( QString::fromStdString( "Removing: " + resolvable->name() ) );
+	  QString info( QString::fromStdString( "<b>Removing: </b>" + resolvable->name() ) );
 	  s_toOCI.emitStartResolvable( info );
+	  s_toOCI.emitStartProgress( info );
       }
       
       virtual bool progress( int value, Resolvable::constPtr resolvable )
@@ -547,7 +596,7 @@ namespace OCICallbacks
       
       virtual void finish( Resolvable::constPtr resolvable, Error error, const string& reason )
       {
-	  s_toOCI.emitFinishResolvable( error != NO_ERROR );
+	  QString info( QString::fromStdString( "<b>Removed: </b>" + resolvable->name() ) );
 	  // finish progress - indicate error
 	  if ( m_progress ) {
 	      ( *m_progress ).error( error != NO_ERROR );
@@ -559,8 +608,9 @@ namespace OCICallbacks
 	  }
 	  else {
 	      if ( !reason.empty() ) ;
-		  //emit( "remove-finish", reason);
+		  s_toOCI.emitFinishResolvable( info, error != NO_ERROR );
 	  }
+	  s_toOCI.emitFinishProgress( info, error != NO_ERROR );
       }
       
       virtual void reportend()
@@ -583,8 +633,9 @@ namespace OCICallbacks
       {
 	  ( *m_progress )->set( progress_R );
 	  // return !OCI::instance()->exitRequested(); //refer to line 88 (media.h)
-	  QString info( QString::fromStdString( "Checking For File Conflicts" ) );
+	  QString info( QString::fromStdString( "<font color=\"Red\"><b>Checking For File Conflicts...</b></font>" ) );
 	  s_toOCI.emitStartResolvable( info );
+	  s_toOCI.emitStartProgress( info );
 	  return true; //this should suffice for now. Temporary fix
       }
       
@@ -602,7 +653,7 @@ namespace OCICallbacks
 	  m_progress.reset();
 	  
 	  if ( conflicts_R.empty() && noFilelist_R.empty() ) {
-	      s_toOCI.emitFinishResolvable( true );
+	      //s_toOCI.emitFinishResolvable( true );
 	      return true;// !OCI::instance()->exitRequested();
 	  }
 	  
