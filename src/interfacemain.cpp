@@ -30,6 +30,7 @@
 #include <QTextStream>
 #include <QUrl>
 #include <QStringList>
+#include <klocalizedstring.h>
 #include "backend.h"
 #include "utils.h"
 #include "media.h"
@@ -60,7 +61,8 @@ int main( int argc, char *argv[] )
 	qFatal( "Failed to initialize OCI callbacks." );
 	exit( 1 );
     }
-    
+    //Connecting to Catalogs
+    KLocalizedString::setApplicationDomain("oneclickinstaller");
     // Reset RepoManager. This step is necessary to run the manager with root privileges
     ZypperUtils::resetRepoManager( Pathname( "/" ) );
     
