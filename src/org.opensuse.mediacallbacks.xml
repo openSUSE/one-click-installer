@@ -1,0 +1,22 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.opensuse.MediaCallbacks">
+    <signal name="startProgress">
+      <arg type="s" direction="out"/>
+    </signal>
+    <signal name="finishProgress">
+      <arg type="s" direction="out"/>
+      <arg type="b" direction="out"/>
+    </signal>
+    <signal name="startResolvable">
+      <arg type="s" direction="out"/>
+    </signal>
+    <signal name="finishResolvable">
+      <arg type="s" direction="out"/>
+      <arg type="b" direction="out"/>
+    </signal>
+    <signal name="progress">
+      <arg type="i" direction="out"/>
+    </signal>
+  </interface>
+</node>

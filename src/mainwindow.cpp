@@ -1,22 +1,3 @@
-//      Copyright 2012 Saurabh Sood <saurabh@saurabh.geeko>
-//      
-//      This program is free software; you can redistribute it and/or modify
-//      it under the terms of the GNU General Public License as published by
-//      the Free Software Foundation; either version 2 of the License, or
-//      (at your option) any later version.
-//      
-//      This program is distributed in the hope that it will be useful,
-//      but WITHOUT ANY WARRANTY; without even the implied warranty of
-//      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//      GNU General Public License for more details.
-//      
-//      You should have received a copy of the GNU General Public License
-//      along with this program; if not, write to the Free Software
-//      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-//      MA 02110-1301, USA.
-//      
-//      
-
 #include <QDBusConnection>
 #include <klocalizedstring.h>
 #include <sys/types.h>
@@ -70,10 +51,15 @@ MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, boo
     m_header = new MainHeader;
 
     m_firstScreen = new FirstScreen( m_backend, m_tmpFileName, filename, this );
+    qDebug() << "after m_firstScreen";
     Summary *installSummary = new Summary( m_backend, m_tmpFileName );
-    InstallScreen *installer = new InstallScreen( m_backend, m_tmpFileName );
+    qDebug() << "after installSummary";
+    InstallScreen *installer = new InstallScreen();
+    qDebug() << "after installer";
     CheckConflictScreen *checkForConflictsScreen = new CheckConflictScreen();
+    qDebug() << "after checkForConflictsScreen";
     ConflictResolutionScreen *conflictResolutionScreen = new ConflictResolutionScreen();
+    qDebug() << "after conflictresolutionscreen";
     
     QScrollArea *scroll = new QScrollArea;
     scroll->setFrameShape( QFrame::NoFrame );
@@ -125,17 +111,21 @@ MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, boo
     QObject::connect( m_conflictCancel, SIGNAL( clicked() ), conflictResolutionScreen, SLOT( cancelInstallation() ) );
     sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "hasConflicts", m_header, SLOT( showConflictResolutionHeader() ) );
     sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "hasConflicts", this, SLOT( showConflictResolutionScreen() ) );
+    // create and instantiate the MediaCallbacks DBus proxy
+    sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "noConflicts", installer, SLOT( initDBusServices() ) );
     sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "noConflicts", m_header, SLOT( installationStarted() ) );
-  
-     /* For Installation 
-     * QObject::connect( , SIGNAL( installationStarted() ), , SLOT( installationStarted() ) );
-     * QObject::connect( , SIGNAL( installationCompleted() ), , SLOT( installationCompleted() ) );
-     * QObject::connect( , SIGNAL( installationCompleted() ), m_header, SLOT( showCompletionStatus() ) );
-     * QObject::connect( , SIGNAL( installationCompleted() ), m_header, SLOT( installationCompleted() ) );
-     */
+    sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "noConflicts", this, SLOT( showInstallationScreen() ) );
+ 
     show();
 }
 
+void MainWindow::showInstallationScreen()
+{
+    m_screenStack->setCurrentIndex( 2 );
+    m_conflictCancel->hide();
+    m_conflictContinueInstallation->hide();
+    
+}
 void MainWindow::showConflictResolutionScreen()
 {
     m_screenStack->setCurrentIndex( 4 );

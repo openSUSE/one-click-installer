@@ -5,56 +5,47 @@
 #include <QWidget>
 #include <QLabel>
 #include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QPushButton>
 #include <QProgressBar>
-#include <QList>
-#include <QUrl>
+#include <QMovie>
 #include <QDebug>
-#include <QTimer>
-#include <iostream>
-#include <QHash>
-#include <QFileSystemWatcher>
+#include <QTextBrowser>
 #include <QFile>
-#include "packagebackend.h"
-#include "fakebackend.h"
+#include <QTextStream>
+#include "oci_helper_interface.h"
+#include "media_callbacks_interface.h"
 
 class InstallScreen : public QWidget
 {
     Q_OBJECT
 public:
-
     /**
      *  Default Constructor
      */
-    InstallScreen( PackageBackend *backend, const QString& tmpFileName,  QObject *parent = 0 );
-
+    InstallScreen();
+public slots:
+    void initDBusServices();
+    void closeLogFile();
 private slots:
-    /**
-        Hide Progressbars and show status for each package
-    */
-    void showCompletionStatus();
-
-    void logFileChanged( const QString& path );
-
     void cancelInstallation();
-
+    void newResolvableInAction( QString );
+    void newProgressInAction( QString );
+    void updateCurrentResolvableStatusUponCompletion( QString, bool );
+    void updateCurrentProgressStatusUponCompletion( QString, bool );
 private:
-    QLabel *m_installStatus;
-    QLabel *m_sources;
-
-    QPushButton *m_cancel;
-    PackageBackend *m_backend;
-
-    QString m_tmpFileName;
-
-    QHash< int, QHBoxLayout* > m_packageLayouts;
+    QWidget* horizontalLine();
+    QLabel* loadingAnimation(); 
+private:
+    QVBoxLayout *m_mainLayout;
     QProgressBar *m_progressBar;
-
-    QFileSystemWatcher *m_watcher;
-
-signals:
-    void installationCompleted();
+    QPushButton *m_cancelButton;
+    QLabel *m_currentPackageStatusLabel;
+    QTextBrowser *m_statusWidget;
+    QFile m_logFile;
+    QTextStream *m_outData;
+    
+    /* OCIHelper proxies */
+    org::opensuse::OCIHelper *m_ociHelper;
+    org::opensuse::MediaCallbacks *m_mediaCallbacks;
 };
-
 #endif

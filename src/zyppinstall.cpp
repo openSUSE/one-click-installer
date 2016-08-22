@@ -31,8 +31,14 @@
 #include <zypp/ResPool.h>
 #include <zypp/PoolItemBest.h>
 #include <zypp/base/Easy.h>
+#include <zypp/RepoManager.h>
+#include <zypp/Pathname.h>
+#include <zypp/FileChecker.h>
+#include <zypp/media/MediaException.h>
+
 #include "zyppinstall.h"
 #include "utils.h"
+#include "runtimedata.h"
 
 ZYpp::Ptr ZyppInstall::s_zypp = getZYpp(); // acquire initial zypp lock
 
@@ -79,15 +85,87 @@ bool ZyppInstall::commitChanges()
     policy.downloadMode( zypp::DownloadOnly );
     
     try {
+	// set runtime data
+	// RuntimeData::instance()->setCommitPackagesTotal( summary.packagesToGetAndInstall() );
+	RuntimeData::instance()->setCommitPackagesTotal( s_zypp->resolver()->getTransaction().actionSize() ); //temporary fix
+	RuntimeData::instance()->setCommitPackageCurrent( 0 );
+	RuntimeData::instance()->setRpmPackagesTotal( s_zypp->resolver()->getTransaction().actionSize() );
+	RuntimeData::instance()->setRpmPackageCurrent( 0 );
+	RuntimeData::instance()->setEnteredCommit( true );
+	
 	ZYppCommitResult result = s_zypp->commit( policy );
-	if ( !( result.allDone() || (dryRunFlag && result.noError() ) ) )
+	
+	RuntimeData::instance()->setEnteredCommit( false );
+	if ( !result.allDone() || !( dryRunFlag && result.noError() ) ) {
+	     //OCIHelper::instance()->setExitCode( result.attemptToModify() ?
+		//				 ERR_COMMIT : ERR_ZYPP );
 	    throw "Incomplete Commit";
+	}
 	cout << "Commit Succeeded" << endl;
     }
-    catch ( const Exception& exp ) {
-	cout << "Commit aborted with exception" << endl;
-	throw;	
+    catch ( const media::MediaException& e)
+    {
+	string errDescription = "Problem retrieving the package file from the repository";
+	//OCIHelper::instance()->setErrorDescription( ERR_COMMIT, errDescription );
+	return false;
     }
+    catch ( repo::RepoException& e )
+    {
+	bool refreshNeeded = false;
+	try {
+	    RepoManager manager( Pathname( "/" ) );
+	    for ( RepoInfo::urls_const_iterator it = e.info().baseUrlsBegin();
+		 it != e.info().baseUrlsEnd();
+		 ++it )
+	    {
+		if ( manager.checkIfToRefreshMetadata( e.info(), *it, RepoManager::RefreshForced ) == RepoManager::REFRESH_NEEDED ) 
+		{
+		    refreshNeeded = true;
+		    break;
+		}
+	    }
+	}
+	catch( const Exception& e )
+	{ cout << "Ingore - This is just check if to refresh exception" << endl; }
+	
+	string message;
+	if ( refreshNeeded ) // this exception is highly unlikely as we are refreshing all the enabled repos during installation
+	    message = str::Format( "Repository '%s' is out of date. Running '%s' might help" ) % e.info().alias() % "zypper refresh";
+	else
+	    message = "Problem retrieving the package file from the repository";
+	//OCIHelper::instance()->setExitDescription( ERR_COMMIT, message );
+	return false;
+    }
+    catch ( const FileCheckException& e)
+    {
+	string message = "The package integrity check failed. This may be a problem"
+			  " with the repository or media. Please try one of the following:\n"
+			  "- refresh the repositories using 'zypper refresh'\n"
+			  "- use another installation medium (if damaged)\n"
+			  "- use another repository.\n"
+			  "Sorry to disappoint you! This is out of the scope of OCI (for now?)";
+	//OCIHelper::instance()->setExitDescription( ERR_COMMIT, message );
+	return false;
+    }
+    catch ( const Exception& e )
+    {
+	string message = "Problem occured during or after installation or removal of packages";
+	//OCIHelper::instance()->setExitDescription( ERR_COMMIT, message );
+	return false;
+    }
+    catch ( const char* exp)
+    {
+	cout << "Error committing";
+    }
+    
+    /*string output; 
+    if ( OCIHelper::instance()->exitCode() != ZYPP_OK ) {
+	output = "Installation has completed with error. ";
+	if ( OCIHelper::instance()->exitCode() == ERR_COMMIT )
+	    output.append( "Please run 'zypper verify' to repair any dependency problem." );
+	// send output to OCI
+    }*/
+    return true;
 }
 
 void ZyppInstall::initTarget( const Pathname& sysRoot )

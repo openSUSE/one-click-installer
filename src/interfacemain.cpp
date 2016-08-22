@@ -32,6 +32,10 @@
 #include <QStringList>
 #include "backend.h"
 #include "utils.h"
+#include "media.h"
+
+// Runtime Data
+RuntimeData *RuntimeData::s_instance = 0;
 
 int main( int argc, char *argv[] )
 {
@@ -40,6 +44,21 @@ int main( int argc, char *argv[] )
     if ( argc < 2 ) {
 	qDebug() << "Usage: ./oneclickhelper <File Path>";
 	return 1;
+    }
+ 
+    // Progress callbacks
+    try {
+	static RpmCallbacks rpmCallbacks;
+	static SourceCallbacks sourceCallbacks;
+	static MediaCallbacks mediaCallbacks;
+    }
+    catch ( const Exception& e )  {
+	qDebug() << "Failed to initialize OCI callbacks.";
+	exit( 1 );
+    }
+    catch (...) {
+	qDebug() << "Failed to initialize OCI callbacks.";
+	exit( 1 );
     }
     
     // Reset RepoManager. This step is necessary to run the manager with root privileges
