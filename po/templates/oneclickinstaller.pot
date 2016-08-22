@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 22:03+0530\n"
+"POT-Creation-Date: 2016-08-22 23:16+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -333,22 +333,17 @@ msgstr ""
 msgid "Install <b>%1</b>"
 msgstr ""
 
-#: src/zyppinfo.cpp:75
+#: src/zyppinfo.cpp:74
 #, kde-format
 msgid "Not Installed"
 msgstr ""
 
-#: src/zyppinfo.cpp:79
+#: src/zyppinfo.cpp:77
 #, kde-format
-msgid "Archaic (version "
+msgid "Archaic (Version %s installed)"
 msgstr ""
 
 #: src/zyppinfo.cpp:81
-#, kde-format
-msgid " installed)"
-msgstr ""
-
-#: src/zyppinfo.cpp:86
 #, kde-format
 msgid "Up to Date"
 msgstr ""

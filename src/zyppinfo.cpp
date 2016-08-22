@@ -70,17 +70,12 @@ Info ZyppInfo::packageObject( const PoolQuery & q )
 	
 	// set status
 	string status;
-	stringstream format;
 	if ( !installedObject )
 	    status = i18n( "Not Installed" ).toStdString();
 	else {
 	    if ( updateObject ) { 
-		status = str::Format( "%s %s %s " )
-			  % i18n( "Archaic (version " ).toStdString()
-			  % installedObject.edition().asString()
-			  % i18n( " installed)" ).toStdString();
-		//format << "Archaic (version " << installedObject.edition().asString() << " installed)";
-		//status = format.str();
+		status = str::Format( i18n( "Archaic (Version %s installed)" ).toStdString() )
+			  % installedObject.edition().asString();
 	    }
 	    else 
 		status = i18n( "Up to Date" ).toStdString();

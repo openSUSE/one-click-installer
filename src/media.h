@@ -682,17 +682,17 @@ namespace OCICallbacks
 	              "in order to access their file lists." ;
 	      // print them out
 	      qDebug() << "The following packages had to be excluded from file conflicts check because they are not yet downloaded" ;
-	      for_( it, noFilelist_R.begin(), noFilelist_R.end() )
-		  ;//qDebug() << ( *it );
+	      /*for_( it, noFilelist_R.begin(), noFilelist_R.end() )
+		  ;//qDebug() << ( *it );*/
 	  }
 	  
 	  if ( !conflicts_R.empty() )
 	  {
 	      // use i18np() here
 	      qDebug() << "Detected " << conflicts_R.size() << "file conflict(s)" ;
-	      //print them out
+	      /* print them out
 	      for_( it, conflicts_R.begin(), conflicts_R.end() )
-		  ;//qDebug() << ( *it ) ;
+		  ;//qDebug() << ( *it ) ;*/
 	      
 	      // prompt general info (for now) about why file conflicts usually occur
 	      bool cont = true;

@@ -43,7 +43,7 @@ int main( int argc, char *argv[] )
     QCoreApplication app ( argc, argv );
     qDebug() << "Helper Started";
     if ( argc < 2 ) {
-	qFatal( "Usage: ./oneclickhelper <File Path>" );
+	qInfo( "Usage: ./oneclickhelper <File Path>" );
 	return 1;
     }
  
@@ -62,7 +62,7 @@ int main( int argc, char *argv[] )
 	exit( 1 );
     }
     //Connecting to Catalogs
-    KLocalizedString::setApplicationDomain("oneclickinstaller");
+    KLocalizedString::setApplicationDomain( "oneclickinstaller" );
     // Reset RepoManager. This step is necessary to run the manager with root privileges
     ZypperUtils::resetRepoManager( Pathname( "/" ) );
     
