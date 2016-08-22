@@ -10,7 +10,7 @@ namespace OCICallbacks
 								  const vector<string> & devices,
 								  unsigned int& index)
   {
-      cout << "Work needed to be done" << endl;
+      qDebug() << "Work needed to be done";
       return MediaChangeReport::ABORT;
   }
 

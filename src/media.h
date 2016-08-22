@@ -27,6 +27,7 @@
 
 
 #include <QString>
+#include <QDebug>
 #include <KF5/KWidgetsAddons/kmessagebox.h> //for file conflicts
 #include "callbacks.h" // emit values to the OCI
 #include "runtimedata.h"
@@ -176,14 +177,14 @@ namespace OCICallbacks
       {
 	  m_delta = fileName;
 	  m_deltaSize = downloadSize;
-	  cout << "Retrieving delta: " << m_delta << ", " << m_deltaSize << endl;
+	  qDebug() << "Retrieving delta: " << m_delta.c_str() << ", " << m_deltaSize.asString().c_str();
 	  QString info( QString::fromStdString( "Retrieving Delta: " + fileName.asString() ) );
 	  s_toOCI.emitStartResolvable( info );
       }
       
       virtual void problemDeltaDownload( const string & description )
       {
-	  cout << description << endl;
+	  qDebug() << description.c_str() ;
       }
       
       /**
@@ -196,25 +197,25 @@ namespace OCICallbacks
       {
 	  m_delta = filename.basename();
 	  m_labelApplyDelta = m_delta.asString();
-	  cout << "Applying Delta: " << m_delta;
+	  qDebug() << "Applying Delta: " << m_delta.c_str();
 	  QString info( QString::fromStdString( "Applying Delta: " + filename.asString() ) );
 	  s_toOCI.emitStartResolvable( info );
       }
       
       virtual void progressDeltaApply( int value )
       {
-	  cout << m_labelApplyDelta << " " << value << endl;
+	  qDebug() << m_labelApplyDelta.c_str() << " " << value ;
 	  s_toOCI.emitProgress( value );
       }
       
       virtual void problemDeltaApply( const string & description )
       {
-	  cout << description;
+	  qDebug() << description.c_str();
       }
       
       virtual void finishDeltaApply()
       {
-	  cout << "finished applying " << m_labelApplyDelta;
+	  qDebug() << "finished applying " << m_labelApplyDelta.c_str();
 	  s_toOCI.emitFinishResolvable( QString::fromStdString( "Finished Applying" ), true );
       }
       
@@ -244,7 +245,7 @@ namespace OCICallbacks
       
       virtual Action problem( Resolvable::constPtr resolvablePtr, Error error, const string & description )
       {
-	  cout << "error report" << endl;
+	  qDebug() << "error report" ;
 	  // emit( error, description );
 	  // set the rpm_download flag false
 	  // OCIHelper::instance()->runtimeData().rpm_download = false;
@@ -291,20 +292,20 @@ namespace OCICallbacks
   public:
       virtual void start( const ProgressData & data )
       {
-	  cout << "=========================" << endl;
-	  cout << "Object Numeric Id: " << data.numericId() << endl;
-	  cout << "Counter Name: " << data.name() << endl;
-	  cout << "Report Alive: " << data.reportAlive() << endl;
-	  cout << "=========================" << endl;
+	  qDebug() << "=========================" ;
+	  qDebug() << "Object Numeric Id: " << data.numericId() ;
+	  qDebug() << "Counter Name: " << data.name().c_str() ;
+	  qDebug() << "Report Alive: " << data.reportAlive() ;
+	  qDebug() << "=========================" ;
       }
       
       virtual bool progress( const ProgressData & data )
       {
-	  cout << "In ProgressReportReceiver progress() ";
+	  qDebug() << "In ProgressReportReceiver progress() ";
 	  if (data.reportAlive())
-	    cout << data.numericId() << data.name();
+	    qDebug() << data.numericId() << data.name().c_str();
 	  else
-            cout << data.numericId() << " " << data.name() << " " << data.val();
+            qDebug() << data.numericId() << " " << data.name().c_str() << " " << data.val();
 	  return true;
       }
   };
@@ -449,7 +450,7 @@ namespace OCICallbacks
 	  if ( error == NO_ERROR )
 	      ( *m_progressBar )->toMax();
 	  else {
-	      cout << "Reason [in Download Progress ]" << endl;
+	      qDebug() << "Reason [in Download Progress ]" ;
 	      m_progressBar->error();
 	  }
 	  
@@ -500,7 +501,7 @@ namespace OCICallbacks
 	      m_progress.reset();
 	  }
 	  
-	  cout << "Installation of " << resolvable->asString() << " failed" << endl;
+	  qDebug() << "Installation of " << resolvable->asString().c_str() << " failed" ;
 	  // emit the problem
 	  // emit problemEncountered( resolvable->asString(), description );
 	  return (Action) ABORT;
@@ -555,7 +556,7 @@ namespace OCICallbacks
   public:
       virtual void start( Resolvable::constPtr resolvable )
       {
-	  cout << "Removing " << resolvable->asString();
+	  qDebug() << "Removing " << resolvable->asString().c_str();
 	  
 	  //set current rpm package
 	  RuntimeData::instance()->setRpmPackageCurrent( RuntimeData::instance()->rpmPackageCurrent() + 1 );
@@ -588,7 +589,7 @@ namespace OCICallbacks
 	      m_progress.reset();
 	  }
 	  
-	  cout << "Removal of " << resolvable->asString() << " failed" << endl;
+	  qDebug() << "Removal of " << resolvable->asString().c_str() << " failed" ;
 	  // emit the problem
 	  // emit problemEncountered( resolvable->asString(), description );
 	  return (Action) ABORT;
@@ -660,21 +661,21 @@ namespace OCICallbacks
 	  // show error result
 	  if ( !noFilelist_R.empty() ) //warning
 	  {
-	      cout << "Checking for file conflicts requires not installed packages to be downloaded in advance "
-	              "in order to access their file lists." << endl;
+	      qDebug() << "Checking for file conflicts requires not installed packages to be downloaded in advance "
+	              "in order to access their file lists." ;
 	      // print them out
-	      cout << "The following packages had to be excluded from file conflicts check because they are not yet downloaded" << endl;
+	      qDebug() << "The following packages had to be excluded from file conflicts check because they are not yet downloaded" ;
 	      for_( it, noFilelist_R.begin(), noFilelist_R.end() )
-		  cout << ( *it ) << endl;;
+		  ;//qDebug() << ( *it );
 	  }
 	  
 	  if ( !conflicts_R.empty() )
 	  {
 	      // use i18np() here
-	      cout << "Detected " << conflicts_R.size() << "file conflict(s)" << endl;
+	      qDebug() << "Detected " << conflicts_R.size() << "file conflict(s)" ;
 	      //print them out
 	      for_( it, conflicts_R.begin(), conflicts_R.end() )
-		  cout << ( *it ) << endl;
+		  ;//qDebug() << ( *it ) ;
 	      
 	      // prompt general info (for now) about why file conflicts usually occur
 	      bool cont = true;

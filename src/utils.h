@@ -1,7 +1,6 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <iostream>
 #include <string.h>
 
 #include <zypp/RepoManager.h>

@@ -60,14 +60,13 @@ void ZyppInstall::markPackagesForInstallation(const string & packageName)
 	    ui::asSelectable()( *it )->setOnSystem( *it, ResStatus::USER );
 	}
     }
-    cout << s_zypp->pool() << endl;   
-    cout << "=====================[ pool ready ]=============================" << endl;
+    qDebug() << "=====================[ pool ready ]=============================";
 }
 
 bool ZyppInstall::resolveConflictsAndDependencies()
 {
     // Solve Selection
-    cout << "Solving dependencies..." << endl;
+    qDebug() << "Solving dependencies...";
     return s_zypp->resolver()->resolvePool();
 }
 
@@ -75,14 +74,14 @@ bool ZyppInstall::commitChanges()
 {
     // Commit the changes 
     // Please note that dryRunFlag and zypp::DownloadOnly are for now
-    cout << "Committing the changes" << endl;
+    qDebug() << "Committing the changes";
     bool dryRunFlag = false;
     ZYppCommitPolicy policy;
     if ( !dryRunFlag ) {
 	policy.dryRun( true );
 	dryRunFlag = true;
     }
-    policy.downloadMode( zypp::DownloadOnly );
+    policy.downloadMode( zypp::DownloadOnly ); 
     
     try {
 	// set runtime data
@@ -101,7 +100,7 @@ bool ZyppInstall::commitChanges()
 		//				 ERR_COMMIT : ERR_ZYPP );
 	    throw "Incomplete Commit";
 	}
-	cout << "Commit Succeeded" << endl;
+	qDebug() << "Commit Succeeded";
     }
     catch ( const media::MediaException& e)
     {
@@ -126,7 +125,7 @@ bool ZyppInstall::commitChanges()
 	    }
 	}
 	catch( const Exception& e )
-	{ cout << "Ingore - This is just check if to refresh exception" << endl; }
+	{ qDebug() << "Ingore - This is just check if to refresh exception"; }
 	
 	string message;
 	if ( refreshNeeded ) // this exception is highly unlikely as we are refreshing all the enabled repos during installation
@@ -155,7 +154,7 @@ bool ZyppInstall::commitChanges()
     }
     catch ( const char* exp)
     {
-	cout << "Error committing";
+	qDebug() << "Error committing";
     }
     
     /*string output; 
@@ -170,9 +169,9 @@ bool ZyppInstall::commitChanges()
 
 void ZyppInstall::initTarget( const Pathname& sysRoot )
 {
-    cout << "Initializing target at " << sysRoot << endl;
+    qDebug() << "Initializing target at " << sysRoot.asString().c_str();
     s_zypp->initializeTarget( sysRoot ); //initialize target
-    cout << "Loading target resolvables" << endl;
+    qDebug() << "Loading target resolvables";
     s_zypp->getTarget()->load(); // load installed packages to pool
 }
 
