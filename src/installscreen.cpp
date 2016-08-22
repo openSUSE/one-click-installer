@@ -104,19 +104,19 @@ void InstallScreen::initDBusServices()
 
 // Invoke this every time startResolvable() is emitted from start() method[ in media.h ] except for 
 // DownloadProgressReportReceiver in OCIHelper
-void InstallScreen::newResolvableInAction( QString label_R )
+void InstallScreen::newResolvableInAction( const QString & label_R )
 {
     m_statusWidget->append( label_R );
 }
 
 // Invoke this every time finishResolvable() is emitted from finish() method[ in media.h ] except 
 // DownloadProgressReportReceiver in OCIHelper
-void InstallScreen::updateCurrentResolvableStatusUponCompletion( QString finish_R, bool success )
+void InstallScreen::updateCurrentResolvableStatusUponCompletion( const QString & finish_R, bool success )
 {
     m_statusWidget->append( finish_R );
 }
 
-void InstallScreen::newProgressInAction( QString label_R )
+void InstallScreen::newProgressInAction( const QString & label_R )
 {
     m_currentPackageStatusLabel->setText( label_R );
     // write it to the log file
@@ -124,7 +124,7 @@ void InstallScreen::newProgressInAction( QString label_R )
     m_progressBar->reset();
 }
 
-void InstallScreen::updateCurrentProgressStatusUponCompletion( QString finish_R, bool success )
+void InstallScreen::updateCurrentProgressStatusUponCompletion( const QString & finish_R, bool success )
 {
     // set the progress bar to 100
     m_progressBar->setValue( 100 );

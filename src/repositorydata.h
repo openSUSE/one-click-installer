@@ -13,12 +13,12 @@ public:
     /**
      * Set Base Url of Repository
      */
-    void setBaseUrl( const std::string& url );
+    void setBaseUrl( const std::string & url );
 
     /**
      * Set Alias of Repository
      */
-    void setAlias( const std::string& alias );
+    void setAlias( const std::string & alias );
 
     /**
      * Return the KeyRing

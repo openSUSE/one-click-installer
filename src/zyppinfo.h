@@ -33,14 +33,14 @@ public:
     string installedSizeAsString() { return m_installedSize.asString(); }
     unsigned long long installedSize() { return (unsigned long long)m_installedSize; }
 
-    void setRepositoryName( const string& repository ) { m_repositoryName = repository; }
-    void setPackageName( const string& packageName ) { m_packageName = packageName; }
-    void setVersion( const string& version ) { m_version = version; }
-    void setArch( const string& arch ) { m_arch = arch; }
-    void setVendor( const string& vendor ) { m_vendor = vendor; }
+    void setRepositoryName( const string & repository ) { m_repositoryName = repository; }
+    void setPackageName( const string & packageName ) { m_packageName = packageName; }
+    void setVersion( const string & version ) { m_version = version; }
+    void setArch( const string & arch ) { m_arch = arch; }
+    void setVendor( const string & vendor ) { m_vendor = vendor; }
     void setInstalled( bool Instflag ) { m_installed = Instflag; }
-    void setStatus( const string& status ) { m_status = status; }
-    void setInstalledSize( const ByteCount& count ) { m_installedSize = count; }
+    void setStatus( const string & status ) { m_status = status; }
+    void setInstalledSize( const ByteCount & count ) { m_installedSize = count; }
 };
 
 class ZyppInfo
@@ -49,7 +49,7 @@ public:
     /**
      * Executes query to obtain meta-data
      */
-    static Info queryMetadataForPackage( const string& packageName );
+    static Info queryMetadataForPackage( const string & packageName );
  
     /**
      * Returns KeyRing report
@@ -59,7 +59,7 @@ private:
     /**
      * Returns PoolItem object to the user to display various attributes of a packageName
      */
-    static Info packageObject( const PoolQuery& q );
+    static Info packageObject( const PoolQuery & q );
 };
 
 #endif

@@ -22,7 +22,7 @@
 #include <klocalizedstring.h>
 #include "summary.h"
 
-Summary::Summary(PackageBackend *backend, const QString& tmpFileName, QObject *parent )
+Summary::Summary(PackageBackend *backend, const QString & tmpFileName, QObject *parent )
 {
     m_backend = backend;
     m_tmpFileName = tmpFileName;

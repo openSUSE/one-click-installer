@@ -14,7 +14,7 @@ public:
     /**
         Default Constructor
     */
-    YmpParser( const QString& ympfile );
+    YmpParser( const QString & ympfile );
 
     /**
         Parse the YMP file to extract the contents

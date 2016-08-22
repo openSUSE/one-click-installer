@@ -41,12 +41,12 @@ private slots:
     /**
      * Show the Package Description Label
      */
-    void showPackageDescription( QString link );
+    void showPackageDescription( const QString & link );
 
     /**
      * Update the version and size of the package
      */
-    void dataChanged( QString version, QString size );
+    void dataChanged( const QString & version, const QString & size );
 
 signals:
     void sizeUpdated( QString size );

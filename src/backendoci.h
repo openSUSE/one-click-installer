@@ -31,7 +31,7 @@ protected:
     /**
      * Check if repo exists in the system repos or not
      */
-    bool exists( const QString& repo );
+    bool exists( const QString & repo );
 
 signals:
     void checkForConflicts();

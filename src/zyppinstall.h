@@ -13,7 +13,7 @@ public:
   /**
    * Marks packages for installation in pool
    */
-  static void markPackagesForInstallation( const string& packageName );
+  static void markPackagesForInstallation( const string & packageName );
   
   /**
    * Resolves conflicts and dependencies. Returns true on success and false if problems exist

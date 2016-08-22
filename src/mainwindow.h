@@ -25,7 +25,7 @@ public:
     /**
         Default Constructor taking the YMP file as argument
     */
-    MainWindow( const QString& filename, const QString& tmpFileName, bool fakeRequested, QObject *parent = 0 );
+    MainWindow( const QString & filename, const QString & tmpFileName, bool fakeRequested, QObject *parent = 0 );
 
 private:
     PackageBackend *m_backend;
@@ -71,7 +71,7 @@ private slots:
     /**
      * Update the size of packages
      */
-    void updateSize(const QString& size );
+    void updateSize(const QString & size );
     
     /** 
      * Show Check for conflicts screen

@@ -41,7 +41,7 @@ KeyRingReceive ZypperUtils::s_keyReceiveReport;
 
 //Methods
 /************************************* HELPER FUNCTIONS **************************************/
-void ZypperUtils::initRepository( const string& repoUrl )
+void ZypperUtils::initRepository( const string & repoUrl )
 {
     //KeyRing - Handling of gpg keys
     s_keyReceiveReport.connect();
@@ -70,7 +70,7 @@ void ZypperUtils::initRepository( const string& repoUrl )
     cout << "===================================================" << endl;
 }
 
-void ZypperUtils::initRepoInfo( const string& repoUrl, const string& repoAlias )
+void ZypperUtils::initRepoInfo( const string & repoUrl, const string& repoAlias )
 {
     s_repoInfo.addBaseUrl( Url( repoUrl ) );
     s_repoInfo.setName( repoAlias );
@@ -86,7 +86,7 @@ void ZypperUtils::refreshRepoManager()
     s_repoManager->buildCache( s_repoInfo );
 }
 
-void ZypperUtils::addRepository( const string& repoUrl, const string& repoAlias )
+void ZypperUtils::addRepository( const string & repoUrl, const string& repoAlias )
 {
     initRepoInfo( repoUrl, repoAlias );   
     // Add it to the repoManager if not already present
@@ -96,7 +96,7 @@ void ZypperUtils::addRepository( const string& repoUrl, const string& repoAlias 
     }
 }
 
-bool ZypperUtils::exists(const string& repoUrl)
+bool ZypperUtils::exists(const string & repoUrl)
 {
     RepoManager rM;
     for ( RepoInfo& nrepo : rM.knownRepositories() ) {
@@ -163,7 +163,7 @@ void ZypperUtils::initSystemRepos()
     }
 }
 
-void ZypperUtils::resetRepoManager( const Pathname& sysRoot )
+void ZypperUtils::resetRepoManager( const Pathname & sysRoot )
 {
     /* Need to remove temporary PoolItems (loaded into pool when querying package information (metadata))
      * from the ResPool to avoid unnecessary conflicts.

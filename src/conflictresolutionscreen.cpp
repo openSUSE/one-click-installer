@@ -59,7 +59,7 @@ ConflictResolutionScreen::ConflictResolutionScreen()
     setLayout ( m_mainLayout );
 }
 
-void ConflictResolutionScreen::problemSolutionWidget( QString probDescription, QStringList solutions )
+void ConflictResolutionScreen::problemSolutionWidget( const QString & probDescription, const QStringList & solutions )
 {
     m_solId = -1;
     if ( m_solutionWidget != NULL && m_questionLabel != NULL ) {

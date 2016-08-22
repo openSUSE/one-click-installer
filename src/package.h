@@ -31,17 +31,17 @@ public:
     /**
     Sets the name for the package
     */
-    void setName( const QString& name );
+    void setName( const QString & name );
 
     /**
     Sets the summary for the package
     */
-    void setSummary( const QString& summary );
+    void setSummary( const QString & summary );
 
     /**
     Sets the description for the package
     */
-    void setDescription( const QString& description );
+    void setDescription( const QString & description );
 private:
         QString m_name;
         QString m_summary;

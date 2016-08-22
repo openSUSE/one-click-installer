@@ -20,12 +20,12 @@
 
 #include "packagebackend.h"
 
-void PackageBackend::addRepository( const QUrl& url )
+void PackageBackend::addRepository( const QUrl & url )
 {
     m_repositories.append( url );
 }
 
-void PackageBackend::addPackage( const QString& package )
+void PackageBackend::addPackage( const QString & package )
 {
     m_packages << package;
 }
@@ -45,7 +45,7 @@ QString PackageBackend::getFileName()
     return m_tmpFileName;
 }
 
-void PackageBackend::setFileName( const QString& fileName )
+void PackageBackend::setFileName( const QString & fileName )
 {
     m_tmpFileName = fileName;
 }

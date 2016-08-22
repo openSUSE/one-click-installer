@@ -6,7 +6,7 @@
 #include "checkconflictscreen.h"
 #include "conflictresolutionscreen.h"
 
-MainWindow::MainWindow( const QString& filename, const QString& tmpFileName, bool fakeRequested, QObject *parent )
+MainWindow::MainWindow( const QString & filename, const QString & tmpFileName, bool fakeRequested, QObject *parent )
 {
     QDBusConnection sysBus = QDBusConnection::systemBus();
   
@@ -175,7 +175,7 @@ void MainWindow::performInstallation()
     m_cancel->hide();
 }
 
-void MainWindow::updateSize( const QString& size )
+void MainWindow::updateSize( const QString & size )
 {
     if( m_screenStack->currentIndex() == 0 )
         m_header->updateDetails( size );

@@ -23,12 +23,12 @@ RepositoryData::RepositoryData()
 {
 }
 
-void RepositoryData::setAlias( const std::string& alias )
+void RepositoryData::setAlias( const std::string & alias )
 {
     m_alias = alias;
 }
 
-void RepositoryData::setBaseUrl( const std::string& url )
+void RepositoryData::setBaseUrl( const std::string & url )
 {
     m_baseUrl = url;
 }

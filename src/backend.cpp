@@ -23,6 +23,7 @@
  *  Organization: OpenSUSE
  *  Previous Contributor(s): Saurabh Sood 
  ***********************************************************************************/
+
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDBusConnection>
@@ -104,7 +105,7 @@ void Backend::resolve()
     resolve( *m_resolverProblemList.takeFirst() );
 }
 
-void Backend::resolve( const ResolverProblem& problem )
+void Backend::resolve( const ResolverProblem & problem )
 {
     m_currentProblem = problem;
     QString problemStatement( "<b>Problem:</b> " + QString::fromStdString( problem.description() ) );
@@ -141,7 +142,7 @@ void Backend::applySolution( int solId )
     }
 }
 
-void Backend::addPackage(const QString& package)
+void Backend::addPackage(const QString & package)
 {
     s_packages << package;
 }

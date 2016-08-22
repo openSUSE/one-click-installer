@@ -65,7 +65,7 @@ RepositoryWidget::RepositoryWidget(PackageBackend *backend, int index, OCI::Repo
     }
 }
 
-void RepositoryWidget::showDetails( QString link )
+void RepositoryWidget::showDetails( const QString & link )
 {
     if( !m_visible ) {
         m_meta = new RepositoryMetadata( m_repo );

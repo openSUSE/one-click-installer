@@ -21,7 +21,7 @@
 #include "firstscreen.h"
 #include "utils.h"
 
-FirstScreen::FirstScreen( PackageBackend *backend, const QString& tmpFileName, const QString& filename, QObject *parent )
+FirstScreen::FirstScreen( PackageBackend *backend, const QString & tmpFileName, const QString & filename, QObject *parent )
 {
     m_tmpFileName = tmpFileName;
     setStyleSheet( "background-color : white;" );

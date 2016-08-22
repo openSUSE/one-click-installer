@@ -42,16 +42,16 @@ Callbacks::Callbacks()
     }
 }
 
-void Callbacks::emitStartResolvable( QString info )
+void Callbacks::emitStartResolvable( const QString & info )
 { emit startResolvable( info ); }
 
-void Callbacks::emitFinishResolvable( QString info, bool success )
+void Callbacks::emitFinishResolvable( const QString & info, bool success )
 { emit finishResolvable( info, success ); }
 
-void Callbacks::emitStartProgress( QString info )
+void Callbacks::emitStartProgress( const QString & info )
 { emit startProgress( info ); }
 
-void Callbacks::emitFinishProgress( QString info, bool success )
+void Callbacks::emitFinishProgress( const QString & info, bool success )
 { emit finishProgress( info, success ); }
 
 void Callbacks::emitProgress( int value )

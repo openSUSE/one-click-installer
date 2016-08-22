@@ -33,7 +33,7 @@ public:
    /**
         Default constructor taking the backend, and the filename as argument
    */
-    FirstScreen( PackageBackend *backend, const QString& tmpFileName, const QString& filename, QObject *parent = 0 );
+    FirstScreen( PackageBackend *backend, const QString & tmpFileName, const QString & filename, QObject *parent = 0 );
     
 private slots:
 

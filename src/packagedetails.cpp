@@ -90,7 +90,7 @@ PackageDetails::PackageDetails(OCI::Package *package,int count, int packagecount
     setLayout( mainLayout );
 }
 
-void PackageDetails::showPackageDescription( QString link )
+void PackageDetails::showPackageDescription( const QString & link )
 {
     int linkNo = link.toInt();
     qDebug() << linkNo;
@@ -109,7 +109,7 @@ void PackageDetails::showPackageDescription( QString link )
     }
 }
 
-void PackageDetails::dataChanged( QString version, QString size )
+void PackageDetails::dataChanged( const QString & version, const QString & size )
 {
     m_version->setText( version );
     m_size->setText( size );

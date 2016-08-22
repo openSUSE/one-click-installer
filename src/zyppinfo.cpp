@@ -26,7 +26,7 @@
 
 #include "zyppinfo.h"
 
-Info ZyppInfo::queryMetadataForPackage( const string& packageName )
+Info ZyppInfo::queryMetadataForPackage( const string & packageName )
 {
     PoolQuery q;
     q.addKind( ResKind::package );
@@ -36,7 +36,7 @@ Info ZyppInfo::queryMetadataForPackage( const string& packageName )
     return packageObject( q );
 }
 
-Info ZyppInfo::packageObject( const PoolQuery& q )
+Info ZyppInfo::packageObject( const PoolQuery & q )
 {
     Info packageInfo;
     for_( it, q.selectableBegin(), q.selectableEnd() ) {

@@ -42,7 +42,7 @@
 
 ZYpp::Ptr ZyppInstall::s_zypp = getZYpp(); // acquire initial zypp lock
 
-void ZyppInstall::markPackagesForInstallation(const string& packageName)
+void ZyppInstall::markPackagesForInstallation(const string & packageName)
 {
     Pathname sysRoot( "/" );
     initTarget( sysRoot );

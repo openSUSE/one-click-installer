@@ -25,7 +25,7 @@ private slots:
     /**
      * Show Repository Details
      */
-    void showDetails( QString link );
+    void showDetails( const QString & link );
 
 private:
    
