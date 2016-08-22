@@ -42,7 +42,7 @@ ConflictResolutionScreen::ConflictResolutionScreen()
     }
     connection.registerObject( "/OCI", this );
     if ( !connection.registerService("org.opensuse.oneclickinstaller") ) {
-	qDebug() << qPrintable( QDBusConnection::systemBus().lastError().message() );
+	qFatal( qPrintable( QDBusConnection::systemBus().lastError().message() ) );
         exit( 1 );
     }
    

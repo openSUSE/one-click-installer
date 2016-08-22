@@ -42,7 +42,7 @@ int main( int argc, char *argv[] )
     QCoreApplication app ( argc, argv );
     qDebug() << "Helper Started";
     if ( argc < 2 ) {
-	qDebug() << "Usage: ./oneclickhelper <File Path>";
+	qFatal( "Usage: ./oneclickhelper <File Path>" );
 	return 1;
     }
  
@@ -53,11 +53,11 @@ int main( int argc, char *argv[] )
 	static MediaCallbacks mediaCallbacks;
     }
     catch ( const Exception& e )  {
-	qDebug() << "Failed to initialize OCI callbacks.";
+	qFatal( "Failed to initialize OCI callbacks." );
 	exit( 1 );
     }
     catch (...) {
-	qDebug() << "Failed to initialize OCI callbacks.";
+	qFatal( "Failed to initialize OCI callbacks." );
 	exit( 1 );
     }
     
@@ -66,7 +66,7 @@ int main( int argc, char *argv[] )
     
     QFile dataFile( argv[ 1 ] );
     if( !dataFile.open( QIODevice::ReadOnly ) ) {
-        qDebug() << "Failed to open Data File";
+        qFatal( "Failed to open Data File" );
         return 1;
     }
     QTextStream inData( &dataFile );

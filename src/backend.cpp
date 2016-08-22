@@ -43,7 +43,7 @@ Backend::Backend()
     }
     connection.registerObject( "/", this );
     if ( !connection.registerService( "org.opensuse.OCIHelper" ) ) {
-	qDebug() << qPrintable( connection.lastError().message() );
+	qFatal ( qPrintable( connection.lastError().message() ) );
 	exit( 1 );
     }
 

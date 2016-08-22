@@ -44,7 +44,7 @@ int main( int argc, char *argv[] )
     }
     
     if( args.isEmpty() || !QFile::exists(args[0])) {
-        qDebug() << "No Valid File Passed";
+         qFatal( "No Valid File Passed" );
         return 0;
     }
     
