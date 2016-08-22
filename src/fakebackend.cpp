@@ -17,7 +17,7 @@
 //      
 //      
 
-
+#include <klocalizedstring.h>
 #include "fakebackend.h"
 
 FakeBackend::FakeBackend( QWidget *main  )
@@ -40,8 +40,8 @@ void FakeBackend::install()
         packList.append( "\n ");
     }
 
-    QMessageBox::about( m_main, "One Click Installer", QString( "The following repositories will be added \n %1" ).arg( repoList ) );
-    QMessageBox::about( m_main, "One Click Installer", QString( "The following packages will be installed \n %1" ).arg( packList ) );
+    QMessageBox::about( m_main, "One Click Installer", i18n( "The following repositories will be added \n %1" ).arg( repoList ) );
+    QMessageBox::about( m_main, "One Click Installer", i18n( "The following packages will be installed \n %1" ).arg( packList ) );
     emit installationCompleted();
 }
 

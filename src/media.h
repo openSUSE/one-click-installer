@@ -28,6 +28,7 @@
 
 #include <QString>
 #include <QDebug>
+#include <klocalizedstring.h>
 #include <KF5/KWidgetsAddons/kmessagebox.h> //for file conflicts
 #include "callbacks.h" // emit values to the OCI
 #include "runtimedata.h"
@@ -88,7 +89,7 @@ namespace OCICallbacks
 	  m_lastReported = time( NULL );
 	  m_lastDrateAvg = -1;
 	  
-	  QString info( QString::fromStdString( "Retrieving: " + Pathname( url.getPathName() ).basename() ) );
+	  QString info( i18n( "Retrieving: " ) + QString::fromStdString( Pathname( url.getPathName() ).basename() ) );
 	  s_toOCI.emitStartProgress( info );
       }
       
@@ -137,7 +138,7 @@ namespace OCICallbacks
 	  // Reports end of a download
 	  // error != NO_ERROR --->> did the download finish with error?
 	 
-	  QString info( QString::fromStdString( "Retrieved: " + Pathname( uri.getPathName() ).basename() ) );
+	  QString info( i18n( "Retrieved: " ) + QString::fromStdString( Pathname( uri.getPathName() ).basename() ) );
 	  s_toOCI.emitFinishProgress( info, error != NO_ERROR );
       }
   
@@ -178,7 +179,8 @@ namespace OCICallbacks
 	  m_delta = fileName;
 	  m_deltaSize = downloadSize;
 	  qDebug() << "Retrieving delta: " << m_delta.c_str() << ", " << m_deltaSize.asString().c_str();
-	  QString info( QString::fromStdString( "Retrieving Delta: " + fileName.asString() ) );
+	  
+	  QString info( i18n( "Retrieving Delta: " ) + QString::fromStdString( fileName.asString() ) );
 	  s_toOCI.emitStartResolvable( info );
       }
       
@@ -198,7 +200,7 @@ namespace OCICallbacks
 	  m_delta = filename.basename();
 	  m_labelApplyDelta = m_delta.asString();
 	  qDebug() << "Applying Delta: " << m_delta.c_str();
-	  QString info( QString::fromStdString( "Applying Delta: " + filename.asString() ) );
+	  QString info( i18n( "Applying Delta: " ) + QString::fromStdString( filename.asString() ) );
 	  s_toOCI.emitStartResolvable( info );
       }
       
@@ -216,7 +218,7 @@ namespace OCICallbacks
       virtual void finishDeltaApply()
       {
 	  qDebug() << "finished applying " << m_labelApplyDelta.c_str();
-	  s_toOCI.emitFinishResolvable( QString::fromStdString( "Finished Applying" ), true );
+	  s_toOCI.emitFinishResolvable( i18n( "Finished Applying" ), true );
       }
       
       virtual void start( Resolvable::constPtr resolvablePtr, const Url & url)
@@ -265,9 +267,11 @@ namespace OCICallbacks
       string getStartDownloadResolvableInfo( Resolvable::constPtr & resolvablePtr )
       {
 	  // #006325 -> Dark Green
-	  string line( str::Format( "<font color=#006325> ( %s / %s ) </font> <b>Retrieving %s:</b> </b><font color=\"Red\">%s-%s.%s</font>" )
+	  string message( i18n( "Retrieving" ).toStdString() );
+	  string line( str::Format( "<font color=#006325> ( %s / %s ) </font> <b>%s %s:</b> </b><font color=\"Red\">%s-%s.%s</font>" )
 				    % RuntimeData::instance()->commitPackageCurrent()
 				    % RuntimeData::instance()->commitPackagesTotal()
+				    % message
 				    % resolvablePtr->kind()
 				    % resolvablePtr->name()
 				    % resolvablePtr->edition()
@@ -279,8 +283,12 @@ namespace OCICallbacks
       string getFinishDownloadResolvableInfo( Resolvable::constPtr & resolvablePtr)
       {
 	  // #14148c -> Dark Blue; 
-	  string line( str::Format( "Download Size:<font color= #14148c> %s </font> Unpacked Size:<font color=\"Purple\"> %s </font><br>" )
+	  string messageDownload( i18n( "Download Size:" ).toStdString() );
+	  string messageUnpacked( i18n( "Unpacked Size:" ).toStdString() );
+	  string line( str::Format( "%s <font color= #14148c> %s </font> %s <font color=\"Purple\"> %s </font><br>" )
+				    % messageDownload
 				    % resolvablePtr->downloadSize()
+				    % messageUnpacked
 				    % resolvablePtr->installSize() );
 	  return line;
       }
@@ -481,7 +489,7 @@ namespace OCICallbacks
 					     rpm_pkgs_total ) );
 	  (*m_progress)->range( 100 );	  
 	  
-	  QString info( QString::fromStdString( "Installing: " + resolvable->asString() ) );
+	  QString info( i18n( "Installing: " ) + QString::fromStdString( resolvable->asString() ) );
 	  s_toOCI.emitStartResolvable( QString::fromStdString( getStartInstallResolvableInfo( resolvable ) ) );
 	  s_toOCI.emitStartProgress( info );
       }
@@ -521,7 +529,7 @@ namespace OCICallbacks
 	      if ( !reason.empty() ) ;
 		  s_toOCI.emitFinishResolvable( QString::fromStdString( getFinishInstallResolvableInfo( resolvable ) ), error != NO_ERROR );
 	  }
-	  QString info( QString::fromStdString( "Installed: " + resolvable->asString() ) );
+	  QString info( i18n( "Installed: " ) + QString::fromStdString( resolvable->asString() ) );
 	  s_toOCI.emitFinishProgress( info, error != NO_ERROR );
       }
       
@@ -531,18 +539,23 @@ namespace OCICallbacks
       string getStartInstallResolvableInfo( Resolvable::constPtr & resolvablePtr )
       {
 	  // #006325 -> Dark Green
-	  string line( str::Format( "<font color=#006325> ( %s / %s ) </font> <b>Installing :</b> </b><font color=\"Red\">%s</font>" )
+	  string message( i18n( "Installing:" ).toStdString() );
+	  string line( str::Format( "<font color=#006325> ( %s / %s ) </font> <b>%s</b> </b><font color=\"Red\">%s</font>" )
 				    % RuntimeData::instance()->rpmPackageCurrent()
 				    % RuntimeData::instance()->rpmPackagesTotal()
+				    % message
 				    % resolvablePtr->asString() );
 				    
 	  return line;	    
       }
       string getFinishInstallResolvableInfo( Resolvable::constPtr & resolvablePtr)
       {
-	  // #14148c -> Dark Blue; 
-	  string line( str::Format( "Installed:<font color= #14148c> %s </font> Status:<font color=\"Purple\"> %s </font><br>" )
+	  // #14148c -> Dark Blue;
+	  string messageStatus( i18n( "Status:" ).toStdString() );
+	  string line( str::Format( "%s:<font color= #14148c> %s </font> %s<font color=\"Purple\"> %s </font><br>" )
+				    % resolvablePtr->kind()
 				    % resolvablePtr->asString()
+				    % messageStatus
 				    % "Done" );
 	  return line;
       }
@@ -569,7 +582,7 @@ namespace OCICallbacks
 					     rpm_pkg_current,
 					     rpm_pkgs_total ) );
 	  ( *m_progress )->range( 100 ); // reports percentage
-	  QString info( QString::fromStdString( "<b>Removing: </b>" + resolvable->name() ) );
+	  QString info( i18n( "<b>Removing: </b>" ) + QString::fromStdString( resolvable->name() ) );
 	  s_toOCI.emitStartResolvable( info );
 	  s_toOCI.emitStartProgress( info );
       }
@@ -597,7 +610,7 @@ namespace OCICallbacks
       
       virtual void finish( Resolvable::constPtr resolvable, Error error, const string & reason )
       {
-	  QString info( QString::fromStdString( "<b>Removed: </b>" + resolvable->name() ) );
+	  QString info( i18n( "<b>Removed: </b>" ) + QString::fromStdString( resolvable->name() ) );
 	  // finish progress - indicate error
 	  if ( m_progress ) {
 	      ( *m_progress ).error( error != NO_ERROR );
@@ -634,7 +647,11 @@ namespace OCICallbacks
       {
 	  ( *m_progress )->set( progress_R );
 	  // return !OCI::instance()->exitRequested(); //refer to line 88 (media.h)
-	  QString info( QString::fromStdString( "<font color=\"Red\"><b>Checking For File Conflicts...</b></font>" ) );
+	  
+	  string line( str::Format( "<font color=\"Red\"><b>%s</b></font>" )
+				    % i18n( "Checking For File Conflicts" ).toStdString() );
+	  QString info( QString::fromStdString( line ) );
+	  
 	  s_toOCI.emitStartResolvable( info );
 	  s_toOCI.emitStartProgress( info );
 	  return true; //this should suffice for now. Temporary fix
@@ -679,8 +696,8 @@ namespace OCICallbacks
 	      
 	      // prompt general info (for now) about why file conflicts usually occur
 	      bool cont = true;
-	      string generalInfo = "File conflicts happen when two packages attempt to install files with the same name but different contents. If you continue, conflicting files will be replaced losing the previous content. Continue? [yes/no]";
-	      int reply = KMessageBox::questionYesNo( 0, QString::fromStdString( generalInfo ), "File Conflicts!" );
+	      string generalInfo = i18n( "File conflicts happen when two packages attempt to install files with the same name but different contents. If you continue, conflicting files will be replaced losing the previous content. Continue? [yes/no]" ).toStdString();
+	      int reply = KMessageBox::questionYesNo( 0, QString::fromStdString( generalInfo ), i18n( "File Conflicts!" ) );
 	      if ( reply == KMessageBox::ButtonCode::No )
 		  cont = false;
 	      

@@ -36,6 +36,7 @@
 #include <zypp/FileChecker.h>
 #include <zypp/media/MediaException.h>
 
+#include <klocalizedstring.h>
 #include "zyppinstall.h"
 #include "utils.h"
 #include "runtimedata.h"
@@ -75,13 +76,13 @@ bool ZyppInstall::commitChanges()
     // Commit the changes 
     // Please note that dryRunFlag and zypp::DownloadOnly are for now
     qDebug() << "Committing the changes";
-    bool dryRunFlag = false;
+    bool dryRunFlag = true;
     ZYppCommitPolicy policy;
     if ( !dryRunFlag ) {
 	policy.dryRun( true );
 	dryRunFlag = true;
     }
-    policy.downloadMode( zypp::DownloadOnly ); 
+    policy.downloadMode( zypp::DownloadInAdvance ); 
     
     try {
 	// set runtime data
@@ -104,7 +105,7 @@ bool ZyppInstall::commitChanges()
     }
     catch ( const media::MediaException& e)
     {
-	string errDescription = "Problem retrieving the package file from the repository";
+	string errDescription = i18n( "Problem retrieving the package file from the repository" ).toStdString();
 	//OCIHelper::instance()->setErrorDescription( ERR_COMMIT, errDescription );
 	return false;
     }
@@ -129,26 +130,26 @@ bool ZyppInstall::commitChanges()
 	
 	string message;
 	if ( refreshNeeded ) // this exception is highly unlikely as we are refreshing all the enabled repos during installation
-	    message = str::Format( "Repository '%s' is out of date. Running '%s' might help" ) % e.info().alias() % "zypper refresh";
+	    message = str::Format( i18n( "Repository '%s' is out of date. Running '%s' might help" ).toStdString() ) % e.info().alias() % "zypper refresh";
 	else
-	    message = "Problem retrieving the package file from the repository";
+	    message = i18n( "Problem retrieving the package file from the repository" ).toStdString();
 	//OCIHelper::instance()->setExitDescription( ERR_COMMIT, message );
 	return false;
     }
     catch ( const FileCheckException& e)
     {
-	string message = "The package integrity check failed. This may be a problem"
+	string message = i18n( "The package integrity check failed. This may be a problem"
 			  " with the repository or media. Please try one of the following:\n"
 			  "- refresh the repositories using 'zypper refresh'\n"
 			  "- use another installation medium (if damaged)\n"
 			  "- use another repository.\n"
-			  "Sorry to disappoint you! This is out of the scope of OCI (for now?)";
+			  "Sorry to disappoint you! This is out of the scope of OCI (for now?)" ).toStdString();
 	//OCIHelper::instance()->setExitDescription( ERR_COMMIT, message );
 	return false;
     }
     catch ( const Exception& e )
     {
-	string message = "Problem occured during or after installation or removal of packages";
+	string message = i18n( "Problem occured during or after installation or removal of packages" ).toStdString();
 	//OCIHelper::instance()->setExitDescription( ERR_COMMIT, message );
 	return false;
     }

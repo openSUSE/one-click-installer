@@ -46,13 +46,13 @@ InstallScreen::InstallScreen()
     m_statusWidget->setMinimumSize( 500, 180 );
        
     // Cancel button
-    m_cancelButton = new QPushButton( "Cancel" );
+    m_cancelButton = new QPushButton( i18n( "Cancel" ) );
     QHBoxLayout *buttonLayout = new QHBoxLayout();
     buttonLayout->addSpacing( 400 );
     buttonLayout->addWidget( m_cancelButton );
     
     // Current message label, Progress Bar
-    m_currentPackageStatusLabel = new QLabel( "Please Wait..." );
+    m_currentPackageStatusLabel = new QLabel( i18n( "Please Wait..." ) );
     m_progressBar = new QProgressBar;
     m_progressBar->setMinimum( 0 );
     m_progressBar->setMaximum( 100 );

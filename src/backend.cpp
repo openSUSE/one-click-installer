@@ -23,10 +23,10 @@
  *  Organization: OpenSUSE
  *  Previous Contributor(s): Saurabh Sood 
  ***********************************************************************************/
-
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDBusConnection>
+#include <klocalizedstring.h>
 #include "backend.h"
 #include "ocihelperadaptor.h"	//generated during build time
 
@@ -108,7 +108,7 @@ void Backend::resolve()
 void Backend::resolve( const ResolverProblem & problem )
 {
     m_currentProblem = problem;
-    QString problemStatement( "<b>Problem:</b> " + QString::fromStdString( problem.description() ) );
+    QString problemStatement( i18n( "<b>Problem:</b> " ) + QString::fromStdString( problem.description() ) );
     QStringList solProposals;
     
     const ProblemSolutionList & solutions = problem.solutions();
