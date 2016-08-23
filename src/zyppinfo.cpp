@@ -24,9 +24,10 @@
  *  Previous Contributor: None
  ***********************************************************************************/
 
+#include<klocalizedstring.h>
 #include "zyppinfo.h"
 
-Info ZyppInfo::queryMetadataForPackage( const string& packageName )
+Info ZyppInfo::queryMetadataForPackage( const string & packageName )
 {
     PoolQuery q;
     q.addKind( ResKind::package );
@@ -36,7 +37,7 @@ Info ZyppInfo::queryMetadataForPackage( const string& packageName )
     return packageObject( q );
 }
 
-Info ZyppInfo::packageObject( const PoolQuery& q )
+Info ZyppInfo::packageObject( const PoolQuery & q )
 {
     Info packageInfo;
     for_( it, q.selectableBegin(), q.selectableEnd() ) {
@@ -69,16 +70,15 @@ Info ZyppInfo::packageObject( const PoolQuery& q )
 	
 	// set status
 	string status;
-	stringstream format;
 	if ( !installedObject )
-	    status = "Not Installed";
+	    status = i18n( "Not Installed" ).toStdString();
 	else {
-	    if ( updateObject ) {
-		format << "Archaic (version " << installedObject.edition().asString() << " installed)";
-		status = format.str();
+	    if ( updateObject ) { 
+		status = str::Format( i18n( "Archaic (Version %s installed)" ).toStdString() )
+			  % installedObject.edition().asString();
 	    }
 	    else 
-		status = "Up to Date";
+		status = i18n( "Up to Date" ).toStdString();
 	}
 	packageInfo.setStatus( status );
     }

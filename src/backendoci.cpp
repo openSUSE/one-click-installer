@@ -27,7 +27,7 @@
 #include "backendoci.h"
 #include "utils.h"
 
-bool BackendOCI::exists(const QString& repoUrl)
+bool BackendOCI::exists(const QString & repoUrl)
 {
     return ZypperUtils::exists( repoUrl.toStdString() );
 }

@@ -22,7 +22,7 @@
 #include <QDebug>
 #include <QFile>
 
-OCI::YmpParser::YmpParser( const QString& ympfile )
+OCI::YmpParser::YmpParser( const QString & ympfile )
 {
     m_fileName = ympfile;
 }

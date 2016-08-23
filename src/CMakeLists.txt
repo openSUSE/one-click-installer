@@ -17,7 +17,7 @@ set(Qt5_USE_DBUS, true)
 
 find_package(PACKAGEKITQT5 REQUIRED)
 find_package(KF5WidgetsAddons REQUIRED)
-find_package(KF5I18n NO_MODULE)
+find_package(KF5I18n REQUIRED)
 
 #We need -DQT_WIDGETS_LIB when using QtWidgets in Qt5
 add_definitions(${Qt5Widgets_DEFINITIONS})

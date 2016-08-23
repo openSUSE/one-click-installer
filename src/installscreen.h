@@ -28,10 +28,10 @@ public slots:
     void closeLogFile();
 private slots:
     void cancelInstallation();
-    void newResolvableInAction( QString );
-    void newProgressInAction( QString );
-    void updateCurrentResolvableStatusUponCompletion( QString, bool );
-    void updateCurrentProgressStatusUponCompletion( QString, bool );
+    void newResolvableInAction( const QString & );
+    void newProgressInAction( const QString & );
+    void updateCurrentResolvableStatusUponCompletion( const QString &, bool );
+    void updateCurrentProgressStatusUponCompletion( const QString &, bool );
 private:
     QWidget* horizontalLine();
     QLabel* loadingAnimation(); 

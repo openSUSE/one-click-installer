@@ -30,6 +30,7 @@
 #include <QTextStream>
 #include <QUrl>
 #include <QStringList>
+#include <klocalizedstring.h>
 #include "backend.h"
 #include "utils.h"
 #include "media.h"
@@ -42,7 +43,7 @@ int main( int argc, char *argv[] )
     QCoreApplication app ( argc, argv );
     qDebug() << "Helper Started";
     if ( argc < 2 ) {
-	qDebug() << "Usage: ./oneclickhelper <File Path>";
+	qInfo( "Usage: ./oneclickhelper <File Path>" );
 	return 1;
     }
  
@@ -53,20 +54,21 @@ int main( int argc, char *argv[] )
 	static MediaCallbacks mediaCallbacks;
     }
     catch ( const Exception& e )  {
-	qDebug() << "Failed to initialize OCI callbacks.";
+	qFatal( "Failed to initialize OCI callbacks." );
 	exit( 1 );
     }
     catch (...) {
-	qDebug() << "Failed to initialize OCI callbacks.";
+	qFatal( "Failed to initialize OCI callbacks." );
 	exit( 1 );
     }
-    
+    //Connecting to Catalogs
+    KLocalizedString::setApplicationDomain( "oneclickinstaller" );
     // Reset RepoManager. This step is necessary to run the manager with root privileges
     ZypperUtils::resetRepoManager( Pathname( "/" ) );
     
     QFile dataFile( argv[ 1 ] );
     if( !dataFile.open( QIODevice::ReadOnly ) ) {
-        qDebug() << "Failed to open Data File";
+        qFatal( "Failed to open Data File" );
         return 1;
     }
     QTextStream inData( &dataFile );

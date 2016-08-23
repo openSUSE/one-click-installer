@@ -1,14 +1,13 @@
 #ifndef KEYRING_H
 #define KEYRING_H
 
-#include <stdlib.h>
-#include <iostream>
 #include <boost/format.hpp>
 #include <string>
 #include <zypp/ZYppCallbacks.h>
 #include <zypp/KeyRing.h>
 #include <zypp/Pathname.h>
 #include <zypp/base/Logger.h>
+#include <QDebug>
 
 using namespace zypp;
 struct KeyRingReceive : public zypp::callback::ReceiveReport<zypp::KeyRingReport>
@@ -32,15 +31,16 @@ struct KeyRingReceive : public zypp::callback::ReceiveReport<zypp::KeyRingReport
         if ( m_id.empty() || m_name.empty() || m_fingerprint.empty() ) {
             m_keyRingExists = true;
         }
-        m_created = key.created().asString().c_str();
-        m_expires = key.expires().asString().c_str();
+        m_created = key.created().asString();
+        m_expires = key.expires().asString();
 
         //Printing Information
-        std::cout<<"Key ID: " << m_id << std::endl;
-        std::cout<<"Key Name: " << m_name << std::endl;
-        std::cout<<"Key Fingerprint: " << m_fingerprint <<std::endl;
-        std::cout<<"Key Created: "<< m_created <<std::endl;
-        std::cout<<"Key Expires: "<< m_expires <<std::endl;
+        qDebug() << "Key ID: " <<  m_id.c_str();
+        qDebug() << "Key Name: " <<  m_name.c_str();
+        qDebug() << "Key Fingerprint: " << m_fingerprint.c_str();
+        qDebug() << "Key Created: "<< m_created.c_str();
+        qDebug() << "Key Expires: "<< m_expires.c_str();
+	
         return KeyRingReport::KEY_TRUST_AND_IMPORT;
     }
 };

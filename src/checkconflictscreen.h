@@ -8,6 +8,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <klocalizedstring.h>
 
 class CheckConflictScreen : public QWidget
 {

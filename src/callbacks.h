@@ -9,11 +9,11 @@ class Callbacks : public QObject
     Q_CLASSINFO( "D-Bus Interface", "org.opensuse.MediaCallbacks" )
 public:
     Callbacks();
-    void emitStartResolvable( QString info );
-    void emitFinishResolvable( QString info, bool success );
+    void emitStartResolvable( const QString & info );
+    void emitFinishResolvable( const QString & info, bool success );
     void emitProgress( int value );
-    void emitStartProgress( QString );
-    void emitFinishProgress( QString, bool success );
+    void emitStartProgress( const QString & info);
+    void emitFinishProgress( const QString & info, bool success );
 Q_SIGNALS:
     void startProgress( QString );
     void finishProgress( QString, bool );

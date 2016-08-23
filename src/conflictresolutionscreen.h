@@ -27,7 +27,7 @@ private:
     org::opensuse::OCIHelper *m_ociHelper;
     
 private slots:
-    void problemSolutionWidget( QString problem, QStringList solutions );
+    void problemSolutionWidget( const QString & problem, const QStringList & solutions );
     void cancelInstallation();
     void setSolutionID();
 public Q_SLOTS:

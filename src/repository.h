@@ -41,27 +41,27 @@ public:
     /**
     Sets the value of Recommended for the repository
     */
-    void setRecommended( const QString& recommmended );
+    void setRecommended( const QString & recommmended );
 
     /**
     Sets the name for the repository
     */
-    void setName( const QString& name );
+    void setName( const QString & name );
 
     /**
     Sets the description for the repository
     */
-    void setDescription( const QString& description );
+    void setDescription( const QString & description );
 
     /**
     Sets the summary for the repository
     */
-    void setSummary( const QString& summary );
+    void setSummary( const QString & summary );
 
     /**
     Set the URL for the repository
     */
-    void setUrl( const QString& url );
+    void setUrl( const QString & url );
 private:
     QString m_recommended;
     QString m_name;

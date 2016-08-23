@@ -27,6 +27,8 @@
 
 
 #include <QString>
+#include <QDebug>
+#include <klocalizedstring.h>
 #include <KF5/KWidgetsAddons/kmessagebox.h> //for file conflicts
 #include "callbacks.h" // emit values to the OCI
 #include "runtimedata.h"
@@ -68,12 +70,12 @@ namespace OCICallbacks
   class MediaChangeReportReceiver : public callback::ReceiveReport<media::MediaChangeReport>
   {
   public:
-      virtual MediaChangeReport::Action requestMedia( Url& url, 
+      virtual MediaChangeReport::Action requestMedia( Url & url, 
 						      unsigned mediumNr,
 						      MediaChangeReport::Error error,
-						      const string& description,
-						      const vector<string>& devices,
-						      unsigned& index);
+						      const string & description,
+						      const vector<string> & devices,
+						      unsigned & index);
   private:
       RepeatCounter repeatCounter;
   };
@@ -82,12 +84,12 @@ namespace OCICallbacks
   class DownloadProgressReportReceiver : public callback::ReceiveReport<media::DownloadProgressReport>
   {
   public:
-      virtual void start( const Url& url, Pathname localFile )
+      virtual void start( const Url & url, Pathname localFile )
       {
 	  m_lastReported = time( NULL );
 	  m_lastDrateAvg = -1;
 	  
-	  QString info( QString::fromStdString( "Retrieving: " + Pathname( url.getPathName() ).basename() ) );
+	  QString info( i18n( "Retrieving: " ) + QString::fromStdString( Pathname( url.getPathName() ).basename() ) );
 	  s_toOCI.emitStartProgress( info );
       }
       
@@ -102,7 +104,7 @@ namespace OCICallbacks
        * TODO implement OCI::exitRequested()
        * TODO return false on SIGINT
        */
-      virtual bool progress( int value, const Url& uri, double drateAvg, double drateNow )
+      virtual bool progress( int value, const Url & uri, double drateAvg, double drateNow )
       {
 	  time_t now = time( NULL );
 	  if ( now > m_lastReported )
@@ -124,19 +126,19 @@ namespace OCICallbacks
 	  return true;
       }
       
-      virtual DownloadProgressReport::Action problem( const Url& uri, DownloadProgressReport::Error error, const string& description )
+      virtual DownloadProgressReport::Action problem( const Url & uri, DownloadProgressReport::Error error, const string & description )
       {
 	  // emit the error, and its description to the OCI
 	  // emit problemEncountered( description );
 	  return DownloadProgressReport::ABORT;
       }
       
-      virtual void finish( const Url& uri, Error error, const string& reason )
+      virtual void finish( const Url & uri, Error error, const string & reason )
       {
 	  // Reports end of a download
 	  // error != NO_ERROR --->> did the download finish with error?
 	 
-	  QString info( QString::fromStdString( "Retrieved: " + Pathname( uri.getPathName() ).basename() ) );
+	  QString info( i18n( "Retrieved: " ) + QString::fromStdString( Pathname( uri.getPathName() ).basename() ) );
 	  s_toOCI.emitFinishProgress( info, error != NO_ERROR );
       }
   
@@ -147,8 +149,8 @@ namespace OCICallbacks
   
   class AuthenticationReportReceiver : public callback::ReceiveReport<media::AuthenticationReport>
   {
-      virtual bool prompt( const Url& url,
-			   const string& description,
+      virtual bool prompt( const Url & url,
+			   const string & description,
 			   media::AuthData* authData );
   };
   
@@ -172,18 +174,19 @@ namespace OCICallbacks
        *	 - download is interruptable
        *	 - problems are just informal
        */
-      virtual void startDeltaDownload( const Pathname& fileName, const ByteCount& downloadSize )
+      virtual void startDeltaDownload( const Pathname & fileName, const ByteCount & downloadSize )
       {
 	  m_delta = fileName;
 	  m_deltaSize = downloadSize;
-	  cout << "Retrieving delta: " << m_delta << ", " << m_deltaSize << endl;
-	  QString info( QString::fromStdString( "Retrieving Delta: " + fileName.asString() ) );
+	  qDebug() << "Retrieving delta: " << m_delta.c_str() << ", " << m_deltaSize.asString().c_str();
+	  
+	  QString info( i18n( "Retrieving Delta: " ) + QString::fromStdString( fileName.asString() ) );
 	  s_toOCI.emitStartResolvable( info );
       }
       
-      virtual void problemDeltaDownload( const string& description )
+      virtual void problemDeltaDownload( const string & description )
       {
-	  cout << description << endl;
+	  qDebug() << description.c_str() ;
       }
       
       /**
@@ -192,33 +195,33 @@ namespace OCICallbacks
        *	 - apply is not interruptable
        *	 - problems are just informal
        */
-      virtual void startDeltaApply( const Pathname& filename )
+      virtual void startDeltaApply( const Pathname & filename )
       {
 	  m_delta = filename.basename();
 	  m_labelApplyDelta = m_delta.asString();
-	  cout << "Applying Delta: " << m_delta;
-	  QString info( QString::fromStdString( "Applying Delta: " + filename.asString() ) );
+	  qDebug() << "Applying Delta: " << m_delta.c_str();
+	  QString info( i18n( "Applying Delta: " ) + QString::fromStdString( filename.asString() ) );
 	  s_toOCI.emitStartResolvable( info );
       }
       
       virtual void progressDeltaApply( int value )
       {
-	  cout << m_labelApplyDelta << " " << value << endl;
+	  qDebug() << m_labelApplyDelta.c_str() << " " << value ;
 	  s_toOCI.emitProgress( value );
       }
       
-      virtual void problemDeltaApply( const string& description )
+      virtual void problemDeltaApply( const string & description )
       {
-	  cout << description;
+	  qDebug() << description.c_str();
       }
       
       virtual void finishDeltaApply()
       {
-	  cout << "finished applying " << m_labelApplyDelta;
-	  s_toOCI.emitFinishResolvable( QString::fromStdString( "Finished Applying" ), true );
+	  qDebug() << "finished applying " << m_labelApplyDelta.c_str();
+	  s_toOCI.emitFinishResolvable( i18n( "Finished Applying" ), true );
       }
       
-      virtual void start( Resolvable::constPtr resolvablePtr, const Url& url)
+      virtual void start( Resolvable::constPtr resolvablePtr, const Url & url)
       {
 	  m_resolvablePtr = resolvablePtr;
 	  m_url = url;
@@ -242,9 +245,9 @@ namespace OCICallbacks
       // Not needed. The progress will be reported by the DownloadProgressReportReceiver's progress method
       // virtual bool progress( int value, Resolvable::constPtr resolvablePtr ) { return true; }
       
-      virtual Action problem( Resolvable::constPtr resolvablePtr, Error error, const string& description )
+      virtual Action problem( Resolvable::constPtr resolvablePtr, Error error, const string & description )
       {
-	  cout << "error report" << endl;
+	  qDebug() << "error report" ;
 	  // emit( error, description );
 	  // set the rpm_download flag false
 	  // OCIHelper::instance()->runtimeData().rpm_download = false;
@@ -256,17 +259,19 @@ namespace OCICallbacks
       // virtual void pkgGpgCheck( const UserData& userData )  { }
       
       // Although DownloadProgressReportReceiver is handling the progress, report download size and unpacked size
-      virtual void finish( Resolvable::constPtr resolvablePtr , Error error, const string& reason )
+      virtual void finish( Resolvable::constPtr resolvablePtr , Error error, const string & reason )
       {
 	  s_toOCI.emitFinishResolvable( QString::fromStdString( getFinishDownloadResolvableInfo( resolvablePtr ) ), error != NO_ERROR );
       }
       
-      string getStartDownloadResolvableInfo( Resolvable::constPtr resolvablePtr )
+      string getStartDownloadResolvableInfo( Resolvable::constPtr & resolvablePtr )
       {
 	  // #006325 -> Dark Green
-	  string line( str::Format( "<font color=#006325> ( %s / %s ) </font> <b>Retrieving %s:</b> </b><font color=\"Red\">%s-%s.%s</font>" )
+	  string message( i18n( "Retrieving" ).toStdString() );
+	  string line( str::Format( "<font color=#006325> ( %s / %s ) </font> <b>%s %s:</b> </b><font color=\"Red\">%s-%s.%s</font>" )
 				    % RuntimeData::instance()->commitPackageCurrent()
 				    % RuntimeData::instance()->commitPackagesTotal()
+				    % message
 				    % resolvablePtr->kind()
 				    % resolvablePtr->name()
 				    % resolvablePtr->edition()
@@ -275,11 +280,15 @@ namespace OCICallbacks
 	  return line;	    
       }
       
-      string getFinishDownloadResolvableInfo( Resolvable::constPtr resolvablePtr)
+      string getFinishDownloadResolvableInfo( Resolvable::constPtr & resolvablePtr)
       {
 	  // #14148c -> Dark Blue; 
-	  string line( str::Format( "Download Size:<font color= #14148c> %s </font> Unpacked Size:<font color=\"Purple\"> %s </font><br>" )
+	  string messageDownload( i18n( "Download Size:" ).toStdString() );
+	  string messageUnpacked( i18n( "Unpacked Size:" ).toStdString() );
+	  string line( str::Format( "%s <font color= #14148c> %s </font> %s <font color=\"Purple\"> %s </font><br>" )
+				    % messageDownload
 				    % resolvablePtr->downloadSize()
+				    % messageUnpacked
 				    % resolvablePtr->installSize() );
 	  return line;
       }
@@ -289,22 +298,22 @@ namespace OCICallbacks
   class ProgressReportReceiver : public callback::ReceiveReport<ProgressReport>
   {
   public:
-      virtual void start( const ProgressData& data )
+      virtual void start( const ProgressData & data )
       {
-	  cout << "=========================" << endl;
-	  cout << "Object Numeric Id: " << data.numericId() << endl;
-	  cout << "Counter Name: " << data.name() << endl;
-	  cout << "Report Alive: " << data.reportAlive() << endl;
-	  cout << "=========================" << endl;
+	  qDebug() << "=========================" ;
+	  qDebug() << "Object Numeric Id: " << data.numericId() ;
+	  qDebug() << "Counter Name: " << data.name().c_str() ;
+	  qDebug() << "Report Alive: " << data.reportAlive() ;
+	  qDebug() << "=========================" ;
       }
       
-      virtual bool progress( const ProgressData& data )
+      virtual bool progress( const ProgressData & data )
       {
-	  cout << "In ProgressReportReceiver progress() ";
+	  qDebug() << "In ProgressReportReceiver progress() ";
 	  if (data.reportAlive())
-	    cout << data.numericId() << data.name();
+	    qDebug() << data.numericId() << data.name().c_str();
 	  else
-            cout << data.numericId() << " " << data.name() << " " << data.val();
+            qDebug() << data.numericId() << " " << data.name().c_str() << " " << data.val();
 	  return true;
       }
   };
@@ -313,7 +322,7 @@ namespace OCICallbacks
   class ProgressBar : private base::NonCopyable
   {
   public:
-      ProgressBar( const string& progressId_R, const string& label_R, unsigned current_R = 0, unsigned total_R = 0 )
+      ProgressBar( const string & progressId_R, const string & label_R, unsigned current_R = 0, unsigned total_R = 0 )
 	: m_error( indeterminate )
 	, m_progressId( progressId_R )
       {
@@ -336,7 +345,7 @@ namespace OCICallbacks
       }
       
       /** \overload also change the progress bar label */
-      void print( const string& label_R )
+      void print( const string & label_R )
       { m_progress.name( label_R ); print(); }
       
       /** Indicate the error condition for the final progress bar */
@@ -348,11 +357,11 @@ namespace OCICallbacks
       { m_error = error_R; }
       
       /** \overload also change the progress data (bar) label */
-      void error( const string& label_R )
+      void error( const string & label_R )
       { m_progress.name( label_R ); error( true ); }
       
       /** \overload set the TriBool and change the progress bar label */
-      void error( TriBool error_R, const string& label_R )
+      void error( TriBool error_R, const string & label_R )
       { m_progress.name( label_R ); error( error_R ); }
       
   public:
@@ -376,8 +385,8 @@ namespace OCICallbacks
       class Print
       {
       public:
-	  Print( ProgressBar& bar_R ) : m_bar( &bar_R ) {}
-	  bool operator()( const ProgressData& progress_R )
+	  Print( ProgressBar & bar_R ) : m_bar( &bar_R ) {}
+	  bool operator()( const ProgressData & progress_R )
 	  {
 	      // emit the actual installation progress
 	      s_toOCI.emitProgress( progress_R.reportValue() );
@@ -387,7 +396,7 @@ namespace OCICallbacks
 	  ProgressBar *m_bar;
       };
       
-      string outLabel( const string& msg_R ) const
+      string outLabel( const string & msg_R ) const
       { return m_labelPrefix.empty() ? msg_R : m_labelPrefix + msg_R; }
   private:
       TriBool m_error;
@@ -405,7 +414,7 @@ namespace OCICallbacks
   class DownloadProgress : public callback::ReceiveReport<media::DownloadProgressReport>
   {
   public:
-      DownloadProgress( ProgressBar& progressBar_R )
+      DownloadProgress( ProgressBar & progressBar_R )
       : m_progressBar( &progressBar_R )
       , m_oldReceiver( Distributor::instance().getReceiver() )
       {
@@ -420,7 +429,7 @@ namespace OCICallbacks
 	      Distributor::instance().noReceiver();
       }
       
-      virtual void start( const Url& file, Pathname localFile )
+      virtual void start( const Url & file, Pathname localFile )
       {
 	  ( *m_progressBar )->range( 100 );	// receives %
 	  
@@ -428,7 +437,7 @@ namespace OCICallbacks
 	      m_oldReceiver->start( file, localFile );
       }
       
-      virtual bool progress( int value, const Url& file, double dbpsAvg = -1, double dbpsCurrent = -1 )
+      virtual bool progress( int value, const Url & file, double dbpsAvg = -1, double dbpsCurrent = -1 )
       {
 	  ( *m_progressBar )->set( value );
 	  
@@ -437,19 +446,19 @@ namespace OCICallbacks
 	  return true;
       }
       
-      virtual Action probem( const Url& file, Error error, const string& description )
+      virtual Action probem( const Url & file, Error error, const string & description )
       {
 	  if ( m_oldReceiver )
 	      return m_oldReceiver->problem( file, error, description );
 	  return Receiver::problem( file, error, description );
       }
       
-      virtual void finish( const Url& file, Error error, const string& reason )
+      virtual void finish( const Url & file, Error error, const string & reason )
       {
 	  if ( error == NO_ERROR )
 	      ( *m_progressBar )->toMax();
 	  else {
-	      cout << "Reason [in Download Progress ]" << endl;
+	      qDebug() << "Reason [in Download Progress ]" ;
 	      m_progressBar->error();
 	  }
 	  
@@ -480,7 +489,7 @@ namespace OCICallbacks
 					     rpm_pkgs_total ) );
 	  (*m_progress)->range( 100 );	  
 	  
-	  QString info( QString::fromStdString( "Installing: " + resolvable->asString() ) );
+	  QString info( i18n( "Installing: " ) + QString::fromStdString( resolvable->asString() ) );
 	  s_toOCI.emitStartResolvable( QString::fromStdString( getStartInstallResolvableInfo( resolvable ) ) );
 	  s_toOCI.emitStartProgress( info );
       }
@@ -492,7 +501,7 @@ namespace OCICallbacks
 	  return true;
       }
       
-      virtual Action problem( Resolvable::constPtr resolvable, Error error, const string& description, RpmLevel /*unused*/)
+      virtual Action problem( Resolvable::constPtr resolvable, Error error, const string & description, RpmLevel /*unused*/)
       {
 	  // finish progress - indicate error
 	  if ( m_progress ) {
@@ -500,13 +509,13 @@ namespace OCICallbacks
 	      m_progress.reset();
 	  }
 	  
-	  cout << "Installation of " << resolvable->asString() << " failed" << endl;
+	  qDebug() << "Installation of " << resolvable->asString().c_str() << " failed" ;
 	  // emit the problem
 	  // emit problemEncountered( resolvable->asString(), description );
 	  return (Action) ABORT;
       }
     
-      virtual void finish( Resolvable::constPtr resolvable, Error error, const string& reason, RpmLevel /*unused */)
+      virtual void finish( Resolvable::constPtr resolvable, Error error, const string & reason, RpmLevel /*unused */)
       {
 	  if ( m_progress ) {
 	      (*m_progress).error( error != NO_ERROR );
@@ -520,28 +529,33 @@ namespace OCICallbacks
 	      if ( !reason.empty() ) ;
 		  s_toOCI.emitFinishResolvable( QString::fromStdString( getFinishInstallResolvableInfo( resolvable ) ), error != NO_ERROR );
 	  }
-	  QString info( QString::fromStdString( "Installed: " + resolvable->asString() ) );
+	  QString info( i18n( "Installed: " ) + QString::fromStdString( resolvable->asString() ) );
 	  s_toOCI.emitFinishProgress( info, error != NO_ERROR );
       }
       
       virtual void reportend()
       { m_progress.reset(); }
       
-      string getStartInstallResolvableInfo( Resolvable::constPtr resolvablePtr )
+      string getStartInstallResolvableInfo( Resolvable::constPtr & resolvablePtr )
       {
 	  // #006325 -> Dark Green
-	  string line( str::Format( "<font color=#006325> ( %s / %s ) </font> <b>Installing :</b> </b><font color=\"Red\">%s</font>" )
+	  string message( i18n( "Installing:" ).toStdString() );
+	  string line( str::Format( "<font color=#006325> ( %s / %s ) </font> <b>%s</b> </b><font color=\"Red\">%s</font>" )
 				    % RuntimeData::instance()->rpmPackageCurrent()
 				    % RuntimeData::instance()->rpmPackagesTotal()
+				    % message
 				    % resolvablePtr->asString() );
 				    
 	  return line;	    
       }
-      string getFinishInstallResolvableInfo( Resolvable::constPtr resolvablePtr)
+      string getFinishInstallResolvableInfo( Resolvable::constPtr & resolvablePtr)
       {
-	  // #14148c -> Dark Blue; 
-	  string line( str::Format( "Installed:<font color= #14148c> %s </font> Status:<font color=\"Purple\"> %s </font><br>" )
+	  // #14148c -> Dark Blue;
+	  string messageStatus( i18n( "Status:" ).toStdString() );
+	  string line( str::Format( "%s:<font color= #14148c> %s </font> %s<font color=\"Purple\"> %s </font><br>" )
+				    % resolvablePtr->kind()
 				    % resolvablePtr->asString()
+				    % messageStatus
 				    % "Done" );
 	  return line;
       }
@@ -555,7 +569,7 @@ namespace OCICallbacks
   public:
       virtual void start( Resolvable::constPtr resolvable )
       {
-	  cout << "Removing " << resolvable->asString();
+	  qDebug() << "Removing " << resolvable->asString().c_str();
 	  
 	  //set current rpm package
 	  RuntimeData::instance()->setRpmPackageCurrent( RuntimeData::instance()->rpmPackageCurrent() + 1 );
@@ -568,7 +582,7 @@ namespace OCICallbacks
 					     rpm_pkg_current,
 					     rpm_pkgs_total ) );
 	  ( *m_progress )->range( 100 ); // reports percentage
-	  QString info( QString::fromStdString( "<b>Removing: </b>" + resolvable->name() ) );
+	  QString info( i18n( "<b>Removing: </b>" ) + QString::fromStdString( resolvable->name() ) );
 	  s_toOCI.emitStartResolvable( info );
 	  s_toOCI.emitStartProgress( info );
       }
@@ -580,7 +594,7 @@ namespace OCICallbacks
 	  return true;
       }
       
-      virtual Action problem( Resolvable::constPtr resolvable, Error error, const string& description )
+      virtual Action problem( Resolvable::constPtr resolvable, Error error, const string & description )
       {
 	  // finish progress - indicate error
 	  if ( m_progress ) {
@@ -588,15 +602,15 @@ namespace OCICallbacks
 	      m_progress.reset();
 	  }
 	  
-	  cout << "Removal of " << resolvable->asString() << " failed" << endl;
+	  qDebug() << "Removal of " << resolvable->asString().c_str() << " failed" ;
 	  // emit the problem
 	  // emit problemEncountered( resolvable->asString(), description );
 	  return (Action) ABORT;
       }
       
-      virtual void finish( Resolvable::constPtr resolvable, Error error, const string& reason )
+      virtual void finish( Resolvable::constPtr resolvable, Error error, const string & reason )
       {
-	  QString info( QString::fromStdString( "<b>Removed: </b>" + resolvable->name() ) );
+	  QString info( i18n( "<b>Removed: </b>" ) + QString::fromStdString( resolvable->name() ) );
 	  // finish progress - indicate error
 	  if ( m_progress ) {
 	      ( *m_progress ).error( error != NO_ERROR );
@@ -629,24 +643,28 @@ namespace OCICallbacks
 					     "Checking for file conflicts:" ) );
       }
       
-      virtual bool start( const ProgressData& progress_R )
+      virtual bool start( const ProgressData & progress_R )
       {
 	  ( *m_progress )->set( progress_R );
 	  // return !OCI::instance()->exitRequested(); //refer to line 88 (media.h)
-	  QString info( QString::fromStdString( "<font color=\"Red\"><b>Checking For File Conflicts...</b></font>" ) );
+	  
+	  string line( str::Format( "<font color=\"Red\"><b>%s</b></font>" )
+				    % i18n( "Checking For File Conflicts" ).toStdString() );
+	  QString info( QString::fromStdString( line ) );
+	  
 	  s_toOCI.emitStartResolvable( info );
 	  s_toOCI.emitStartProgress( info );
 	  return true; //this should suffice for now. Temporary fix
       }
       
-      virtual bool progress( const ProgressData& progress_R, const sat::Queue& noFilelist_R )
+      virtual bool progress( const ProgressData & progress_R, const sat::Queue & noFilelist_R )
       {
 	  ( *m_progress )->set( progress_R );
 	  // return !OCI::instance()->exitRequested(); //refer to line 88 (media.h)
 	  return true; //this should suffice for now. Temporary fix
       }
       
-      virtual bool result( const ProgressData& progress_R, const sat::Queue& noFilelist_R, const sat::FileConflicts& conflicts_R )
+      virtual bool result( const ProgressData & progress_R, const sat::Queue & noFilelist_R, const sat::FileConflicts & conflicts_R )
       {
 	  // finish progress - only conflicts count as error
 	  ( *m_progress ).error( !conflicts_R.empty() );
@@ -660,26 +678,26 @@ namespace OCICallbacks
 	  // show error result
 	  if ( !noFilelist_R.empty() ) //warning
 	  {
-	      cout << "Checking for file conflicts requires not installed packages to be downloaded in advance "
-	              "in order to access their file lists." << endl;
+	      qDebug() << "Checking for file conflicts requires not installed packages to be downloaded in advance "
+	              "in order to access their file lists." ;
 	      // print them out
-	      cout << "The following packages had to be excluded from file conflicts check because they are not yet downloaded" << endl;
-	      for_( it, noFilelist_R.begin(), noFilelist_R.end() )
-		  cout << ( *it ) << endl;;
+	      qDebug() << "The following packages had to be excluded from file conflicts check because they are not yet downloaded" ;
+	      /*for_( it, noFilelist_R.begin(), noFilelist_R.end() )
+		  ;//qDebug() << ( *it );*/
 	  }
 	  
 	  if ( !conflicts_R.empty() )
 	  {
 	      // use i18np() here
-	      cout << "Detected " << conflicts_R.size() << "file conflict(s)" << endl;
-	      //print them out
+	      qDebug() << "Detected " << conflicts_R.size() << "file conflict(s)" ;
+	      /* print them out
 	      for_( it, conflicts_R.begin(), conflicts_R.end() )
-		  cout << ( *it ) << endl;
+		  ;//qDebug() << ( *it ) ;*/
 	      
 	      // prompt general info (for now) about why file conflicts usually occur
 	      bool cont = true;
-	      string generalInfo = "File conflicts happen when two packages attempt to install files with the same name but different contents. If you continue, conflicting files will be replaced losing the previous content. Continue? [yes/no]";
-	      int reply = KMessageBox::questionYesNo( 0, QString::fromStdString( generalInfo ), "File Conflicts!" );
+	      string generalInfo = i18n( "File conflicts happen when two packages attempt to install files with the same name but different contents. If you continue, conflicting files will be replaced losing the previous content. Continue? [yes/no]" ).toStdString();
+	      int reply = KMessageBox::questionYesNo( 0, QString::fromStdString( generalInfo ), i18n( "File Conflicts!" ) );
 	      if ( reply == KMessageBox::ButtonCode::No )
 		  cont = false;
 	      

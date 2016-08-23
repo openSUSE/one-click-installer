@@ -21,7 +21,7 @@
 #include "firstscreen.h"
 #include "utils.h"
 
-FirstScreen::FirstScreen( PackageBackend *backend, const QString& tmpFileName, const QString& filename, QObject *parent )
+FirstScreen::FirstScreen( PackageBackend *backend, const QString & tmpFileName, const QString & filename, QObject *parent )
 {
     m_tmpFileName = tmpFileName;
     setStyleSheet( "background-color : white;" );
@@ -54,7 +54,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString& tmpFileName, c
         // Only proceed if it is the recommended repository
         if(repo->recommended() == "false")
             continue;
-        ZypperUtils::initRepository(repo->url().toStdString());
+        ZypperUtils::initRepository( repo->name().toStdString(), repo->url().toStdString());
         ++m_numOfRepositories;
         m_backend->addRepository( QUrl( repo->url() ) );
 	

@@ -35,24 +35,24 @@
 #include "utils.h"
 
 // Define static variables here
-scoped_ptr<RepoManager> ZypperUtils::s_repoManager( new RepoManager( Pathname( "/tmp" ) ) );
+scoped_ptr<RepoManager> ZypperUtils::s_repoManager( new RepoManager( Pathname( "/tmp/ociRepos" ) ) );
 RepoInfo ZypperUtils::s_repoInfo;
 KeyRingReceive ZypperUtils::s_keyReceiveReport;
 
 //Methods
 /************************************* HELPER FUNCTIONS **************************************/
-void ZypperUtils::initRepository( const string& repoUrl )
+void ZypperUtils::initRepository( const string & repoName, const string & repoUrl )
 {
     //KeyRing - Handling of gpg keys
     s_keyReceiveReport.connect();
-    addRepository( repoUrl );
+    addRepository( repoUrl, repoName );
     //TRUST_KEY_TEMPORARILY - we need only the key information 
     KeyRing::setDefaultAccept( KeyRing::TRUST_KEY_TEMPORARILY );
-    cout << "TRUST_KEY_TEMPORARILY accepted" << endl;
+    qDebug() << "TRUST_KEY_TEMPORARILY accepted";
     refreshRepoManager();
     //load cache
     try {
-	cout << "Loading resolvables from " << s_repoInfo.alias() << endl;
+	qDebug() << "Loading resolvables from " << s_repoInfo.alias().c_str();
 	s_repoManager->loadFromCache( s_repoInfo );      
     }
     catch (const Exception& exp)
@@ -64,13 +64,13 @@ void ZypperUtils::initRepository( const string& repoUrl )
     }
     s_keyReceiveReport.disconnect();
     
-    cout << "===================================================" << endl;
-    cout << "Alias: " << s_repoInfo.alias() << endl;
-    cout << "Url: " << s_repoInfo.url() << endl;
-    cout << "===================================================" << endl;
+    qDebug() << "===================================================";
+    qDebug() << "Alias: " << s_repoInfo.alias().c_str();
+    qDebug() << "Url: " << s_repoInfo.url().asString().c_str();
+    qDebug() << "===================================================";
 }
 
-void ZypperUtils::initRepoInfo( const string& repoUrl, const string& repoAlias )
+void ZypperUtils::initRepoInfo( const string & repoUrl, const string& repoAlias )
 {
     s_repoInfo.addBaseUrl( Url( repoUrl ) );
     s_repoInfo.setName( repoAlias );
@@ -81,22 +81,22 @@ void ZypperUtils::initRepoInfo( const string& repoUrl, const string& repoAlias )
 
 void ZypperUtils::refreshRepoManager() 
 {
-    cout << "Refreshing Repo: " << s_repoInfo.alias() << endl;
+    qDebug() << "Refreshing Repo: " << s_repoInfo.alias().c_str();
     s_repoManager->refreshMetadata( s_repoInfo, RepoManager::RefreshForced );
     s_repoManager->buildCache( s_repoInfo );
 }
 
-void ZypperUtils::addRepository( const string& repoUrl, const string& repoAlias )
+void ZypperUtils::addRepository( const string & repoUrl, const string& repoAlias )
 {
     initRepoInfo( repoUrl, repoAlias );   
     // Add it to the repoManager if not already present
     if ( !s_repoManager->hasRepo( repoAlias ) ) {
 	s_repoManager->addRepository( s_repoInfo );
-	cout << "added repo" << endl;
+	qDebug() << "added repo";
     }
 }
 
-bool ZypperUtils::exists(const string& repoUrl)
+bool ZypperUtils::exists(const string & repoUrl)
 {
     RepoManager rM;
     for ( RepoInfo& nrepo : rM.knownRepositories() ) {
@@ -131,7 +131,7 @@ void ZypperUtils::initSystemRepos()
 	    for ( const Url& url : repo.baseUrls() ) {
 		try {
 		    if (s_repoManager->checkIfToRefreshMetadata( repo, url ) == RepoManager::REFRESH_NEEDED ) {
-			cout << "Need to autorefresh repository " << repo.alias() << endl;
+			qDebug() << "Need to autorefresh repository " << repo.alias().c_str();
 			refreshNeeded = true;
 		    }
 		    break;	// exit after first successful checkIfToRefreshMetadata
@@ -142,7 +142,7 @@ void ZypperUtils::initSystemRepos()
 	
 	// Initial metadata download or cache refresh 
 	if ( !s_repoManager->isCached( repo ) || refreshNeeded ) {
-	    cout << "Refreshing repo... " << repo << endl;
+	    qDebug() << "Refreshing repo... " << repo.asUserString().c_str();
 	    if ( s_repoManager->isCached( repo ) )
 		s_repoManager->cleanCache( repo );
 	    s_repoManager->refreshMetadata( repo );
@@ -151,7 +151,7 @@ void ZypperUtils::initSystemRepos()
 	
 	// load cache
 	try {
-	    cout << "Loading resolvables from " << repo.alias() << endl;
+	    qDebug() << "Loading resolvables from " << repo.alias().c_str() << endl;
 	    s_repoManager->loadFromCache( repo );	// load available packages to pool
 	}
 	catch (const Exception& exp ) {
@@ -163,7 +163,7 @@ void ZypperUtils::initSystemRepos()
     }
 }
 
-void ZypperUtils::resetRepoManager( const Pathname& sysRoot )
+void ZypperUtils::resetRepoManager( const Pathname & sysRoot )
 {
     /* Need to remove temporary PoolItems (loaded into pool when querying package information (metadata))
      * from the ResPool to avoid unnecessary conflicts.
@@ -185,7 +185,7 @@ void ZypperUtils::resetRepoManager( const Pathname& sysRoot )
 	s_repoManager.reset( new RepoManager( sysRoot ) );
     }
     catch ( const Exception& exp ) {
-	cout << "Oops! Failed to init repo manager" << endl;
+	qDebug() << "Oops! Failed to init repo manager";
 	throw;
     }
 }

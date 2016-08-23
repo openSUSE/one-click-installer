@@ -26,7 +26,7 @@ public:
     /**
      * Add package 
      */
-    static void addPackage( const QString& package );
+    static void addPackage( const QString & package );
 Q_SIGNALS:
     void hasConflicts();
     void displayProblemAndSolutions( QString, QStringList );
@@ -42,7 +42,7 @@ private:
      */
     void resolve();
     void resolveConflicts();
-    void resolve( const ResolverProblem& problem );
+    void resolve( const ResolverProblem & problem );
     
     ZYpp::Ptr m_zypp;
     ResolverProblem m_currentProblem;

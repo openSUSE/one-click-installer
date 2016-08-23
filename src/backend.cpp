@@ -26,6 +26,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDBusConnection>
+#include <klocalizedstring.h>
 #include "backend.h"
 #include "ocihelperadaptor.h"	//generated during build time
 
@@ -42,7 +43,7 @@ Backend::Backend()
     }
     connection.registerObject( "/", this );
     if ( !connection.registerService( "org.opensuse.OCIHelper" ) ) {
-	qDebug() << qPrintable( connection.lastError().message() );
+	qFatal ( qPrintable( connection.lastError().message() ) );
 	exit( 1 );
     }
 
@@ -104,10 +105,10 @@ void Backend::resolve()
     resolve( *m_resolverProblemList.takeFirst() );
 }
 
-void Backend::resolve( const ResolverProblem& problem )
+void Backend::resolve( const ResolverProblem & problem )
 {
     m_currentProblem = problem;
-    QString problemStatement( "<b>Problem:</b> " + QString::fromStdString( problem.description() ) );
+    QString problemStatement( i18n( "<b>Problem:</b> " ) + QString::fromStdString( problem.description() ) );
     QStringList solProposals;
     
     const ProblemSolutionList & solutions = problem.solutions();
@@ -141,7 +142,7 @@ void Backend::applySolution( int solId )
     }
 }
 
-void Backend::addPackage(const QString& package)
+void Backend::addPackage(const QString & package)
 {
     s_packages << package;
 }

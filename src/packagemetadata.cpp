@@ -31,7 +31,7 @@ PackageMetadata::PackageMetadata()
 {   
 }
 
-void PackageMetadata::getData( const QString& packageName )
+void PackageMetadata::getData( const QString & packageName )
 {
     Info packageInfo = ZyppInfo::queryMetadataForPackage( packageName.toStdString() );
     

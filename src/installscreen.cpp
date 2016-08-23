@@ -46,13 +46,13 @@ InstallScreen::InstallScreen()
     m_statusWidget->setMinimumSize( 500, 180 );
        
     // Cancel button
-    m_cancelButton = new QPushButton( "Cancel" );
+    m_cancelButton = new QPushButton( i18n( "Cancel" ) );
     QHBoxLayout *buttonLayout = new QHBoxLayout();
     buttonLayout->addSpacing( 400 );
     buttonLayout->addWidget( m_cancelButton );
     
     // Current message label, Progress Bar
-    m_currentPackageStatusLabel = new QLabel( "Please Wait..." );
+    m_currentPackageStatusLabel = new QLabel( i18n( "Please Wait..." ) );
     m_progressBar = new QProgressBar;
     m_progressBar->setMinimum( 0 );
     m_progressBar->setMaximum( 100 );
@@ -104,19 +104,19 @@ void InstallScreen::initDBusServices()
 
 // Invoke this every time startResolvable() is emitted from start() method[ in media.h ] except for 
 // DownloadProgressReportReceiver in OCIHelper
-void InstallScreen::newResolvableInAction( QString label_R )
+void InstallScreen::newResolvableInAction( const QString & label_R )
 {
     m_statusWidget->append( label_R );
 }
 
 // Invoke this every time finishResolvable() is emitted from finish() method[ in media.h ] except 
 // DownloadProgressReportReceiver in OCIHelper
-void InstallScreen::updateCurrentResolvableStatusUponCompletion( QString finish_R, bool success )
+void InstallScreen::updateCurrentResolvableStatusUponCompletion( const QString & finish_R, bool success )
 {
     m_statusWidget->append( finish_R );
 }
 
-void InstallScreen::newProgressInAction( QString label_R )
+void InstallScreen::newProgressInAction( const QString & label_R )
 {
     m_currentPackageStatusLabel->setText( label_R );
     // write it to the log file
@@ -124,7 +124,7 @@ void InstallScreen::newProgressInAction( QString label_R )
     m_progressBar->reset();
 }
 
-void InstallScreen::updateCurrentProgressStatusUponCompletion( QString finish_R, bool success )
+void InstallScreen::updateCurrentProgressStatusUponCompletion( const QString & finish_R, bool success )
 {
     // set the progress bar to 100
     m_progressBar->setValue( 100 );

@@ -20,7 +20,7 @@ public:
     /**
      * Construct the object with the filename and backend object
      */
-    Summary( PackageBackend *backend, const QString& tmpFileName, QObject *parent = 0 );
+    Summary( PackageBackend *backend, const QString & tmpFileName, QObject *parent = 0 );
 
 private:
     QTextBrowser *m_installationSummary;

@@ -30,7 +30,7 @@ public:
     /**
      * Query Metadata Information
      */
-    void getData( const QString& packageName );
+    void getData( const QString & packageName );
 private:
       
     QString m_size;

@@ -36,13 +36,14 @@
 #include <zypp/FileChecker.h>
 #include <zypp/media/MediaException.h>
 
+#include <klocalizedstring.h>
 #include "zyppinstall.h"
 #include "utils.h"
 #include "runtimedata.h"
 
 ZYpp::Ptr ZyppInstall::s_zypp = getZYpp(); // acquire initial zypp lock
 
-void ZyppInstall::markPackagesForInstallation(const string& packageName)
+void ZyppInstall::markPackagesForInstallation(const string & packageName)
 {
     Pathname sysRoot( "/" );
     initTarget( sysRoot );
@@ -60,14 +61,13 @@ void ZyppInstall::markPackagesForInstallation(const string& packageName)
 	    ui::asSelectable()( *it )->setOnSystem( *it, ResStatus::USER );
 	}
     }
-    cout << s_zypp->pool() << endl;   
-    cout << "=====================[ pool ready ]=============================" << endl;
+    qDebug() << "=====================[ pool ready ]=============================";
 }
 
 bool ZyppInstall::resolveConflictsAndDependencies()
 {
     // Solve Selection
-    cout << "Solving dependencies..." << endl;
+    qDebug() << "Solving dependencies...";
     return s_zypp->resolver()->resolvePool();
 }
 
@@ -75,14 +75,14 @@ bool ZyppInstall::commitChanges()
 {
     // Commit the changes 
     // Please note that dryRunFlag and zypp::DownloadOnly are for now
-    cout << "Committing the changes" << endl;
-    bool dryRunFlag = false;
+    qDebug() << "Committing the changes";
+    bool dryRunFlag = true;
     ZYppCommitPolicy policy;
     if ( !dryRunFlag ) {
 	policy.dryRun( true );
 	dryRunFlag = true;
     }
-    policy.downloadMode( zypp::DownloadOnly );
+    policy.downloadMode( zypp::DownloadInAdvance ); 
     
     try {
 	// set runtime data
@@ -101,11 +101,11 @@ bool ZyppInstall::commitChanges()
 		//				 ERR_COMMIT : ERR_ZYPP );
 	    throw "Incomplete Commit";
 	}
-	cout << "Commit Succeeded" << endl;
+	qDebug() << "Commit Succeeded";
     }
     catch ( const media::MediaException& e)
     {
-	string errDescription = "Problem retrieving the package file from the repository";
+	string errDescription = i18n( "Problem retrieving the package file from the repository" ).toStdString();
 	//OCIHelper::instance()->setErrorDescription( ERR_COMMIT, errDescription );
 	return false;
     }
@@ -126,36 +126,36 @@ bool ZyppInstall::commitChanges()
 	    }
 	}
 	catch( const Exception& e )
-	{ cout << "Ingore - This is just check if to refresh exception" << endl; }
+	{ qDebug() << "Ingore - This is just check if to refresh exception"; }
 	
 	string message;
 	if ( refreshNeeded ) // this exception is highly unlikely as we are refreshing all the enabled repos during installation
-	    message = str::Format( "Repository '%s' is out of date. Running '%s' might help" ) % e.info().alias() % "zypper refresh";
+	    message = str::Format( i18n( "Repository '%s' is out of date. Running '%s' might help" ).toStdString() ) % e.info().alias() % "zypper refresh";
 	else
-	    message = "Problem retrieving the package file from the repository";
+	    message = i18n( "Problem retrieving the package file from the repository" ).toStdString();
 	//OCIHelper::instance()->setExitDescription( ERR_COMMIT, message );
 	return false;
     }
     catch ( const FileCheckException& e)
     {
-	string message = "The package integrity check failed. This may be a problem"
+	string message = i18n( "The package integrity check failed. This may be a problem"
 			  " with the repository or media. Please try one of the following:\n"
 			  "- refresh the repositories using 'zypper refresh'\n"
 			  "- use another installation medium (if damaged)\n"
 			  "- use another repository.\n"
-			  "Sorry to disappoint you! This is out of the scope of OCI (for now?)";
+			  "Sorry to disappoint you! This is out of the scope of OCI (for now?)" ).toStdString();
 	//OCIHelper::instance()->setExitDescription( ERR_COMMIT, message );
 	return false;
     }
     catch ( const Exception& e )
     {
-	string message = "Problem occured during or after installation or removal of packages";
+	string message = i18n( "Problem occured during or after installation or removal of packages" ).toStdString();
 	//OCIHelper::instance()->setExitDescription( ERR_COMMIT, message );
 	return false;
     }
     catch ( const char* exp)
     {
-	cout << "Error committing";
+	qDebug() << "Error committing";
     }
     
     /*string output; 
@@ -170,9 +170,9 @@ bool ZyppInstall::commitChanges()
 
 void ZyppInstall::initTarget( const Pathname& sysRoot )
 {
-    cout << "Initializing target at " << sysRoot << endl;
+    qDebug() << "Initializing target at " << sysRoot.asString().c_str();
     s_zypp->initializeTarget( sysRoot ); //initialize target
-    cout << "Loading target resolvables" << endl;
+    qDebug() << "Loading target resolvables";
     s_zypp->getTarget()->load(); // load installed packages to pool
 }
 

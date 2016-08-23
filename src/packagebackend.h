@@ -12,12 +12,12 @@ class PackageBackend : public QObject
     /**
      	Adds the repository required to install the selected packages.
      */
-    virtual void addRepository( const QUrl& url );
+    virtual void addRepository( const QUrl & url );
 
     /**
     	Add the package to be installed
      */
-    virtual void addPackage( const QString& package);
+    virtual void addPackage( const QString & package);
 
     /**
      	Return the list of packages selected for installation
@@ -37,7 +37,7 @@ class PackageBackend : public QObject
     /**
         Set the Temporary Filename
      */
-    virtual void setFileName( const QString& fileName );
+    virtual void setFileName( const QString & fileName );
 
     /**
         Get the Temporary Filename
@@ -47,7 +47,7 @@ class PackageBackend : public QObject
     /**
         Return true if repository exists
      */
-    virtual bool exists( const QString& url ) = 0;
+    virtual bool exists( const QString & url ) = 0;
 
 private:
     QList< QString > m_packages;

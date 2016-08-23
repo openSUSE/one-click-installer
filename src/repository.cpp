@@ -49,27 +49,27 @@ QString OCI::Repository::url() const
 	return m_url;
 }
 
-void OCI::Repository::setName( const QString& name )
+void OCI::Repository::setName( const QString & name )
 {
 	m_name = name;
 }
 
-void OCI::Repository::setRecommended( const QString& recommended )
+void OCI::Repository::setRecommended( const QString & recommended )
 {
 	m_recommended = recommended;
 }
 
-void OCI::Repository::setSummary( const QString& summary )
+void OCI::Repository::setSummary( const QString & summary )
 {
 	m_summary = summary;
 }
 
-void OCI::Repository::setDescription( const QString& description )
+void OCI::Repository::setDescription( const QString & description )
 {
 	m_description = description;
 }
 
-void OCI::Repository::setUrl( const QString& url )
+void OCI::Repository::setUrl( const QString & url )
 {
 	m_url = url;
 }
