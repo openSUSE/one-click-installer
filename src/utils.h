@@ -24,7 +24,7 @@ public:
   /**
    * Initialize Repositories 
    */
-  static void initRepository( const string & repoUrl );
+  static void initRepository( const string & repoName, const string & repoUrl );
   
   /**
    * Refresh RepoManager to query meta data of a package

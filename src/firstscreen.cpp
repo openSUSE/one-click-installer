@@ -54,7 +54,7 @@ FirstScreen::FirstScreen( PackageBackend *backend, const QString & tmpFileName, 
         // Only proceed if it is the recommended repository
         if(repo->recommended() == "false")
             continue;
-        ZypperUtils::initRepository(repo->url().toStdString());
+        ZypperUtils::initRepository( repo->name().toStdString(), repo->url().toStdString());
         ++m_numOfRepositories;
         m_backend->addRepository( QUrl( repo->url() ) );
 	

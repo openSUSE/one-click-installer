@@ -35,17 +35,17 @@
 #include "utils.h"
 
 // Define static variables here
-scoped_ptr<RepoManager> ZypperUtils::s_repoManager( new RepoManager( Pathname( "/tmp" ) ) );
+scoped_ptr<RepoManager> ZypperUtils::s_repoManager( new RepoManager( Pathname( "/tmp/ociRepos" ) ) );
 RepoInfo ZypperUtils::s_repoInfo;
 KeyRingReceive ZypperUtils::s_keyReceiveReport;
 
 //Methods
 /************************************* HELPER FUNCTIONS **************************************/
-void ZypperUtils::initRepository( const string & repoUrl )
+void ZypperUtils::initRepository( const string & repoName, const string & repoUrl )
 {
     //KeyRing - Handling of gpg keys
     s_keyReceiveReport.connect();
-    addRepository( repoUrl );
+    addRepository( repoUrl, repoName );
     //TRUST_KEY_TEMPORARILY - we need only the key information 
     KeyRing::setDefaultAccept( KeyRing::TRUST_KEY_TEMPORARILY );
     qDebug() << "TRUST_KEY_TEMPORARILY accepted";
