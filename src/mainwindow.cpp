@@ -5,6 +5,7 @@
 #include "mainwindow.h"
 #include "checkconflictscreen.h"
 #include "conflictresolutionscreen.h"
+#include "finallogscreen.h"
 
 MainWindow::MainWindow( const QString & filename, const QString & tmpFileName, bool fakeRequested, QObject *parent )
 {
@@ -27,9 +28,13 @@ MainWindow::MainWindow( const QString & filename, const QString & tmpFileName, b
     m_conflictCancel->hide();
     m_conflictContinueInstallation->hide();
     
+    m_finalLogExit = new QPushButton( i18n ( "Exit" ) );
+    m_finalLogExit->hide();
+    
     buttonLayout->addWidget( m_showSettings );
-    buttonLayout->addSpacing( 100 );
+    buttonLayout->addSpacing( 350 );
     buttonLayout->addWidget( m_conflictCancel );
+    buttonLayout->addWidget( m_finalLogExit );
     buttonLayout->addWidget( m_cancel );
     buttonLayout->addSpacing( 10 );
     buttonLayout->addWidget( m_conflictContinueInstallation );
@@ -60,6 +65,7 @@ MainWindow::MainWindow( const QString & filename, const QString & tmpFileName, b
     qDebug() << "after checkForConflictsScreen";
     ConflictResolutionScreen *conflictResolutionScreen = new ConflictResolutionScreen();
     qDebug() << "after conflictresolutionscreen";
+    FinalLogScreen *finalLogScreen = new FinalLogScreen();
     
     QScrollArea *scroll = new QScrollArea;
     scroll->setFrameShape( QFrame::NoFrame );
@@ -73,12 +79,18 @@ MainWindow::MainWindow( const QString & filename, const QString & tmpFileName, b
     scrollConflictScreen->setWidget( conflictResolutionScreen );
     scrollConflictScreen->setWidgetResizable( true );
     
+    QScrollArea *scrollFinalLogScreen = new QScrollArea;
+    scrollFinalLogScreen->setFrameShape( QFrame::NoFrame );
+    scrollFinalLogScreen->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    scrollFinalLogScreen->setWidget( finalLogScreen );
+    scrollFinalLogScreen->setWidgetResizable( true );
     
     m_screenStack->addWidget( scroll );
     m_screenStack->addWidget( installSummary );
     m_screenStack->addWidget( installer );
     m_screenStack->addWidget( checkForConflictsScreen );
     m_screenStack->addWidget( scrollConflictScreen );
+    m_screenStack->addWidget( scrollFinalLogScreen );
 
     m_screenStack->setCurrentIndex( 0 );
 
@@ -115,8 +127,26 @@ MainWindow::MainWindow( const QString & filename, const QString & tmpFileName, b
     sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "noConflicts", installer, SLOT( initDBusServices() ) );
     sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "noConflicts", m_header, SLOT( installationStarted() ) );
     sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "noConflicts", this, SLOT( showInstallationScreen() ) );
+    
+    // final installation log screen
+    sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "installationFinished", installer, SLOT( closeLogFile() ) );
+    sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "installationFinished", finalLogScreen, SLOT( processInstalledPackages( QStringList, bool ) ) );
+    sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "installationFinished", this, SLOT( showFinalInstallationLogScreen() ) );
+    
+    QObject::connect( finalLogScreen, SIGNAL( finalLogHeader( int, bool, bool ) ), m_header, SLOT( showFinalInstallationLogHeader( int, bool, bool ) ) );
+    QObject::connect( m_finalLogExit, SIGNAL( clicked() ), finalLogScreen, SLOT( close() ) );
  
     show();
+}
+
+void MainWindow::showFinalInstallationLogScreen()
+{
+    // Hide all button except m_finalLogExit
+    m_conflictCancel->hide();
+    m_conflictContinueInstallation->hide();
+    m_finalLogExit->show();
+    
+    m_screenStack->setCurrentIndex( 5 );
 }
 
 void MainWindow::showInstallationScreen()

@@ -77,3 +77,19 @@ void MainHeader::installationCompleted()
 {
     m_statusLabel->setText( i18n("Success!!!") );
 }
+
+void MainHeader::showFinalInstallationLogHeader( int numOfPackagesInstalled, bool commitStatus, bool packageInstalled )
+{
+    if ( commitStatus ) { // all packages were installed
+	m_icon->setPixmap( QPixmap( "/usr/share/icons/hicolor/32x32/apps/success.png" ) );
+	m_statusLabel->setText( i18n( "<b>Success!</b><br> %1 packages were installed successfully." ).arg( numOfPackagesInstalled ) );
+    }
+    else if ( !commitStatus && !packageInstalled ) {	// only few packages were installed
+	m_icon->setPixmap( QPixmap( "/usr/share/icons/hicolor/32x32/apps/warning.png" ) );
+	m_statusLabel->setText( i18n( "<b>Warning:</b> Some packages were not installed correctly." ) );
+    }
+    else { // all packages weren't installed
+	m_icon->setPixmap( QPixmap( "/usr/share/icons/hicolor/32x32/apps/conflictIcon.png" ) );
+	m_statusLabel->setText( i18n( "<b>Error: None of your software could be installed.</b>" ) );
+    }
+}
