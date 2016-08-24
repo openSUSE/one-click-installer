@@ -23,8 +23,8 @@ find_package(KF5I18n REQUIRED)
 add_definitions(${Qt5Widgets_DEFINITIONS})
 add_definitions(${Qt5DBus_DEFINITIONS})
 
-set(oneclickinstaller_SOURCES main.cpp backendoci.cpp conflictresolutionscreen.cpp utils.cpp mainwindow.cpp firstscreen.cpp settings.cpp fakebackend.cpp repository.cpp package.cpp ympparser.cpp packagebackend.cpp installscreen.cpp repositorywidget.cpp summary.cpp keyringcallbacks.cpp mainheader.cpp packagedetails.cpp repositorymetadata.cpp repositorydata.cpp packagemetadata.cpp zyppinfo.cpp)
-set(oneclickinstaller_HEADERS backendoci.h conflictresolutionscreen.h utils.h mainwindow.h checkconflictscreen.h firstscreen.h settings.h installscreen.h repositorywidget.h summary.h mainheader.h packagedetails.h packagemetadata.h packagebackend.h zyppinfo.h)
+set(oneclickinstaller_SOURCES main.cpp finallogscreen.cpp backendoci.cpp conflictresolutionscreen.cpp utils.cpp mainwindow.cpp firstscreen.cpp settings.cpp fakebackend.cpp repository.cpp package.cpp ympparser.cpp packagebackend.cpp installscreen.cpp repositorywidget.cpp summary.cpp keyringcallbacks.cpp mainheader.cpp packagedetails.cpp repositorymetadata.cpp repositorydata.cpp packagemetadata.cpp zyppinfo.cpp)
+set(oneclickinstaller_HEADERS finallogscreen.h backendoci.h conflictresolutionscreen.h utils.h mainwindow.h checkconflictscreen.h firstscreen.h settings.h installscreen.h repositorywidget.h summary.h mainheader.h packagedetails.h packagemetadata.h packagebackend.h zyppinfo.h)
 
 set(oneclickhelper_SOURCES interfacemain.cpp backend.cpp  utils.cpp zyppinstall.cpp media.cpp callbacks.cpp)
 set(oneclickhelper_HEADERS backend.h keyring.h utils.h zyppinstall.h media.h callbacks.h runtimedata.h)
@@ -70,6 +70,11 @@ INSTALL(FILES res/oneclickinstall.png DESTINATION /usr/share/icons/hicolor/32x32
 INSTALL(FILES res/ticks-endless.gif DESTINATION /usr/share/one-click-installer/res/)
 INSTALL(FILES res/conflictCheck.gif DESTINATION /usr/share/one-click-installer/res/)
 INSTALL(FILES res/conflictIcon.png DESTINATION /usr/share/icons/hicolor/32x32/apps/)
+INSTALL(FILES res/okIcon.png DESTINATION /usr/share/icons/hicolor/32x32/apps/)
+INSTALL(FILES res/success.png DESTINATION /usr/share/icons/hicolor/32x32/apps/)
+INSTALL(FILES res/errorInstall.png DESTINATION /usr/share/icons/hicolor/32x32/apps/)
+INSTALL(FILES res/warning.png DESTINATION /usr/share/icons/hicolor/32x32/apps/)
+
 
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
