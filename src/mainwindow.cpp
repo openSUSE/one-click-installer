@@ -1,4 +1,5 @@
 #include <QDBusConnection>
+#include <QStandardPaths>
 #include <klocalizedstring.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -103,7 +104,8 @@ MainWindow::MainWindow( const QString & filename, const QString & tmpFileName, b
 
     setLayout( mainLayout );
     setWindowTitle("One Click Installer");
-    setWindowIcon( QIcon("/usr/share/icons/hicolor/32x32/apps/oneclickinstall.png") );
+    qDebug() << QStandardPaths::AppDataLocation << "=================";
+    setWindowIcon( QIcon( QStandardPaths::locate( QStandardPaths::AppDataLocation, "res/oneclickinstall.png" ) ) );
 
     QObject::connect( m_showSettings, SIGNAL( clicked() ), this, SLOT( showSettings() ) );
     QObject::connect( m_install, SIGNAL( clicked() ), this, SLOT( performInstallation() ) );

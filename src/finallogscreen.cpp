@@ -27,6 +27,7 @@
 #include <QHBoxLayout>
 #include <QTextStream>
 #include <QGridLayout>
+#include <QStandardPaths>
 #include <QIcon>
 #include <klocalizedstring.h>
 #include "finallogscreen.h"
@@ -90,7 +91,8 @@ QLabel* FinalLogScreen::repoWidget( const QString & line )
 
 QPixmap FinalLogScreen::image( bool success )
 {   
-    return QIcon::fromTheme( success ? "okIcon" : "errorInstall" ).pixmap( 22, 22 );
+    return QIcon( QStandardPaths::locate( QStandardPaths::AppDataLocation,
+		  success ? "res/okIcon.png" : "res/errorInstall.png" ) ).pixmap( 22, 22 );
 }
 
 QGridLayout* FinalLogScreen::installedWidget( const QString & packageName )

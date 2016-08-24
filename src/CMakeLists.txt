@@ -62,19 +62,18 @@ INSTALL(TARGETS oneclickhelper DESTINATION /usr/sbin)
 INSTALL(TARGETS oneclickinstaller DESTINATION /usr/bin)
 #INSTALL_TARGETS(/sbin oneclickhelper)
 
+# get multimedia (png, gifs... ) into VISUAL_MEDIA and install them at "/usr/share/one-click-installer/res/"
+# as they are not standard icons
+file(GLOB VISUAL_MEDIA
+      "res/*.gif"
+      "res/*.png"
+)
+set(INSTALL_PATH /usr/share/one-click-installer/res/)
 
 INSTALL(FILES oci.desktop DESTINATION /usr/share/applications)
 INSTALL(FILES org.opensuse.oneclickinstaller.conf DESTINATION /etc/dbus-1/system.d/)
 INSTALL(FILES org.opensuse.OCIHelper.conf DESTINATION /etc/dbus-1/system.d/)
-INSTALL(FILES res/oneclickinstall.png DESTINATION /usr/share/icons/hicolor/32x32/apps/)
-INSTALL(FILES res/ticks-endless.gif DESTINATION /usr/share/one-click-installer/res/)
-INSTALL(FILES res/conflictCheck.gif DESTINATION /usr/share/one-click-installer/res/)
-INSTALL(FILES res/conflictIcon.png DESTINATION /usr/share/icons/hicolor/32x32/apps/)
-INSTALL(FILES res/okIcon.png DESTINATION /usr/share/icons/hicolor/32x32/apps/)
-INSTALL(FILES res/success.png DESTINATION /usr/share/icons/hicolor/32x32/apps/)
-INSTALL(FILES res/errorInstall.png DESTINATION /usr/share/icons/hicolor/32x32/apps/)
-INSTALL(FILES res/warning.png DESTINATION /usr/share/icons/hicolor/32x32/apps/)
-
+INSTALL(FILES ${VISUAL_MEDIA} DESTINATION ${INSTALL_PATH})
 
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}

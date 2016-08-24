@@ -17,6 +17,7 @@
 //      
 //      
 
+#include <QStandardPaths>
 #include <klocalizedstring.h>
 #include "mainheader.h"
 
@@ -29,7 +30,7 @@ MainHeader::MainHeader( QWidget *parent )
     m_statusLabel->setWordWrap( true );
     m_statusLabel->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
-    const QPixmap icon( "/usr/share/icons/hicolor/32x32/apps/oneclickinstall.png" );
+    const QPixmap icon( QStandardPaths::locate( QStandardPaths::AppDataLocation, "res/oneclickinstall.png" ) );
     m_icon = new QLabel;
     m_icon->setPixmap( icon );
 
@@ -65,7 +66,7 @@ void MainHeader::showCheckForConflictsHeader()
 
 void MainHeader::showConflictResolutionHeader()
 {
-    m_icon->setPixmap( QPixmap( "/usr/share/icons/hicolor/32x32/apps/conflictIcon.png" ) );
+    m_icon->setPixmap( QPixmap( QStandardPaths::locate( QStandardPaths::AppDataLocation, "res/conflictIcon.png" ) ) );
     m_statusLabel->setText( i18n( "<b>Oops!</b> There is a software conflict." ) );
 }
 void MainHeader::installationStarted()
@@ -81,15 +82,15 @@ void MainHeader::installationCompleted()
 void MainHeader::showFinalInstallationLogHeader( int numOfPackagesInstalled, bool commitStatus, bool packageInstalled )
 {
     if ( commitStatus ) { // all packages were installed
-	m_icon->setPixmap( QPixmap( "/usr/share/icons/hicolor/32x32/apps/success.png" ) );
+	m_icon->setPixmap( QPixmap( QStandardPaths::locate( QStandardPaths::AppDataLocation, "res/success.png" ) ) );
 	m_statusLabel->setText( i18n( "<b>Success!</b><br> %1 packages were installed successfully." ).arg( numOfPackagesInstalled ) );
     }
     else if ( !commitStatus && !packageInstalled ) {	// only few packages were installed
-	m_icon->setPixmap( QPixmap( "/usr/share/icons/hicolor/32x32/apps/warning.png" ) );
+	m_icon->setPixmap( QPixmap( QStandardPaths::locate( QStandardPaths::AppDataLocation, "res/warning.png" ) ) );
 	m_statusLabel->setText( i18n( "<b>Warning:</b> Some packages were not installed correctly." ) );
     }
     else { // all packages weren't installed
-	m_icon->setPixmap( QPixmap( "/usr/share/icons/hicolor/32x32/apps/conflictIcon.png" ) );
+	m_icon->setPixmap( QPixmap( QStandardPaths::locate( QStandardPaths::AppDataLocation, "res/conflictIcon.png" ) ) );
 	m_statusLabel->setText( i18n( "<b>Error: None of your software could be installed.</b>" ) );
     }
 }
