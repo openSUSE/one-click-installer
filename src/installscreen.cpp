@@ -31,6 +31,8 @@
 InstallScreen::InstallScreen()
 {
     m_mainLayout = new QVBoxLayout;
+    m_mainLayout->setSpacing( 0 );
+    m_currentPackage = 0;
         
     // log file
     m_logFile.setFileName( "/tmp/oci_log.txt" );
@@ -59,17 +61,21 @@ InstallScreen::InstallScreen()
     m_progressBar->setRange( 0, 100 );
     m_progressBar->setTextVisible( true );
     
+    // total progress message label, Total Progress Bar
+    m_totProgBarStatusLabel = new QLabel( i18n( "Total Progress:" ) );
+    m_totalProgressBar = new QProgressBar;
+    m_totalProgressBar->setMinimum( 0 );
+    m_totalProgressBar->setRange( 0, 100 );
+    m_totalProgressBar->setTextVisible( true );
+    
     // All set! Now add widgets to the m_mainLayout
     m_mainLayout->addWidget( m_statusWidget );
-    m_mainLayout->setSpacing( 0 );
     m_mainLayout->addWidget( horizontalLine() );
-    m_mainLayout->setSpacing( 0 );
     m_mainLayout->addWidget( m_currentPackageStatusLabel );
-    m_mainLayout->setSpacing( 0 );
     m_mainLayout->addWidget( m_progressBar );
-    m_mainLayout->setSpacing( 0 );
+    m_mainLayout->addWidget( m_totProgBarStatusLabel );
+    m_mainLayout->addWidget( m_totalProgressBar );
     m_mainLayout->addWidget( horizontalLine() );
-    m_mainLayout->setSpacing( 5 );
     m_mainLayout->addLayout( buttonLayout );
     
     // Signals and slots
@@ -114,6 +120,9 @@ void InstallScreen::newResolvableInAction( const QString & label_R )
 void InstallScreen::updateCurrentResolvableStatusUponCompletion( const QString & finish_R, bool success )
 {
     m_statusWidget->append( finish_R );
+    
+    // set (incr) the total progress bar value
+    m_totalProgressBar->setValue( ++m_currentPackage );
 }
 
 void InstallScreen::newProgressInAction( const QString & label_R )
@@ -149,6 +158,15 @@ void InstallScreen::cancelInstallation()
     closeLogFile();
     m_ociHelper->killBackend(); // quit OCIHelper
     qApp->quit(); // quit OCI
+}
+
+void InstallScreen::setTotalProgressMax( int commitPackages )
+{
+    /*
+     * Set the max value for total progress bar - i.e. twice the number of packages.
+     * When 50% is reached, it would mean "all packages are downloaded"
+     */
+    m_totalProgressBar->setMaximum( commitPackages * 2 );
 }
 
 void InstallScreen::closeLogFile()

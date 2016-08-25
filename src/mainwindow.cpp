@@ -127,6 +127,8 @@ MainWindow::MainWindow( const QString & filename, const QString & tmpFileName, b
     sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "hasConflicts", this, SLOT( showConflictResolutionScreen() ) );
     // create and instantiate the MediaCallbacks DBus proxy
     sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "noConflicts", installer, SLOT( initDBusServices() ) );
+    // set total progress bar max
+    sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "commitPackages", installer, SLOT( setTotalProgressMax( int ) ) );
     sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "noConflicts", m_header, SLOT( installationStarted() ) );
     sysBus.connect( QString(), QString(), "org.opensuse.OCIHelper", "noConflicts", this, SLOT( showInstallationScreen() ) );
     

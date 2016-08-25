@@ -36,6 +36,8 @@
 #include <zypp/FileChecker.h>
 #include <zypp/media/MediaException.h>
 
+#include <QDBusConnection>
+#include <QDBusMessage>
 #include <klocalizedstring.h>
 #include "zyppinstall.h"
 #include "utils.h"
@@ -92,6 +94,12 @@ bool ZyppInstall::commitChanges()
 	RuntimeData::instance()->setRpmPackagesTotal( s_zypp->resolver()->getTransaction().actionSize() );
 	RuntimeData::instance()->setRpmPackageCurrent( 0 );
 	RuntimeData::instance()->setEnteredCommit( true );
+	
+	// send commitPackages signal through o.o.OCIHelper to OCI - required for total progress bar
+	// the following lines will be replaced as soon as Summary is implemented
+	QDBusMessage signal = QDBusMessage::createSignal( "/", "org.opensuse.OCIHelper", "commitPackages" );
+	signal << RuntimeData::instance()->commitPackagesTotal();
+	QDBusConnection::systemBus().send( signal );
 	
 	ZYppCommitResult result = s_zypp->commit( policy );
 	

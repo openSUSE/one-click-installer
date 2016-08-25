@@ -26,6 +26,7 @@ public:
 public slots:
     void initDBusServices();
     void closeLogFile();
+    void setTotalProgressMax( int );
 private slots:
     void cancelInstallation();
     void newResolvableInAction( const QString & );
@@ -38,11 +39,14 @@ private:
 private:
     QVBoxLayout *m_mainLayout;
     QProgressBar *m_progressBar;
+    QProgressBar *m_totalProgressBar;
     QPushButton *m_cancelButton;
     QLabel *m_currentPackageStatusLabel;
+    QLabel *m_totProgBarStatusLabel;
     QTextBrowser *m_statusWidget;
     QFile m_logFile;
     QTextStream *m_outData;
+    unsigned m_currentPackage;
     
     /* OCIHelper proxies */
     org::opensuse::OCIHelper *m_ociHelper;
