@@ -80,7 +80,7 @@ int main( int argc, char *argv[] )
         line = inData.readLine();
         if( !line.isNull() ) {
 	    if (line.at( 0 ) == 'N' ) {
-		repoAlias = line.split( " " ).at( 1 );
+		repoAlias = line.mid( 2 );
 		RuntimeData::instance()->writeInfo( line );
 	    } else if( line.at( 0 ) == 'R' ) {
                 QString repo = line.split( " " ).at( 1 );
