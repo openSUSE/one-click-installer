@@ -517,6 +517,11 @@ namespace OCICallbacks
     
       virtual void finish( Resolvable::constPtr resolvable, Error error, const string & reason, RpmLevel /*unused */)
       {
+	  // store the package name, and its installed status in RuntimeData
+	  RuntimeData::instance()->writeInfo( QString::fromStdString( str::Format( "%s %s" ) 
+								      % resolvable->name()
+								      % ( error == NO_ERROR ) ) );
+	  
 	  if ( m_progress ) {
 	      (*m_progress).error( error != NO_ERROR );
 	      m_progress.reset();

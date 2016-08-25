@@ -41,6 +41,7 @@ private:
     QPushButton *m_install;
     QPushButton *m_conflictCancel;
     QPushButton *m_conflictContinueInstallation;
+    QPushButton *m_finalLogExit;
 
     
     QString m_tmpFileName;
@@ -56,7 +57,7 @@ private slots:
     /**
      *  Update the Repository and Package Counts
      */
-    void updateCount(int repoCount , int packageCount);
+    void updateCount( int repoCount , int packageCount );
 
     /**
      * Show the install screen
@@ -71,7 +72,7 @@ private slots:
     /**
      * Update the size of packages
      */
-    void updateSize(const QString & size );
+    void updateSize( const QString & size );
     
     /** 
      * Show Check for conflicts screen
@@ -87,6 +88,11 @@ private slots:
      * Show Installation Screen
      */
     void showInstallationScreen();
+    
+    /**
+     * Show Final Installation Log Screen
+     */
+    void showFinalInstallationLogScreen();
 signals:
     void countChanged( int repoCount, int packageCount );
 };

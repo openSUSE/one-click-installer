@@ -31,6 +31,7 @@ Q_SIGNALS:
     void hasConflicts();
     void displayProblemAndSolutions( QString, QStringList );
     void noConflicts();
+    void installationFinished( QStringList, bool );
     
 public Q_SLOTS:
     void killBackend();
@@ -51,6 +52,7 @@ private:
     org::opensuse::oneclickinstaller *m_oci;
         
     static QStringList s_packages;
+    bool m_successFlag;
 };
 
 #endif

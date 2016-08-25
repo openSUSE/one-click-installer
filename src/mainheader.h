@@ -49,6 +49,11 @@ public slots:
      * Show Conflict Resolution header
      */
     void showConflictResolutionHeader();
+    
+    /**
+     * Show Final Installation Log header
+     */
+    void showFinalInstallationLogHeader( int numOfPackagesInstalled, bool commitStatus, bool packageInstalled );
 
 private:
     QLabel *m_statusLabel;

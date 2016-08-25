@@ -81,7 +81,7 @@ int main( int argc, char *argv[] )
         if( !line.isNull() ) {
 	    if (line.at( 0 ) == 'N' ) {
 		repoAlias = line.split( " " ).at( 1 );
-		repoAlias.append( "-repo" );
+		RuntimeData::instance()->writeInfo( line );
 	    } else if( line.at( 0 ) == 'R' ) {
                 QString repo = line.split( " " ).at( 1 );
                 qDebug() << repo;

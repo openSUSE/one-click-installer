@@ -9,6 +9,10 @@
     </signal>
     <signal name="noConflicts">
     </signal>
+    <signal name="installationFinished">
+      <arg type="as" direction="out"/>
+      <arg type="b" direction="out"/>
+    </signal>
     <method name="killBackend">
     </method>
     <method name="applySolution">

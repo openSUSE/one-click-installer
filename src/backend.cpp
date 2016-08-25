@@ -28,6 +28,7 @@
 #include <QDBusConnection>
 #include <klocalizedstring.h>
 #include "backend.h"
+#include "runtimedata.h"
 #include "ocihelperadaptor.h"	//generated during build time
 
 // static variable
@@ -43,7 +44,7 @@ Backend::Backend()
     }
     connection.registerObject( "/", this );
     if ( !connection.registerService( "org.opensuse.OCIHelper" ) ) {
-	qFatal ( qPrintable( connection.lastError().message() ) );
+	qFatal( qPrintable( connection.lastError().message() ) );
 	exit( 1 );
     }
 
@@ -60,6 +61,9 @@ Backend::Backend()
     }
     
     install();
+    
+    // emit installationFinished( QStringList /* installedPackages */, bool m_successFlag ) signal to OCI 
+    emit installationFinished( RuntimeData::instance()->installationLog(), m_successFlag );
 }
 
 void Backend::install() 
@@ -91,7 +95,7 @@ void Backend::resolveConflicts()
     emit noConflicts();
     
     // Step 3. Commit Changes
-    ZyppInstall::commitChanges();
+    m_successFlag = ZyppInstall::commitChanges();
     
     // Step 4. Continue the process, if there are more than 1 packages to install 
     install();

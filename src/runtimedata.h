@@ -1,6 +1,7 @@
 #ifndef RUNTIMEDATA_H
 #define RUNTIMEDATA_H
 
+#include <QStringList>
 /**
  * Extend it to hold packages and repos as well - to simplify installation
  */
@@ -48,6 +49,8 @@ public:
     { return m_waitingForInputFromKMsgBox; }
     bool rpmDownload()
     { return m_rpmDownload; }
+    QStringList installationLog()
+    { return m_installationLog; }
     
     // instance
     static RuntimeData* instance()
@@ -55,6 +58,12 @@ public:
       if ( !s_instance )
 	  s_instance = new RuntimeData();
       return s_instance;
+    }
+    
+    void writeInfo( const QString & info )
+    {
+	qDebug() << info;
+	m_installationLog << info;
     }
     
 private:
@@ -65,6 +74,7 @@ private:
     bool m_enteredCommit;
     bool m_waitingForInputFromKMsgBox;
     bool m_rpmDownload;
+    QStringList m_installationLog;
     static RuntimeData *s_instance;
 };
 #endif
